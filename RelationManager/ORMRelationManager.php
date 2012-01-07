@@ -20,13 +20,10 @@ class ORMRelationManager extends DoctrineRelationManager
         } else {
             $class = get_class($object);
         }
-        
+
+        // TODO
         $id = $object->getId();
-        
-        if(!$id) {
-            var_dump($object);
-        }
-        
+
         $relationClass = $this->relationObjectClass;
         return new $relationClass($type, $key, $class, $id);
     }
