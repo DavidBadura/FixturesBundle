@@ -4,6 +4,7 @@ namespace DavidBadura\FixturesBundle\Tests\Executor;
 
 use DavidBadura\FixturesBundle\Executor\Executor;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\RoleType;
 
 /**
  * @author David Badura <d.badura@gmx.de>
@@ -20,23 +21,35 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
-    public function testTreeValidationException()
+    public function testTreeValidationUnknownTypeException()
     {
 
         $data = array(
-            'user' => array(
-                'david' => array(
+            'undefine' => array()
+        );
+
+        $type = new RoleType();
+
+        $executor = new Executor($this->rm, $this->persister);
+        $executor->addFixtureType($type);
+        $executor->execute($data);
+    }
+
+    /**
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     */
+    public function testTreeValidationUnknownPropertyException()
+    {
+
+        $data = array(
+            'role' => array(
+                'admin' => array(
                     'undefine' => 'test'
                 )
             )
         );
 
-        $type = $this->getMock('DavidBadura\\FixturesBundle\\FixtureType\\FixtureType');
-
-        $type->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('user'));
-
+        $type = new RoleType();
 
         $executor = new Executor($this->rm, $this->persister);
         $executor->addFixtureType($type);
@@ -45,7 +58,32 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateObject()
     {
-        $this->markTestIncomplete();
+
+        $data = array(
+            'role' => array(
+                'admin' => array(
+                    'name' => 'Admin'
+                )
+            )
+        );
+
+        $rm = clone $this->rm;
+        $rm->expects($this->once())
+            ->method('set')
+            ->with($this->equalTo('role'), $this->equalTo('admin'), $this->isInstanceOf('Role'));
+
+        $type = new RoleType();
+
+        $executor = new Executor($this->rm, $this->persister);
+        $executor->addFixtureType($type);
+        $objects = $executor->execute($data);
+
+        $this->assertCount(1, $objects);
+
+        $object = array_shift($objects);
+
+        $this->assertEquals('Admin', $object->name);
+
     }
 
     public function testObjectRelations()
