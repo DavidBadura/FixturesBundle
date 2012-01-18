@@ -50,7 +50,6 @@ class UserType extends FixtureType
         $node->scalarNode('name')->isRequired()->end()
                 ->scalarNode('email')->isRequired()->end()
                 ->arrayNode('groups')
-                ->useAttributeAsKey('key')
                 ->prototype('scalar')->end()
                 ->end()
         ;
