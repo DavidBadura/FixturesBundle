@@ -8,103 +8,102 @@ Installation
 
 Add the DavidBaduraFixturesBundle to your application kernel:
 
-.. code-block:: php
-
-    // app/AppKernel.php
-    public function registerBundles()
-    {
-        return array(
-            // ...
-            new DavidBadura\FixturesBundle\DavidBaduraFixturesBundle(),
-            // ...
-        );
-    }
+``` php
+// app/AppKernel.php
+public function registerBundles()
+{
+    return array(
+        // ...
+        new DavidBadura\FixturesBundle\DavidBaduraFixturesBundle(),
+        // ...
+    );
+}
+```
 
 Create fixture types
 --------------------
 
 Create user fixture type
 
-.. code-block:: php
+``` php
+// YourBundle/FixtureTypes/UserType.php
+namespace YourBundle\FixtureTypes;
 
-    // YourBundle/FixtureTypes/UserType.php
-    namespace YourBundle\FixtureTypes;
+use DavidBadura\FixturesBundle\FixtureType\FixtureType;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
-    use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-    use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+class UserType extends FixtureType
+{
 
-    class UserType extends FixtureType
+    public function createObject($data)
     {
-
-        public function createObject($data)
-        {
-            $user = new User($data['name'], $data['email']);
-            foreach ($data['groups'] as $group) {
-                $user->addGroup($group);
-            }
-
-            return $user;
+        $user = new User($data['name'], $data['email']);
+        foreach ($data['groups'] as $group) {
+            $user->addGroup($group);
         }
 
-        public function addNodeSchema(NodeBuilder $node)
-        {
-            $node->scalarNode('name')->isRequired()->end()
-                 ->scalarNode('email')->isRequired()->end()
-                 ->arrayNode('groups')
-                    ->useAttributeAsKey('key')
-                    ->prototype('scalar')->end()
-                 ->end()
-            ;
-        }
-
-
-        public function getName()
-        {
-            return 'user';
-        }
-
-        public function getOrder() {
-            return 2;
-        }
-
+        return $user;
     }
 
+    public function addNodeSchema(NodeBuilder $node)
+    {
+        $node->scalarNode('name')->isRequired()->end()
+                ->scalarNode('email')->isRequired()->end()
+                ->arrayNode('groups')
+                ->useAttributeAsKey('key')
+                ->prototype('scalar')->end()
+                ->end()
+        ;
+    }
+
+
+    public function getName()
+    {
+        return 'user';
+    }
+
+    public function getOrder() {
+        return 2;
+    }
+
+}
+```
 
 Create group fixture type
 
-.. code-block:: php
+``` php
+// YourBundle/FixtureTypes/GroupType.php
+namespace YourBundle\FixtureTypes;
 
-    // YourBundle/FixtureTypes/GroupType.php
-    namespace YourBundle\FixtureTypes;
+use DavidBadura\FixturesBundle\FixtureType\FixtureType;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
-    use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-    use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+class GroupType extends FixtureType
+{
 
-    class GroupType extends FixtureType
+    public function createObject($data)
     {
-
-        public function createObject($data)
-        {
-            $group = new Group($data['name']);
-            return $group;
-        }
-
-        public function addNodeSchema(NodeBuilder $node)
-        {
-            $node->scalarNode('name')->isRequired()->end();
-        }
-
-
-        public function getName()
-        {
-            return 'group';
-        }
-
-        public function getOrder() {
-            return 1;
-        }
-
+        $group = new Group($data['name']);
+        return $group;
     }
+
+    public function addNodeSchema(NodeBuilder $node)
+    {
+        $node->scalarNode('name')->isRequired()->end();
+    }
+
+
+    public function getName()
+    {
+        return 'group';
+    }
+
+    public function getOrder() {
+        return 1;
+    }
+
+}
+```
 
 
 Create fixtures
@@ -113,22 +112,22 @@ Create fixtures
 
 YAML
 
-.. code-block:: yaml
-
-    # @YourBundle/Resource/fixtures/example.yml
-    user:
-        david:
-            name: David
-            email: "d.badura@gmx.de"
-            groups: ["@group:admin"]
-    group:
-        admin:
-            name: Admin
+``` yaml
+# @YourBundle/Resource/fixtures/example.yml
+user:
+    david:
+        name: David
+        email: "d.badura@gmx.de"
+        groups: ["@group:admin"]
+group:
+    admin:
+        name: Admin
+```
 
 
 Load fixtures
 -------------
 
-.. code-block:: bash
-
-    php app/console davidbadura:fixtures:load
+``` shell
+php app/console davidbadura:fixtures:load
+```
