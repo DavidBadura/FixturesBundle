@@ -1,6 +1,8 @@
 DavidBaduraFixturesBundle
 =========================
 
+[![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
+
 Installation
 ------------
 
