@@ -4,7 +4,11 @@ namespace DavidBadura\FixturesBundle\Tests\Executor;
 
 use DavidBadura\FixturesBundle\Executor\Executor;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use DavidBadura\FixturesBundle\RelationManager\RelationManager;
+use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\Role;
 use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\RoleType;
+use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\User;
+use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\UserType;
 
 /**
  * @author David Badura <d.badura@gmx.de>
@@ -14,7 +18,7 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->rm = $this->getMock('DavidBadura\\FixturesBundle\\RelationManager\\RelationManagerInterface');
+        $this->rm = new RelationManager();
         $this->persister = $this->getMock('DavidBadura\\FixturesBundle\\Persister\\PersisterInterface');
     }
 
@@ -67,14 +71,9 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $rm = clone $this->rm;
-        $rm->expects($this->once())
-            ->method('set')
-            ->with($this->equalTo('role'), $this->equalTo('admin'), $this->isInstanceOf('Role'));
-
         $type = new RoleType();
 
-        $executor = new Executor($this->rm, $this->persister);
+        $executor = new Executor(clone $this->rm, $this->persister);
         $executor->addFixtureType($type);
         $objects = $executor->execute($data);
 
@@ -88,7 +87,41 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
 
     public function testObjectRelations()
     {
-        $this->markTestIncomplete();
+
+        $data = array(
+            'role' => array(
+                'admin' => array(
+                    'name' => 'Admin'
+                )
+            ),
+            'user' => array(
+                'david' => array(
+                    'name' => 'David Badura',
+                    'email' => 'd.badura@gmx.de',
+                    'roles' => array(
+                        '@role:admin'
+                    )
+                )
+            )
+        );
+
+        $executor = new Executor(clone $this->rm, $this->persister);
+        $executor->addFixtureType(new RoleType());
+        $executor->addFixtureType(new UserType());
+        $objects = $executor->execute($data);
+
+        $this->assertCount(2, $objects);
+
+        $rm = $executor->getRelationManager();
+
+        $this->assertTrue($rm->has('user', 'david'));
+        $this->assertTrue($rm->has('role', 'admin'));
+
+        $user = $rm->get('user', 'david');
+        $role = $rm->get('role', 'admin');
+
+        $this->assertEquals(array($role), $user->roles);
+
     }
 
 }
