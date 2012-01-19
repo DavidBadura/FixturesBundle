@@ -105,6 +105,7 @@ class Executor
                 $this->rm->save();
             }
         }
+        return $objects;
     }
 
     /**
