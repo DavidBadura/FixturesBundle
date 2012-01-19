@@ -5,10 +5,10 @@ namespace DavidBadura\FixturesBundle\Tests\Executor;
 use DavidBadura\FixturesBundle\Executor\Executor;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use DavidBadura\FixturesBundle\RelationManager\RelationManager;
-use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\Role;
 use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\RoleType;
-use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\User;
 use DavidBadura\FixturesBundle\Tests\TestFixtureTypes\UserType;
+use DavidBadura\FixturesBundle\Tests\TestObjects\Role;
+use DavidBadura\FixturesBundle\Tests\TestObjects\User;
 
 /**
  * @author David Badura <d.badura@gmx.de>

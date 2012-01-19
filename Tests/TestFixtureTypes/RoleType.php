@@ -4,6 +4,7 @@ namespace DavidBadura\FixturesBundle\Tests\TestFixtureTypes;
 
 use DavidBadura\FixturesBundle\FixtureType\FixtureType;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use DavidBadura\FixturesBundle\Tests\TestObjects\Role;
 
 /**
  * @author David Badura <d.badura@gmx.de>
@@ -27,16 +28,5 @@ class RoleType extends FixtureType
     {
         return 'role';
     }
-
-}
-
-class Role
-{
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
 
 }

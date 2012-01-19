@@ -4,6 +4,7 @@ namespace DavidBadura\FixturesBundle\Tests\TestFixtureTypes;
 
 use DavidBadura\FixturesBundle\FixtureType\FixtureType;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use DavidBadura\FixturesBundle\Tests\TestObjects\User;
 
 /**
  * @author David Badura <d.badura@gmx.de>
@@ -38,34 +39,5 @@ class UserType extends FixtureType
     {
         return 'user';
     }
-
-}
-
-class User
-{
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $email;
-
-    /**
-     *
-     * @var array
-     */
-    public $roles = array();
-
-    /**
-     *
-     * @var array
-     */
-    public $groups = array();
 
 }
