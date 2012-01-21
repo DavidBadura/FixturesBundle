@@ -4,6 +4,7 @@ namespace DavidBadura\FixturesBundle;
 
 use DavidBadura\FixturesBundle\RelationManager\RelationManagerInterface;
 use DavidBadura\FixturesBundle\Persister\PersisterInterface;
+use DavidBadura\FixturesBundle\FixtureType\FixtureType;
 
 /**
  * @author David Badura <d.badura@gmx.de>
@@ -15,7 +16,7 @@ class FixtureLoader
      *
      * @var RelationManagerInterface
      */
-    protected $rm;
+    private $rm;
 
     /**
      *
@@ -27,8 +28,19 @@ class FixtureLoader
      *
      * @var array
      */
-    private $stack;
+    private $loaded = array();
 
+    /**
+     *
+     * @var array
+     */
+    private $stack = array();
+
+    /**
+     *
+     * @var \Closure
+     */
+    private $logger;
 
     /**
      *
@@ -37,6 +49,15 @@ class FixtureLoader
     public function __construct(RelationManager $rm)
     {
         $this->rm = $rm;
+    }
+
+    /**
+     *
+     * @return RelationManager
+     */
+    public function getRelationManager()
+    {
+        return $this->rm;
     }
 
     /**
@@ -54,6 +75,15 @@ class FixtureLoader
 
     /**
      *
+     * @param \Closure $logger
+     */
+    public function setLogger(\Closure $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     *
      * @param array $data
      * @param array $types
      * @param array $options
@@ -63,65 +93,189 @@ class FixtureLoader
 
         $defaultOptions = array(
             'no-validate' => false,
-            'no-persist' => false,
-            'group' => null
+            'no-persist' => false
         );
 
         $options = array_merge($defaultOptions, $options);
 
+        $types = $this->prepareTypes($types);
 
-        $rm = $this->rm;
+        $this->createObjects($data, $types);
+        $this->finalizeObjects($data, $types);
 
-        if (isset($this->stack[$type][$key])) {
-
+        if (!$options['no-validate']) {
+            $this->validateObjects();
         }
 
-        $this->stack[$type][$key] = true;
-
-        array_walk_recursive($data[$type][$key], function(&$value, $key) use ($rm, $data) {
-                if (preg_match('/^@(\w*):(\w*)$/', $value, $hit)) {
-                    if (!$rm->has($hit[1], $hit[2])) {
-                        $value = $this->createObject($hit[1], $hit[2], $data);
-                    } else {
-                        $value = $rm->get($hit[1], $hit[2]);
-                    }
-                }
-            });
-
-        $this->types[$type]->setRelationManager($this->rm);
-        $object = $this->types[$type]->createObject($data[$type][$key]);
-        $rm->set($type, $key, $object);
-
-        unset($this->stack[$type][$key]);
-
-        return $object;
-
-            $objects = $this->createObjects($data);
-
-        return $objects;
+        if (!$options['no-persist']) {
+            $this->persistObjects();
+        }
     }
 
     /**
      *
      * @param array $data
-     * @return type
+     * @param array $types
      */
-    private function createObjects(array $data)
+    private function createObjects(array &$data, array &$types)
     {
-        return $this->executor->execute($this->types, $data);
-    }
+        $this->stack = array();
 
+        foreach ($data as $objectType => $keys) {
+            foreach (array_keys($keys) as $objectKey) {
+
+                if (isset($this->loaded[$objectType][$objectKey])) {
+                    continue;
+                }
+
+                $this->createObject($objectType, $objectKey, $data, $types);
+            }
+        }
+    }
 
     /**
      *
-     * @param array $objects
-     * @return type
+     * @param array $data
+     * @param array $types
      */
-    private function persistObjects(array $objects)
+    private function finalizeObjects(array &$data, array &$types)
+    {
+        $this->stack = array();
+
+        foreach ($data as $objectType => $keys) {
+            foreach (array_keys($keys) as $objectKey) {
+
+                if (isset($this->loaded[$objectType][$objectKey])) {
+                    continue;
+                }
+
+                $this->finalizeObject($objectType, $objectKey, $data, $types);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param array $data
+     * @param FixtureType $fixtureType
+     * @param string $objectType
+     * @param string $objectKey
+     * @throws \Exception
+     */
+    private function createObject($objectType, $objectKey, array &$data, &$types)
     {
 
-        foreach ($this->types as $type) {
+        if (isset($this->stack[$objectType][$objectKey])) {
+            throw new \Exception('circle');
+        }
 
+        $this->stack[$objectType][$objectKey] = true;
+
+        $loader = $this;
+
+        array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, &$data, &$types) {
+                if (preg_match('/^@(\w*):(\w*)$/', $value, $hit)) {
+
+                    if (!$loader->rm->hasRepository($hit[1])
+                        || !$loader->rm->getRepository($hit[1])->has($hit[2])) {
+
+                        $loader->createObject($data, $types, $objectType, $objectKey);
+                    }
+
+                    $value = $loader->rm->getRepository($hit[1])->get($hit[2]);
+                }
+            });
+
+        $object = $types[$objectType]->createObject($data[$objectType][$objectKey]);
+
+        if (!$this->rm->hasRepository($objectType)) {
+            $this->rm->createRepository($objectType);
+        }
+
+        $this->getRelationManager($objectType)->set($objectKey, $object);
+        unset($this->stack[$objectType][$objectKey]);
+    }
+
+    /**
+     *
+     * @param array $data
+     * @param FixtureType $fixtureType
+     * @param string $objectType
+     * @param string $objectKey
+     * @throws \Exception
+     */
+    private function finalizeObject($objectType, $objectKey, array &$data, &$types)
+    {
+
+        if (isset($this->stack[$objectType][$objectKey])) {
+            throw new \Exception('circle');
+        }
+
+        $this->stack[$objectType][$objectKey] = true;
+
+        $loader = $this;
+
+        array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, &$data, &$types) {
+                if (preg_match('/^@@(\w*):(\w*)$/', $value, $hit)) {
+
+                    if (!$loader->rm->hasRepository($hit[1])
+                        || !$loader->rm->getRepository($hit[1])->has($hit[2])) {
+
+                        throw new \Exception();
+                        //$loader->finalizeObject($data, $types, $objectType, $objectKey);
+                    }
+
+                    $value = $loader->rm->getRepository($hit[1])->get($hit[2]);
+                }
+            });
+
+        $object = $this->getRelationManager($objectType)->get($objectKey);
+        $types[$objectType]->finalizeObject($object, $data[$objectType][$objectKey]);
+
+        unset($this->stack[$objectType][$objectKey]);
+    }
+
+    /**
+     *
+     */
+    private function validateObjects()
+    {
+
+    }
+
+    /**
+     *
+     */
+    private function persistObjects()
+    {
+
+    }
+
+    /**
+     *
+     * @param array $types
+     * @return array
+     */
+    private function prepareTypes(array $types)
+    {
+        $tempTypes = array();
+        foreach ($types as $type) {
+            if (!$type instanceof FixtureType) {
+                throw new \Exception();
+            }
+            $tempTypes[$type->getName()] = $type;
+        }
+        return $tempTypes;
+    }
+
+    /**
+     *
+     * @param string $message
+     */
+    private function log($message)
+    {
+        if ($this->logger) {
+            $this->logger($message);
         }
     }
 
