@@ -4,9 +4,9 @@ DavidBaduraFixturesBundle
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
 
 
-NOTICE:
-The Bundle isn't working yet! It is still in its infancy ;-)
-Currently, it has only a rough structure to show how it should look like at the end.
+> NOTICE:
+> The Bundle isn't working yet! It is still in its infancy.
+> Currently, it has only a rough structure to show how it should look like at the end.
 
 
 Installation
@@ -46,7 +46,7 @@ davidbadura_fixtures:
 Create fixture types
 --------------------
 
-Create user fixture type
+Create user fixture type (with annotation)
 
 ``` php
 // YourBundle/FixtureTypes/UserType.php
@@ -76,20 +76,14 @@ class UserType extends FixtureType
 }
 ```
 
-Create group fixture type
+Create group fixture type (without annotation)
 
 ``` php
 // YourBundle/FixtureTypes/GroupType.php
 namespace YourBundle\FixtureTypes;
 
 use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-use DavidBadura\FixturesBundle\Configuration as Fixture;
 
-/**
- * @Fixture\Type(name="group", group="install")
- * @Fixture\Validation(group="registration")
- * @Fixture\Persister(name="orm")
- */
 class GroupType extends FixtureType
 {
 
@@ -99,8 +93,35 @@ class GroupType extends FixtureType
         return $group;
     }
 
+    public function getName()
+    {
+        return 'group';
+    }
+
+    public function getGroup()
+    {
+        return 'install';
+    }
+
+    public function getValidateObjects()
+    {
+        return true;
+    }
+
+    public function getValidationGroup()
+    {
+        return 'registration';
+    }
+
+    public function getPerister()
+    {
+        return 'orm';
+    }
+
 }
 ```
+
+The fixtures must have only one *name*, everything else is optional.
 
 
 Create fixtures
