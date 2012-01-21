@@ -3,7 +3,6 @@
 namespace DavidBadura\FixturesBundle\Tests\TestFixtureTypes;
 
 use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use DavidBadura\FixturesBundle\Tests\TestObjects\Group;
 
 /**
@@ -11,13 +10,6 @@ use DavidBadura\FixturesBundle\Tests\TestObjects\Group;
  */
 class GroupType extends FixtureType
 {
-
-    public function addNodeSchema(NodeBuilder $node)
-    {
-        $node->scalarNode('name')->isRequired()->end()
-            ->scalarNode('leader')->isRequired()->end()
-        ;
-    }
 
     public function createObject($data)
     {
