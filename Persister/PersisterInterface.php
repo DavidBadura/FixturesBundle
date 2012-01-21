@@ -3,18 +3,20 @@
 namespace DavidBadura\FixturesBundle\Persister;
 
 /**
- * 
+ *
  * @author David Badura <d.badura@gmx.de>
  */
 interface PersisterInterface
 {
 
     /**
-     * Save objects
-     * 
-     * @param array $objects
+     * @param object $object
      */
-    public function save($objects);
-    
-    
+    public function persist($object);
+
+    /**
+     *
+     */
+    public function flush();
+
 }

@@ -33,46 +33,33 @@ class LoadDataFixturesCommand  extends ContainerAwareCommand
         $this
             ->setName('davidbadura:fixtures:load')
             ->setDescription('Load data fixtures and save it.')
-            ->addOption('fixtures', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.')
-            ->addOption('fixture-types', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixture types from.')
-            ->addOption('test', null, InputOption::VALUE_NONE, 'Test the fixtures.')
+            ->addOption('fixtures', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.', null)
+            ->addOption('fixture-types', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixture types from.', null)
+            ->addOption('group', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixture types from.', null)
+            ->addOption('no-persist', 'np', InputOption::VALUE_NONE, 'Test the fixtures.')
+            ->addOption('no-validate', 'nv', InputOption::VALUE_NONE, 'Test the fixtures.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         
-        $output->writeln('load fixtures');
-        
-        $dirOrFile = $input->getOption('fixtures');
-        if ($dirOrFile) {
-            $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
-        } else {
-            $paths = array();
-            foreach ($this->getApplication()->getKernel()->getBundles() as $bundle) {
-                $path = $bundle->getPath().'/Resources/fixtures';
-                if(is_dir($path)) {
-                    $paths[] = $path;
-                }
-            }
-        }
-        
-        if(!$paths) {
-            return;
-        }
-        
-        $finder = new Finder();
-        $finder->in($paths)->name('*.yml');
-        
-        $data = array();
-        foreach ($finder->files() as $file) {
-            
-            $temp_data = Yaml::parse($file->getPathname());
-            if(is_array($temp_data)) {
-                $data = array_merge_recursive($data, $temp_data);
-            }
-            
-        }
+        $container = $this->getContainer();
+
+        $fileLoader = $container->get('davidbadura_fixtures.fixture_file_loader');
+        $data = $fileLoader->loadFixtureData();
+
+        $typeLoader = $container->get('davidbadura_fixtures.fixture_type_loader');
+        $types = $typeLoader->load();
+
+        $fixtureLoader = $this->getContainer()->get('davidbadura_fixtures.fixture_loader');
+        $fixtureLoader->loadFixtures($data, $types, array(
+            'group' => $input->getOption('group'),
+            'no-validate' => $input->getOption('fixture-types'),
+            'no-persist' => $input->getOption('fixture-types')
+        ));
+
+        /*
 
         $dirOrFile = $input->getOption('fixture-types');
         if ($dirOrFile) {
@@ -90,27 +77,28 @@ class LoadDataFixturesCommand  extends ContainerAwareCommand
                 $loader->loadFromDirectory($path);
             }
         }
-        
+
         $fixtures = $loader->getFixtureTypes();
         if (!$fixtures) {
             throw new InvalidArgumentException(
                 sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $paths))
             );
         }
-        
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $relationManager = new ORMRelationManager($em);
+
         $relationManager = new RelationManager();
         $persister = new DoctrinePersister($em);
         $executor = new Executor($relationManager, $persister);
         $executor->setLogger(function($message) use ($output) {
             $output->writeln(sprintf('  <comment>></comment> <info>%s</info>', $message));
         });
-        
+
         foreach ($fixtures as $type) {
             $executor->addFixtureType($type);
         }
-        
+
         $executor->execute($data, $input->getOption('test'));
+         *
+         *
+         */
     }
 }

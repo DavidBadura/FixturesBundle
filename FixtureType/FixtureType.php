@@ -1,71 +1,97 @@
-<?php
+#<?php
 
 namespace DavidBadura\FixturesBundle\FixtureType;
 
-
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use DavidBadura\FixturesBundle\RelationManager\RelationManagerInterface;
-
 /**
- * 
+ *
  * @author David Badura <d.badura@gmx.de>
  */
-abstract class FixtureType {
-    
+abstract class FixtureType
+{
+
     /**
      *
-     * @var RelationManager
+     * @var string
      */
-    private $rm;
-    
+    protected $name;
+
     /**
      *
-     * @param RelationManagerInterface $rm
+     * @var string
      */
-    public function setRelationManager(RelationManagerInterface $rm) {
-        $this->rm = $rm;
-    }
-    
+    protected $group;
+
     /**
      *
-     * @param string $type
-     * @param string $key
-     * @return mixed 
+     * @var string
      */
-    public function get($type, $key) {
-        return $this->rm->get($type, $key);
-    }
-    
+    protected $persister;
+
     /**
      *
-     * @param string $type
-     * @param string $key
-     * @return mixed 
+     * @var boolean
      */
-    public function has($type, $key) {
-        return $this->rm->has($type, $key);
-    }
-    
+    protected $validateObjects;
+
     /**
-     * @return integer
+     *
+     * @var string
      */
-    public function getOrder() {
-        return 0;
+    protected $validationGroup;
+
+    /**
+     *
+     * @param array $data
+     * @return object
+     */
+    abstract public function createObject($data);
+
+    /**
+     *
+     * @param object $object
+     * @param array $data
+     */
+    public function finalizeObject($object, $data);
+
+    /**
+     *
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
     }
 
     /**
-     * @param NodeBuilder $node
-     */
-    abstract function addNodeSchema(NodeBuilder $node);
-    
-    /**
-     * @param array $data
-     */
-    abstract function createObject($data);
-    
-    /**
+     *
      * @return string
      */
-    abstract function getName();
-    
+    public function getGroup() {
+        return $this->group;
+    }
+
+    /**
+     * get the persister name
+     *
+     * @return string
+     */
+    public function getPersister() {
+        return $this->persister;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function validateObjects() {
+        return $this->validateObjects;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getValidationGroup() {
+        return $this->validationGroup;
+    }
+
 }

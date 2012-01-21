@@ -3,6 +3,12 @@ DavidBaduraFixturesBundle
 
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
 
+
+NOTICE:
+The Bundle isn't working yet! It is still in its infancy ;-)
+Currently, it has only a rough structure to show how it should look like at the end.
+
+
 Installation
 ------------
 
@@ -20,6 +26,23 @@ public function registerBundles()
 }
 ```
 
+Configuration
+-------------
+YAML
+
+``` yaml
+# app/config/config.yml
+davidbadura_fixtures:
+    annotation: true
+    types:
+        - YourBundle
+    persister-
+        orm:
+            type: doctrine
+            object_manager: doctrine.orm.entity_manager.default
+```
+
+
 Create fixture types
 --------------------
 
@@ -30,8 +53,13 @@ Create user fixture type
 namespace YourBundle\FixtureTypes;
 
 use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use DavidBadura\FixturesBundle\Configuration as Fixture;
 
+/**
+ * @Fixture\Type(name="user", group="install")
+ * @Fixture\Validation(group="registration")
+ * @Fixture\Persister(name="orm")
+ */
 class UserType extends FixtureType
 {
 
@@ -45,26 +73,6 @@ class UserType extends FixtureType
         return $user;
     }
 
-    public function addNodeSchema(NodeBuilder $node)
-    {
-        $node->scalarNode('name')->isRequired()->end()
-                ->scalarNode('email')->isRequired()->end()
-                ->arrayNode('groups')
-                ->prototype('scalar')->end()
-                ->end()
-        ;
-    }
-
-
-    public function getName()
-    {
-        return 'user';
-    }
-
-    public function getOrder() {
-        return 2;
-    }
-
 }
 ```
 
@@ -75,8 +83,13 @@ Create group fixture type
 namespace YourBundle\FixtureTypes;
 
 use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use DavidBadura\FixturesBundle\Configuration as Fixture;
 
+/**
+ * @Fixture\Type(name="group", group="install")
+ * @Fixture\Validation(group="registration")
+ * @Fixture\Persister(name="orm")
+ */
 class GroupType extends FixtureType
 {
 
@@ -84,21 +97,6 @@ class GroupType extends FixtureType
     {
         $group = new Group($data['name']);
         return $group;
-    }
-
-    public function addNodeSchema(NodeBuilder $node)
-    {
-        $node->scalarNode('name')->isRequired()->end();
-    }
-
-
-    public function getName()
-    {
-        return 'group';
-    }
-
-    public function getOrder() {
-        return 1;
     }
 
 }
@@ -117,7 +115,7 @@ user:
     david:
         name: David
         email: "d.badura@gmx.de"
-        groups: ["@group:admin"]
+        groups: ["@group:admin"] # <- reference to group.admin
 group:
     admin:
         name: Admin
@@ -128,5 +126,5 @@ Load fixtures
 -------------
 
 ``` shell
-php app/console davidbadura:fixtures:load
+php app/console davidbadura:fixtures:load --group install
 ```

@@ -5,12 +5,12 @@ namespace DavidBadura\FixturesBundle\Persister;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * 
+ *
  * @author David Badura <d.badura@gmx.de>
  */
 class DoctrinePersister implements PersisterInterface
 {
-    
+
     /**
      *
      * @var ObjectManager
@@ -18,17 +18,30 @@ class DoctrinePersister implements PersisterInterface
     protected $om;
 
     /**
+     *
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om) {
+    public function __construct(ObjectManager $om)
+    {
         $this->om = $om;
     }
-    
-    public function save($objects) {
-        foreach ($objects as $object) {
-            $this->om->persist($object);
-        }
+
+    /**
+     *
+     * @param object $object
+     */
+    public function persist($object)
+    {
+        $this->om->persist($object);
+    }
+
+    /**
+     *
+     *
+     */
+    public function flush()
+    {
         $this->om->flush();
     }
-    
+
 }
