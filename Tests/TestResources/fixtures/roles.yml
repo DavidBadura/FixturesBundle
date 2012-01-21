@@ -1,0 +1,5 @@
+role:
+  admin:
+    name: Admin
+  user:
+    name: User

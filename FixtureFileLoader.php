@@ -14,41 +14,16 @@ class FixtureFileLoader
 
     /**
      *
-     * @var KernelInterface
-     */
-    private $kernel;
-
-    /**
-     *
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
-    }
-
-    /**
-     *
      * @return array
      */
-    public function loadFixtureData($path = false)
+    public function loadFixtureData($path)
     {
 
-        if ($path) {
-            $paths = is_array($path) ? $path : array($path);
-        } else {
-            $paths = array();
-            foreach ($this->kernel->getBundles() as $bundle) {
-                $path = $bundle->getPath() . '/Resources/fixtures';
-                if (is_dir($path)) {
-                    $paths[] = $path;
-                }
-            }
+        if(!$path) {
+            throw new \Exception("Nothing to load");
         }
 
-        if (!$paths) {
-            throw new \Exception();
-        }
+        $paths = is_array($path) ? $path : array($path);
 
         $finder = new Finder();
         $finder->in($paths)->name('*.yml');

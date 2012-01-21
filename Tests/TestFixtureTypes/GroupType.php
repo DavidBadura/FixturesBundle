@@ -20,7 +20,9 @@ class GroupType extends FixtureType
 
     public function finalizeObject($object, $data)
     {
-        $object->leader = $data['leader'];
+        if (isset($data['leader'])) {
+            $object->leader = $data['leader'];
+        }
     }
 
     public function getName()

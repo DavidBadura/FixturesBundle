@@ -1,68 +1,53 @@
 <?php
 
-namespace DavidBadura\FixturesBundle;
+namespace DavidBadura\FixturesBundle\Tests\RelationManager;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\HttpKernel\KernelInterface;
+use DavidBadura\FixturesBundle\FixtureFileLoader;
 
 /**
  * @author David Badura <d.badura@gmx.de>
  */
-class FixtureFileLoader
+class FixtureFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
 
-    /**
-     *
-     * @var KernelInterface
-     */
-    private $kernel;
-
-    /**
-     *
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
+    public function testLoadData()
     {
-        $this->kernel = $kernel;
-    }
+        $draft = array(
+            'user' => array(
+                'david' => array(
+                    'name' => 'David Badura',
+                    'group' => array('@group:owner', '@group:developer'),
+                    'role' => array('@role:admin'),
+                ),
+                'other' => array(
+                    'name' => 'Somebody',
+                    'group' => array('@group:developer'),
+                    'role' => array('@role:user'),
+                ),
+            ),
+            'group' => array(
+                'developer' => array(
+                    'name' => 'Developer',
+                    'leader' => '@@user:david',
+                ),
+            ),
+            'role' => array(
+                'admin' => array(
+                    'name' => 'Admin',
+                ),
+                'user' => array(
+                    'name' => 'User',
+                ),
+            ),
+        );
 
-    /**
-     *
-     * @return array
-     */
-    public function loadFixtureData($path = false)
-    {
+        $loader = new FixtureFileLoader();
 
-        if ($path) {
-            $paths = is_array($path) ? $path : array($path);
-        } else {
-            $paths = array();
-            foreach ($this->kernel->getBundles() as $bundle) {
-                $path = $bundle->getPath() . '/Resources/fixtures';
-                if (is_dir($path)) {
-                    $paths[] = $path;
-                }
-            }
-        }
+        $data = $loader->loadFixtureData(array(
+            __DIR__ . '/TestResources/fixtures'
+            ));
 
-        if (!$paths) {
-            throw new \Exception();
-        }
-
-        $finder = new Finder();
-        $finder->in($paths)->name('*.yml');
-
-        $data = array();
-        foreach ($finder->files() as $file) {
-
-            $temp_data = Yaml::parse($file->getPathname());
-            if (is_array($temp_data)) {
-                $data = array_merge_recursive($data, $temp_data);
-            }
-        }
-
-        return $data;
+        $this->assertEquals($draft, $data);
     }
 
 }

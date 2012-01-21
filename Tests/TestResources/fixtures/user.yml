@@ -1,0 +1,9 @@
+user:
+  david:
+    name: "David Badura"
+    group: ["@group:owner", "@group:developer"]
+    role: ["@role:admin"]
+  other:
+    name: "Somebody"
+    group: ["@group:developer"]
+    role: ["@role:user"]
