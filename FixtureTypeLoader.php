@@ -3,6 +3,7 @@
 namespace DavidBadura\FixturesBundle;
 
 use Doctrine\Common\Annotations\Reader;
+use DavidBadura\FixturesBundle\FixtureType\FixtureType;
 use DavidBadura\FixturesBundle\Configuration\Type;
 use DavidBadura\FixturesBundle\Configuration\Validation;
 use DavidBadura\FixturesBundle\Configuration\Persister;
@@ -45,7 +46,7 @@ class FixtureTypeLoader
      *
      * @param Reader $reader
      */
-    public function __construct(Reader $reader)
+    public function setAnnotationReader(Reader $reader)
     {
         $this->reader = $reader;
     }
@@ -123,11 +124,11 @@ class FixtureTypeLoader
         }
 
         if ($type->getName() == null || trim($type->getName()) == '') {
-            throw new \Exception();
+            throw new \Exception(sprintf('the fixture type "%s" need a name', get_class($type)));
         }
 
-        if (isset($this->fixtureTypes[$type - getName()])) {
-            throw new \Exception();
+        if (isset($this->fixtureTypes[$type->getName()])) {
+            throw new \Exception(sprintf('a fixture type with the name "%s" exist already', $type->getName()));
         }
         $this->fixtureTypes[$type->getName()] = $type;
         return $this;
@@ -163,25 +164,40 @@ class FixtureTypeLoader
      *
      * @param FixtureType $fixtureType
      */
-    private function loadAnnotationConfiguration(FixtureType $fixtureType)
+    public function loadAnnotationConfiguration(FixtureType $fixtureType)
     {
+        if(!$this->reader) {
+            throw new \Exception('if you have the configuration via annotations then you must set the annotation reader');
+        }
+
         $reflClass = new \ReflectionObject($fixtureType);
 
         foreach ($this->reader->getClassAnnotations($reflClass) as $configuration) {
             if ($configuration instanceof Type) {
                 if ($configuration->name) {
-                    // overwrite fixture type property
+                    $property = $reflClass->getProperty('name');
+                    $property->setAccessible(true);
+                    $property->setValue($fixtureType, $configuration->name);
                 }
                 if ($configuration->group) {
-                    // overwrite fixture type property
+                    $property = $reflClass->getProperty('group');
+                    $property->setAccessible(true);
+                    $property->setValue($fixtureType, $configuration->group);
                 }
             } elseif ($configuration instanceof Validation) {
+                $property = $reflClass->getProperty('validateObjects');
+                $property->setAccessible(true);
+                $property->setValue($fixtureType, true);
                 if ($configuration->group) {
-                    // overwrite fixture type property
+                    $property = $reflClass->getProperty('validationGroup');
+                    $property->setAccessible(true);
+                    $property->setValue($fixtureType, $configuration->group);
                 }
             } elseif ($configuration instanceof Persister) {
                 if ($configuration->name) {
-                    // overwrite fixture type property
+                    $property = $reflClass->getProperty('persister');
+                    $property->setAccessible(true);
+                    $property->setValue($fixtureType, $configuration->name);
                 }
             }
         }

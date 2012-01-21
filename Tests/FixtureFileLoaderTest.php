@@ -1,6 +1,6 @@
 <?php
 
-namespace DavidBadura\FixturesBundle\Tests\RelationManager;
+namespace DavidBadura\FixturesBundle\Tests;
 
 use DavidBadura\FixturesBundle\FixtureFileLoader;
 
