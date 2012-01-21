@@ -46,14 +46,14 @@ class FixtureLoader
      *
      * @param Executor $executor
      */
-    public function __construct(RelationManager $rm)
+    public function __construct(RelationManagerInterface $rm)
     {
         $this->rm = $rm;
     }
 
     /**
      *
-     * @return RelationManager
+     * @return RelationManagerInterface
      */
     public function getRelationManager()
     {
@@ -124,6 +124,10 @@ class FixtureLoader
         foreach ($data as $objectType => $keys) {
             foreach (array_keys($keys) as $objectKey) {
 
+                if (!isset($types[$objectType])) {
+                    continue;
+                }
+
                 if (isset($this->loaded[$objectType][$objectKey])) {
                     continue;
                 }
@@ -140,12 +144,11 @@ class FixtureLoader
      */
     private function finalizeObjects(array &$data, array &$types)
     {
-        $this->stack = array();
 
         foreach ($data as $objectType => $keys) {
             foreach (array_keys($keys) as $objectKey) {
 
-                if (isset($this->loaded[$objectType][$objectKey])) {
+                if (!isset($types[$objectType])) {
                     continue;
                 }
 
@@ -165,12 +168,19 @@ class FixtureLoader
     private function createObject($objectType, $objectKey, array &$data, &$types)
     {
 
-        if (isset($this->stack[$objectType][$objectKey])) {
+        if (!isset($types[$objectType])) {
+            throw new \Exception(sprintf('type "%s" not exist', $objectType));
+        }
+
+        if (!isset($data[$objectType][$objectKey])) {
+            throw new \Exception(sprintf('data for "%s:%s" not exist', $objectType, $objectKey));
+        }
+
+        if (isset($this->stack[$objectType . ':' . $objectKey])) {
             throw new \Exception('circle');
         }
 
-        $this->stack[$objectType][$objectKey] = true;
-
+        $this->stack[$objectType . ':' . $objectKey] = true;
         $loader = $this;
 
         array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, &$data, &$types) {
@@ -179,7 +189,7 @@ class FixtureLoader
                     if (!$loader->rm->hasRepository($hit[1])
                         || !$loader->rm->getRepository($hit[1])->has($hit[2])) {
 
-                        $loader->createObject($data, $types, $objectType, $objectKey);
+                        $loader->createObject($hit[1], $hit[2], $data, $types);
                     }
 
                     $value = $loader->rm->getRepository($hit[1])->get($hit[2]);
@@ -192,8 +202,8 @@ class FixtureLoader
             $this->rm->createRepository($objectType);
         }
 
-        $this->getRelationManager($objectType)->set($objectKey, $object);
-        unset($this->stack[$objectType][$objectKey]);
+        $this->rm->getRepository($objectType)->set($objectKey, $object);
+        unset($this->stack[$objectType . ':' . $objectKey]);
     }
 
     /**
@@ -207,32 +217,27 @@ class FixtureLoader
     private function finalizeObject($objectType, $objectKey, array &$data, &$types)
     {
 
-        if (isset($this->stack[$objectType][$objectKey])) {
-            throw new \Exception('circle');
-        }
-
-        $this->stack[$objectType][$objectKey] = true;
-
         $loader = $this;
-
         array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, &$data, &$types) {
+
+                if (!is_string($value)) {
+                    return;
+                }
+
                 if (preg_match('/^@@(\w*):(\w*)$/', $value, $hit)) {
 
                     if (!$loader->rm->hasRepository($hit[1])
                         || !$loader->rm->getRepository($hit[1])->has($hit[2])) {
 
                         throw new \Exception();
-                        //$loader->finalizeObject($data, $types, $objectType, $objectKey);
                     }
 
                     $value = $loader->rm->getRepository($hit[1])->get($hit[2]);
                 }
             });
 
-        $object = $this->getRelationManager($objectType)->get($objectKey);
+        $object = $this->rm->getRepository($objectType)->get($objectKey);
         $types[$objectType]->finalizeObject($object, $data[$objectType][$objectKey]);
-
-        unset($this->stack[$objectType][$objectKey]);
     }
 
     /**

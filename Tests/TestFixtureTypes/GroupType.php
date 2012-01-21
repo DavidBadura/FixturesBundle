@@ -15,8 +15,12 @@ class GroupType extends FixtureType
     {
         $group = new Group();
         $group->name = $data['name'];
-        $group->leader = $data['leader'];
         return $group;
+    }
+
+    public function finalizeObject($object, $data)
+    {
+        $object->leader = $data['leader'];
     }
 
     public function getName()

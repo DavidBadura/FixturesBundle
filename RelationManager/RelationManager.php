@@ -6,7 +6,7 @@ namespace DavidBadura\FixturesBundle\RelationManager;
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class RelationManager implements RelationManagerInterface
+class RelationManager implements RelationManagerInterface, \Countable
 {
 
     protected $repositoryClass = 'DavidBadura\FixturesBundle\RelationManager\Repository';
@@ -23,7 +23,7 @@ class RelationManager implements RelationManagerInterface
      */
     public function getRepository($type)
     {
-        if(!$this->hasRepository($type)) {
+        if (!$this->hasRepository($type)) {
             throw new Exception(sprintf('repository with the name "%" not exists', $type));
         }
         return $this->repositories[$type];
@@ -34,7 +34,8 @@ class RelationManager implements RelationManagerInterface
      * @param string $type
      * @return boolean
      */
-    public function hasRepository($type) {
+    public function hasRepository($type)
+    {
         return isset($this->repositories[$type]);
     }
 
@@ -44,8 +45,9 @@ class RelationManager implements RelationManagerInterface
      * @return RepositoryInterface
      * @throws Exception
      */
-    public function createRepository($type) {
-        if($this->hasRepository($type)) {
+    public function createRepository($type)
+    {
+        if ($this->hasRepository($type)) {
             throw new Exception(sprintf('repository with the name "%" exists already', $type));
         }
         $repositoryClass = $this->repositoryClass;
@@ -63,6 +65,11 @@ class RelationManager implements RelationManagerInterface
             $objects = array_merge($objects, $repository->getObjects());
         }
         return $objects;
+    }
+
+    public function count()
+    {
+        return count($this->repositories);
     }
 
 }

@@ -16,8 +16,15 @@ class UserType extends FixtureType
         $user = new User();
         $user->name = $data['name'];
         $user->email = $data['email'];
-        $user->roles = $data['roles'];
-        $user->groups = $data['groups'];
+
+        if(isset($data['roles'])) {
+            $user->roles = $data['roles'];
+        }
+
+        if(isset($data['groups'])) {
+            $user->groups = $data['groups'];
+        }
+
         return $user;
     }
 

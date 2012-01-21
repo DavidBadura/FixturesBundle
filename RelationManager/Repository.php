@@ -13,7 +13,7 @@ class Repository implements RepositoryInterface
     public function get($key)
     {
         if (!$this->has($key)) {
-
+            throw new \Exception(sprintf('object with the key "%s" not exist', $key));
         }
         return $this->objects[$key];
     }
@@ -26,7 +26,7 @@ class Repository implements RepositoryInterface
     public function set($key, $object)
     {
         if ($this->has($key)) {
-
+            throw new \Exception(sprintf('object with the key "%s" exist already', $key));
         }
         $this->objects[$key] = $object;
     }
