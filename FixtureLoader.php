@@ -165,7 +165,7 @@ class FixtureLoader
      * @param string $objectKey
      * @throws \Exception
      */
-    private function createObject($objectType, $objectKey, array &$data, &$types)
+    public function createObject($objectType, $objectKey, array &$data, &$types)
     {
 
         if (!isset($types[$objectType])) {
@@ -181,18 +181,20 @@ class FixtureLoader
         }
 
         $this->stack[$objectType . ':' . $objectKey] = true;
-        $loader = $this;
 
-        array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, &$data, &$types) {
+        $loader = $this;
+        $rm = $this->rm;
+
+        array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, $rm, &$data, &$types) {
                 if (preg_match('/^@(\w*):(\w*)$/', $value, $hit)) {
 
-                    if (!$loader->rm->hasRepository($hit[1])
-                        || !$loader->rm->getRepository($hit[1])->has($hit[2])) {
+                    if (!$rm->hasRepository($hit[1])
+                        || !$rm->getRepository($hit[1])->has($hit[2])) {
 
                         $loader->createObject($hit[1], $hit[2], $data, $types);
                     }
 
-                    $value = $loader->rm->getRepository($hit[1])->get($hit[2]);
+                    $value = $rm->getRepository($hit[1])->get($hit[2]);
                 }
             });
 
@@ -214,11 +216,13 @@ class FixtureLoader
      * @param string $objectKey
      * @throws \Exception
      */
-    private function finalizeObject($objectType, $objectKey, array &$data, &$types)
+    public function finalizeObject($objectType, $objectKey, array &$data, &$types)
     {
 
         $loader = $this;
-        array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, &$data, &$types) {
+        $rm = $this->rm;
+
+        array_walk_recursive($data[$objectType][$objectKey], function(&$value, $key) use ($loader, $rm, &$data, &$types) {
 
                 if (!is_string($value)) {
                     return;
@@ -226,13 +230,13 @@ class FixtureLoader
 
                 if (preg_match('/^@@(\w*):(\w*)$/', $value, $hit)) {
 
-                    if (!$loader->rm->hasRepository($hit[1])
-                        || !$loader->rm->getRepository($hit[1])->has($hit[2])) {
+                    if (!$rm->hasRepository($hit[1])
+                        || !$rm->getRepository($hit[1])->has($hit[2])) {
 
                         throw new \Exception();
                     }
 
-                    $value = $loader->rm->getRepository($hit[1])->get($hit[2]);
+                    $value = $rm->getRepository($hit[1])->get($hit[2]);
                 }
             });
 
