@@ -9,6 +9,8 @@ namespace DavidBadura\FixturesBundle\RelationManager;
 class RelationManager implements RelationManagerInterface
 {
 
+    protected $repositoryClass = 'DavidBadura\FixturesBundle\RelationManager\Repository';
+
     /**
      *
      * @var array
@@ -18,60 +20,11 @@ class RelationManager implements RelationManagerInterface
     /**
      *
      * @param string $type
-     * @param string $key
-     * @param mixed $object
-     */
-    public function set($type, $key, $object)
-    {
-        $repository = $this->getRepository($type);
-
-        if ($repository->has($key)) {
-            throw new RelationManagerException(sprintf('object "%s:%s" exist already', $type, $key));
-        }
-
-        $repository->set($key, $object);
-    }
-
-    /**
-     *
-     * @param string $type
-     * @param string $key
-     * @return mixed
-     */
-    public function get($type, $key)
-    {
-        if(!$this->hasRepository($type)) {
-            throw new RelationManagerException(sprintf('object "%s:%s" does not exists', $type, $key));
-        }
-
-        $repository = $this->getRepository($type);
-
-        if (!$repository->has($key)) {
-            throw new RelationManagerException(sprintf('object "%s:%s" does not exists', $type, $key));
-        }
-
-        return $repository->get($key);
-    }
-
-    /**
-     *
-     * @param string $type
-     * @param string $key
-     * @return boolean
-     */
-    public function has($type, $key)
-    {
-        return ($this->hasRepository($type) && $this->getRepository($type)->has($key));
-    }
-
-    /**
-     *
-     * @param RepositoryInterface $type
      */
     public function getRepository($type)
     {
         if(!$this->hasRepository($type)) {
-            $this->repositories[$type] = new Repository();
+            throw new Exception(sprintf('repository with the name "%" not exists', $type));
         }
         return $this->repositories[$type];
     }
@@ -81,8 +34,22 @@ class RelationManager implements RelationManagerInterface
      * @param string $type
      * @return boolean
      */
-    private function hasRepository($type) {
+    public function hasRepository($type) {
         return isset($this->repositories[$type]);
+    }
+
+    /**
+     *
+     * @param string $type
+     * @return RepositoryInterface
+     * @throws Exception
+     */
+    public function createRepository($type) {
+        if($this->hasRepository($type)) {
+            throw new Exception(sprintf('repository with the name "%" exists already', $type));
+        }
+        $repositoryClass = $this->repositoryClass;
+        return $this->repositories[$type] = new $repositoryClass();
     }
 
     /**

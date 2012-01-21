@@ -11,30 +11,6 @@ interface RelationManagerInterface
 
     /**
      *
-     * @param string $type
-     * @param string $key
-     * @param object $object
-     */
-    public function set($type, $key, $object);
-
-    /**
-     *
-     * @param string $type
-     * @param string $key
-     * @return object
-     */
-    public function get($type, $key);
-
-    /**
-     *
-     * @param string $type
-     * @param string $key
-     * @return boolean
-     */
-    public function has($type, $key);
-
-    /**
-     *
      * @param string
      * @return RepositoryInterface
      */
@@ -42,8 +18,23 @@ interface RelationManagerInterface
 
     /**
      *
+     * @param string
+     * @return boolean
+     */
+    public function hasRepository($type);
+
+    /**
+     *
+     * @param string
+     * @return RepositoryInterface
+     */
+    public function createRepository($type);
+
+    /**
+     *
      * @return array
      */
     public function getAllObjects();
+    
 }
 
