@@ -36,7 +36,7 @@ davidbadura_fixtures:
     annotation: true
     types:
         - YourBundle
-    persister-
+    persister:
         orm:
             type: doctrine
             object_manager: doctrine.orm.entity_manager.default
