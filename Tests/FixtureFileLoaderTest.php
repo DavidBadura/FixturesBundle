@@ -43,9 +43,11 @@ class FixtureFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader = new FixtureFileLoader();
 
-        $data = $loader->loadFixtureData(array(
+        $loader->loadFixtureData(array(
             __DIR__ . '/TestResources/fixtures'
             ));
+
+        $data = $loader->getData();
 
         $this->assertEquals($draft, $data);
     }

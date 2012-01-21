@@ -14,12 +14,18 @@ class FixtureFileLoader
 
     /**
      *
+     * @var array
+     */
+    private $data = array();
+
+    /**
+     *
      * @return array
      */
     public function loadFixtureData($path)
     {
 
-        if(!$path) {
+        if (!$path) {
             throw new \Exception("Nothing to load");
         }
 
@@ -28,16 +34,18 @@ class FixtureFileLoader
         $finder = new Finder();
         $finder->in($paths)->name('*.yml');
 
-        $data = array();
         foreach ($finder->files() as $file) {
 
             $temp_data = Yaml::parse($file->getPathname());
             if (is_array($temp_data)) {
-                $data = array_merge_recursive($data, $temp_data);
+                $this->data = array_merge_recursive($this->data, $temp_data);
             }
         }
+    }
 
-        return $data;
+    public function getData()
+    {
+        return $this->data;
     }
 
 }
