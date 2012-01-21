@@ -1,4 +1,4 @@
-#<?php
+<?php
 
 namespace DavidBadura\FixturesBundle\FixtureType;
 
@@ -51,13 +51,17 @@ abstract class FixtureType
      * @param object $object
      * @param array $data
      */
-    public function finalizeObject($object, $data);
+    public function finalizeObject($object, $data)
+    {
+
+    }
 
     /**
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -65,7 +69,8 @@ abstract class FixtureType
      *
      * @return string
      */
-    public function getGroup() {
+    public function getGroup()
+    {
         return $this->group;
     }
 
@@ -74,7 +79,8 @@ abstract class FixtureType
      *
      * @return string
      */
-    public function getPersister() {
+    public function getPersister()
+    {
         return $this->persister;
     }
 
@@ -82,7 +88,8 @@ abstract class FixtureType
      *
      * @return boolean
      */
-    public function validateObjects() {
+    public function validateObjects()
+    {
         return $this->validateObjects;
     }
 
@@ -90,7 +97,8 @@ abstract class FixtureType
      *
      * @return string
      */
-    public function getValidationGroup() {
+    public function getValidationGroup()
+    {
         return $this->validationGroup;
     }
 
