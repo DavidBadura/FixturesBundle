@@ -48,6 +48,9 @@ class FixtureTypeLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $type->validateObjects());
         $this->assertEquals('test', $type->getValidationGroup());
 
+        $types = $loader->getFixtureTypes('install');
+        $this->assertCount(1, $types);
+
     }
 
 }

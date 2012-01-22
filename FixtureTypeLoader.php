@@ -139,9 +139,19 @@ class FixtureTypeLoader
      *
      * @return array $fixtures
      */
-    public function getFixtureTypes()
+    public function getFixtureTypes($group = null)
     {
-        return $this->fixtureTypes;
+        if (!$group) {
+            return $this->fixtureTypes;
+        }
+
+        $fixtures = array();
+        foreach ($this->fixtureTypes as $fixture) {
+            if($fixture->getGroup() == $group) {
+                $fixtures[$fixture->getName()] = $fixture;
+            }
+        }
+        return $fixtures;
     }
 
     /**
@@ -166,7 +176,7 @@ class FixtureTypeLoader
      */
     public function loadAnnotationConfiguration(FixtureType $fixtureType)
     {
-        if(!$this->reader) {
+        if (!$this->reader) {
             throw new \Exception('if you have the configuration via annotations then you must set the annotation reader');
         }
 
