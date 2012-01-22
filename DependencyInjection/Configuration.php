@@ -24,6 +24,9 @@ class Configuration
         $rootNode
             ->children()
                 ->scalarNode('annotation')->defaultValue(true)->end()
+                ->arrayNode('bundles')
+                    ->prototype('scalar')->isRequired()->end()
+                ->end()
                 ->arrayNode('persisters')
                     ->prototype('array')
                     ->children()

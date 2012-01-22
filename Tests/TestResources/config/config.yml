@@ -1,0 +1,8 @@
+davidbadura_fixtures:
+  annotation: true
+  bundles:
+    - DavidBaduraFixturesBundle
+  persister:
+    orm:
+      type: doctrine
+      service: doctrine.orm.entity_manager
