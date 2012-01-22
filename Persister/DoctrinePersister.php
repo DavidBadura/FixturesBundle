@@ -30,7 +30,7 @@ class DoctrinePersister implements PersisterInterface
      *
      * @param object $object
      */
-    public function persist($object)
+    public function addObject($object)
     {
         $this->om->persist($object);
     }
@@ -39,7 +39,7 @@ class DoctrinePersister implements PersisterInterface
      *
      *
      */
-    public function flush()
+    public function save()
     {
         $this->om->flush();
     }

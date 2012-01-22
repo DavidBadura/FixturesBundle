@@ -12,11 +12,11 @@ interface PersisterInterface
     /**
      * @param object $object
      */
-    public function persist($object);
+    public function addObject($object);
 
     /**
      *
      */
-    public function flush();
+    public function save();
 
 }
