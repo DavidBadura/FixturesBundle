@@ -6,7 +6,6 @@
 
     <parameters>
         <parameter key="davidbadura_fixtures.fixture_loader.class">DavidBadura\FixturesBundle\FixtureLoader</parameter>
-        <parameter key="davidbadura_fixtures.executor.class">DavidBadura\FixturesBundle\Executor\Executor</parameter>
         <parameter key="davidbadura_fixtures.relation_manager.class">DavidBadura\FixturesBundle\RelationManager\RelationManager</parameter>
         <parameter key="davidbadura_fixtures.fixture_file_loader.class">DavidBadura\FixturesBundle\FixtureFileLoader</parameter>
         <parameter key="davidbadura_fixtures.fixture_type_loader.class">DavidBadura\FixturesBundle\FixtureTypeLoader</parameter>
@@ -14,26 +13,13 @@
 
     <services>
         <service id="davidbadura_fixtures.fixture_loader" class="%davidbadura_fixtures.fixture_loader.class%">
-            <argument type="service" id="davidbadura_fixtures.executor" />
-            <argument type="service" id="davidbadura_fixtures.fixture_type_loader" />
-        </service>
-    </services>
-
-    <services>
-        <service id="davidbadura_fixtures.executor" class="%davidbadura_fixtures.executor.class%">
             <argument type="service" id="davidbadura_fixtures.relation_manager" />
         </service>
-    </services>
 
-    <services>
         <service id="davidbadura_fixtures.relation_manager" class="%davidbadura_fixtures.relation_manager.class%" />
-    </services>
 
-    <services>
         <service id="davidbadura_fixtures.fixture_type_loader" class="%davidbadura_fixtures.fixture_type_loader.class%" />
-    </services>
 
-    <services>
         <service id="davidbadura_fixtures.fixture_file_loader" class="%davidbadura_fixtures.fixture_file_loader.class%" />
     </services>
 
