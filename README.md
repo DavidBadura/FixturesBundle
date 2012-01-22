@@ -4,9 +4,8 @@ DavidBaduraFixturesBundle
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
 
 
-> NOTICE:
-> The Bundle isn't working yet! It is still in its infancy.
-> Currently, it has only a rough structure to show how it should look like at the end.
+**WARNING:** The Bundle `isn't working` yet! It is still in its infancy.
+Currently, it has only a rough structure to show how it should look like at the end.
 
 
 Installation
@@ -121,7 +120,7 @@ class GroupType extends FixtureType
 }
 ```
 
-The fixtures must have only one *name*, everything else is optional.
+**Notice:** The fixture type must have only a `name`, everything else is optional.
 
 
 Create fixtures
