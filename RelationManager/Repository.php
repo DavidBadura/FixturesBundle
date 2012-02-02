@@ -8,8 +8,18 @@ namespace DavidBadura\FixturesBundle\RelationManager;
 class Repository implements RepositoryInterface
 {
 
+    /**
+     *
+     * @var array
+     */
     protected $objects = array();
 
+    /**
+     *
+     * @param string $key
+     * @return object
+     * @throws \Exception
+     */
     public function get($key)
     {
         if (!$this->has($key)) {
@@ -18,11 +28,22 @@ class Repository implements RepositoryInterface
         return $this->objects[$key];
     }
 
+    /**
+     *
+     * @param string $key
+     * @return boolean
+     */
     public function has($key)
     {
         return isset($this->objects[$key]);
     }
 
+    /**
+     *
+     * @param string $key
+     * @param object $object
+     * @throws \Exception
+     */
     public function set($key, $object)
     {
         if ($this->has($key)) {
@@ -31,9 +52,21 @@ class Repository implements RepositoryInterface
         $this->objects[$key] = $object;
     }
 
+    /**
+     *
+     * @return integer
+     */
     public function count()
     {
         return count($this->objects);
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function toArray() {
+        return $this->objects;
     }
 
 }

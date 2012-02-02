@@ -23,4 +23,9 @@ class RoleType extends FixtureType
         return 'role';
     }
 
+    public function getPersister()
+    {
+        return 'test-persister';
+    }
+
 }

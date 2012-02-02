@@ -104,11 +104,11 @@ class FixtureLoader
         $this->finalizeObjects($data, $types);
 
         if (!$options['no-validate']) {
-            $this->validateObjects();
+            $this->validateObjects($types);
         }
 
         if (!$options['no-persist']) {
-            $this->persistObjects();
+            $this->persistObjects($types);
         }
     }
 
@@ -246,18 +246,37 @@ class FixtureLoader
 
     /**
      *
+     * @param array $types
      */
-    private function validateObjects()
+    private function validateObjects(array $types)
     {
 
     }
 
     /**
      *
+     * @param array $types
      */
-    private function persistObjects()
+    private function persistObjects(array $types)
     {
+        foreach ($types as $type) {
+            if (!$persisterName = $type->getPersister()) {
+                continue;
+            }
 
+            if (!isset($this->persisters[$persisterName])) {
+                throw new \Exception(sprintf('the persister "%s" does not exist', $persisterName));
+            }
+
+            $perister = $this->persisters[$persisterName];
+            foreach ($this->rm->getRepository($type->getName())->toArray() as $object) {
+                $perister->addObject($object);
+            }
+        }
+
+        foreach ($this->persisters as $persister) {
+            $persister->save();
+        }
     }
 
     /**

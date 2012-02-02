@@ -54,7 +54,7 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
 
         $rm = new RelationManager();
         $loader = new FixtureLoader($rm);
-        $loader->loadFixtures($data, array($type));
+        $loader->loadFixtures($data, array($type), array('no-persist' => true));
 
         $this->assertCount(1, $rm);
         $this->assertTrue($rm->hasRepository('role'));
@@ -92,7 +92,7 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
 
         $rm = new RelationManager();
         $loader = new FixtureLoader($rm);
-        $loader->loadFixtures($data, array($roleType, $userType));
+        $loader->loadFixtures($data, array($roleType, $userType), array('no-persist' => true));
 
         $this->assertCount(2, $rm);
         $this->assertTrue($rm->hasRepository('role'));
@@ -142,7 +142,7 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
 
         $rm = new RelationManager();
         $loader = new FixtureLoader($rm);
-        $loader->loadFixtures($data, array($groupType, $userType));
+        $loader->loadFixtures($data, array($groupType, $userType), array('no-persist' => true));
 
         $this->assertCount(2, $rm);
         $this->assertTrue($rm->hasRepository('group'));
@@ -165,7 +165,33 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array($group), $user->groups);
         $this->assertEquals($user, $group->leader);
+    }
 
+    public function testPersistObject()
+    {
+        $data = array(
+            'role' => array(
+                'admin' => array(
+                    'name' => 'Admin'
+                )
+            )
+        );
+
+        $type = new RoleType();
+
+        $rm = new RelationManager();
+        $loader = new FixtureLoader($rm);
+
+        $persister = $this->getMock('DavidBadura\FixturesBundle\Persister\PersisterInterface');
+        $persister->expects($this->once())
+            ->method('addObject')
+            ->with($this->isInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\Role'));
+
+        $persister->expects($this->once())
+            ->method('save');
+
+        $loader->addPersister('test-persister', $persister);
+        $loader->loadFixtures($data, array($type));
     }
 
 }

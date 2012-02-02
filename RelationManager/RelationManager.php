@@ -24,7 +24,7 @@ class RelationManager implements RelationManagerInterface, \Countable
     public function getRepository($type)
     {
         if (!$this->hasRepository($type)) {
-            throw new Exception(sprintf('repository with the name "%" not exists', $type));
+            throw new \Exception(sprintf('repository with the name "%" not exists', $type));
         }
         return $this->repositories[$type];
     }
@@ -48,7 +48,7 @@ class RelationManager implements RelationManagerInterface, \Countable
     public function createRepository($type)
     {
         if ($this->hasRepository($type)) {
-            throw new Exception(sprintf('repository with the name "%" exists already', $type));
+            throw new \Exception(sprintf('repository with the name "%" exists already', $type));
         }
         $repositoryClass = $this->repositoryClass;
         return $this->repositories[$type] = new $repositoryClass();
@@ -62,7 +62,7 @@ class RelationManager implements RelationManagerInterface, \Countable
     {
         $objects = array();
         foreach ($this->repositories as $repository) {
-            $objects = array_merge($objects, $repository->getObjects());
+            $objects = array_merge($objects, $repository->toArray());
         }
         return $objects;
     }
