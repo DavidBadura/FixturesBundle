@@ -31,14 +31,14 @@ YAML
 
 ``` yaml
 # app/config/config.yml
-davidbadura_fixtures:
-    annotation: true
-    types:
-        - YourBundle
-    persister:
-        orm:
-            type: doctrine
-            object_manager: doctrine.orm.entity_manager.default
+david_badura_fixtures:
+  annotation: true
+  bundles:
+    - YourBundle
+  persisters:
+    orm:
+      type: doctrine
+      service: "doctrine.orm.entity_manager"
 ```
 
 

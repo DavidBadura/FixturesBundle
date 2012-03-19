@@ -29,16 +29,18 @@ class DavidBaduraFixturesExtension extends Extension
 
         $loader->load('services.xml');
 
-        $fixtureLoader = $container->get('davidbadura_fixtures.fixture_loader');
+        $fixtureLoader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
 
-        foreach($config['persisters'] as $persisterConfig) {
+        foreach($config['persisters'] as $name => $persisterConfig) {
+
             if($persisterConfig['type'] == 'doctrine') {
-                $fixtureLoader->addPersister($persisterConfig['name'], new DoctrinePersister($persisterConfig['name'], $container->get($persisterConfig['service'])));
+                $persister = $container->register(sprintf('davidbadura_fixtures.persister.%s', $name), 'DavidBadura\FixturesBundle\Persister\DoctrinePersister');
+                $persister->addArgument(new Reference($persisterConfig['service']));
             } else {
                 throw new \Exception(sprintf('persister type "%s" not exist', $persisterConfig['type']));
             }
+            $fixtureLoader->addMethodCall('addPersister', array($name, $persister));
         }
-
     }
 
 }

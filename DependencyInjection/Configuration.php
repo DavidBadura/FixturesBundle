@@ -19,7 +19,7 @@ class Configuration
     public function getConfigTree()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('davidbadura_fixtures', 'array');
+        $rootNode = $treeBuilder->root('david_badura_fixtures', 'array');
 
         $rootNode
             ->children()
@@ -28,11 +28,12 @@ class Configuration
                     ->prototype('scalar')->isRequired()->end()
                 ->end()
                 ->arrayNode('persisters')
+                    ->useAttributeAsKey('name')
                     ->prototype('array')
-                    ->children()
-                        ->scalarNode('name')->isRequired()->end()
-                        ->scalarNode('type')->isRequired()->end()
-                        ->scalarNode('service')->isRequired()->end()
+                        ->children()
+                            ->scalarNode('type')->isRequired()->end()
+                            ->scalarNode('service')->isRequired()->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end()
