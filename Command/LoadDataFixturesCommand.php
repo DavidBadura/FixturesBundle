@@ -23,22 +23,21 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
             ->setName('davidbadura:fixtures:load')
             ->setDescription('Load data fixtures and save it.')
             ->addOption('tag', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Load fixtures by tag', array())
-            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.', array())
-            ->addOption('file', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The file to load data fixtures from.', array())
+            ->addOption('fixture', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.', array())
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $container = $this->getContainer();
         $manager = $container->get('davidbadura_fixtures.fixture_manager');
 
         $manager->load(array(
-            'tag' => $input->getOption('tag'),
-            'dir' => $input->getOption('dir'),
-            'file' => $input->getOption('file'),
+            'tags' => $input->getOption('tag'),
+            'fixtures' => $input->getOption('fixture')
         ));
+
+        $output->writeln('<info>Ok</info>');
     }
 
 }

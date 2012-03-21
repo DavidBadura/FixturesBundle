@@ -76,16 +76,23 @@ fixtures:
 
     group:
         tags: [install]
+        properties:
+            class: "YourBundle\Entity\Group"
+            constructor: [name]
         data:
             admin:
                 name: Admin
             member:
                 name: Member
 ```
+It will be automatically loaded the fixture files from the **Resources\fixtures** folder
 
 
-Create own fixture converter
+Converter
 --------------------
+
+The standard converter uses the getter and setter methods of the class.
+You can also implement your own Converter:
 
 ``` php
 // YourBundle/FixtureConverter/UserConverter.php
@@ -113,10 +120,22 @@ class UserConverter extends FixtureConverter
 }
 ```
 
+Automatically the converter loaded from the **FixtureConverter** folder.
+To register a converter as a service, you must add the **davidbadura_fixtures.converter** tag.
+
+``` xml
+<services>
+    <service id="your_bundle.converter.user" class="YourBundle\FixtureConverter\UserConverter">
+        <tag name="davidbadura_fixtures.converter" />
+    </service>
+</services>
+```
 
 
 Load fixtures
 -------------
+
+Command:
 
 ``` shell
 php app/console davidbadura:fixtures:load
@@ -126,13 +145,18 @@ optional attributes:
 
 ``` shell
 php app/console davidbadura:fixtures:load -tag install
-php app/console davidbadura:fixtures:load -dir "src/..."
-php app/console davidbadura:fixtures:load -file "src/..."
+php app/console davidbadura:fixtures:load -fixture "src/..."
 ```
 
+Service:
+
 ``` php
-# service
-$this->get('david_badura_fixtures.fixture_manager')->load(array(
-    'tags' => array('install')
-));
+$this->get('david_badura_fixtures.fixture_manager')->load();
+```
+
+optional parameters:
+
+``` php
+$this->get('david_badura_fixtures.fixture_manager')->load(array('tags' => array('install')));
+$this->get('david_badura_fixtures.fixture_manager')->load(array('fixtures' => array('src/...')));
 ```

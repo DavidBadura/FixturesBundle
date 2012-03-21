@@ -199,7 +199,10 @@ class FixtureManager
 
     private function createFixture($name, array $data)
     {
+        $builder = new FixtureBuilder();
+        $builder->setName($name);
 
+        return $builder->createFixture();
     }
 
 }

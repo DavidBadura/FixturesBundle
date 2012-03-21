@@ -29,6 +29,12 @@ class FixtureData
 
     /**
      *
+     * @var Fixture
+     */
+    protected $fixture;
+
+    /**
+     *
      * @param string $key
      * @param array $data
      */
@@ -74,6 +80,9 @@ class FixtureData
      */
     public function setObject($object)
     {
+        if($this->object) {
+            throw new \Exception();
+        }
         $this->object = $object;
         return $this;
     }
@@ -85,6 +94,37 @@ class FixtureData
     public function getObject()
     {
         return $this->object;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getProperties()
+    {
+        return $this->fixture->getProperties();
+    }
+
+    /**
+     *
+     * @param Fixture $fixture
+     * @throws \Exception
+     */
+    public function setFixture(Fixture $fixture)
+    {
+        if($this->fixture) {
+            throw new \Exception();
+        }
+        $this->fixture = $fixture;
+    }
+
+    /**
+     *
+     * @return Fixture
+     */
+    public function getFixture()
+    {
+        return $this->fixture;
     }
 
 }

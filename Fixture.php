@@ -2,6 +2,8 @@
 
 namespace DavidBadura\FixturesBundle;
 
+use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>
@@ -41,6 +43,12 @@ class Fixture
 
     /**
      *
+     * @var array
+     */
+    private $properties = array();
+
+    /**
+     *
      * @var FixtureData[]
      */
     private $fixtureData = array();
@@ -52,13 +60,13 @@ class Fixture
      * @param type $persister
      * @param array $data
      */
-    public function __construct($name, $converter, array $fixtureData)
+    public function __construct($name, FixtureConverter $converter, array $fixtureData)
     {
         $this->name = $name;
         $this->converter = $converter;
 
         foreach($fixtureData as $data) {
-            $this->addFixtureData($fixtureData);
+            $this->addFixtureData($data);
         }
     }
 
@@ -192,6 +200,24 @@ class Fixture
 
         $this->fixtureData[$key] = $fixtureData;
         return $this;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     *
+     * @param array $properties
+     */
+    public function setProperties(array $properties)
+    {
+        $this->properties =  $this->converter->prepareProperties($properties);
     }
 
 }

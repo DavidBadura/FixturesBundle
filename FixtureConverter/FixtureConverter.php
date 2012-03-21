@@ -19,16 +19,26 @@ abstract class FixtureConverter
      *
      * @return object
      */
-    abstract public function createObject(FixtureData $data);
+    abstract public function createObject(FixtureData $fixtureData, $properties);
 
     /**
      *
      * @param object $object
      * @param array $data
      */
-    public function finalizeObject($object, FixtureData $data)
+    public function finalizeObject($object, FixtureData $fixtureData)
     {
 
+    }
+
+    /**
+     *
+     * @param array $properties
+     * @return array
+     */
+    public function prepareProperties(array $properties)
+    {
+        return $properties;
     }
 
 }

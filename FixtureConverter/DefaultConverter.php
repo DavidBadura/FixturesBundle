@@ -9,14 +9,38 @@ namespace DavidBadura\FixturesBundle\FixtureConverter;
 class DefaultConverter extends FixtureConverter
 {
 
-    public function createObject(FixtureData $data)
+    public function createObject(FixtureData $fixtureData)
     {
-        return new stdClass($data->getData());
+        $properties = $fixtureData->getProperties();
+
+        $data = $fixtureData->getData();
+        $class = $properties['class'];
+
+        $object = new $class();
+        foreach ($data as $key => $value) {
+            $this->setVar($object, $key, $value);
+        }
+
+        return $object;
     }
 
     public function getName()
     {
         return 'default';
+    }
+
+    public function prepareProperties(array $properties)
+    {
+        if (!isset($properties['class'])) {
+            throw new \Exception();
+        }
+
+        return $properties;
+    }
+
+    private function setVar($object, $key, $value)
+    {
+        $object->$key = $value;
     }
 
 }
