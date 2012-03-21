@@ -14,18 +14,17 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class LoadDataFixturesCommand  extends ContainerAwareCommand
+class LoadDataFixturesCommand extends ContainerAwareCommand
 {
+
     protected function configure()
     {
         $this
             ->setName('davidbadura:fixtures:load')
             ->setDescription('Load data fixtures and save it.')
-            ->addOption('fixtures', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.', null)
-            ->addOption('fixture-types', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixture types from.', null)
-            ->addOption('group', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixture types from.', null)
-            ->addOption('no-persist', 'np', InputOption::VALUE_NONE, 'Test the fixtures.')
-            ->addOption('no-validate', 'nv', InputOption::VALUE_NONE, 'Test the fixtures.')
+            ->addOption('tag', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Load fixtures by tag', array())
+            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.', array())
+            ->addOption('file', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The file to load data fixtures from.', array())
         ;
     }
 
@@ -33,24 +32,13 @@ class LoadDataFixturesCommand  extends ContainerAwareCommand
     {
 
         $container = $this->getContainer();
+        $manager = $container->get('davidbadura_fixtures.fixture_manager');
 
-        $fileLoader = $container->get('davidbadura_fixtures.fixture_file_loader');
-        $data = $fileLoader->loadFixtureData();
-
-        $typeLoader = $container->get('davidbadura_fixtures.fixture_type_loader');
-        $types = $typeLoader->load();
-
-        $fixtureLoader = $this->getContainer()->get('davidbadura_fixtures.fixture_loader');
-
-        $fixtureLoader->setLogger(function($message) use($output) {
-            $output->writeln($message);
-        });
-
-        $fixtureLoader->loadFixtures($data, $types, array(
-            'group' => $input->getOption('group'),
-            'no-validate' => $input->getOption('fixture-types'),
-            'no-persist' => $input->getOption('fixture-types')
+        $manager->load(array(
+            'tag' => $input->getOption('tag'),
+            'dir' => $input->getOption('dir'),
+            'file' => $input->getOption('file'),
         ));
-
     }
+
 }

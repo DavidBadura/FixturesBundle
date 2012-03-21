@@ -29,37 +29,71 @@ Configuration
 -------------
 YAML
 
+Your configuration:
+
 ``` yaml
 # app/config/config.yml
 david_badura_fixtures:
-  annotation: true
-  bundles:
-    - YourBundle
-  persisters:
-    orm:
-      type: doctrine
-      service: "doctrine.orm.entity_manager"
+  bundles: [YourBundle]
 ```
 
 
-Create fixture types
+Defaults:
+
+``` yaml
+# app/config/config.yml
+david_badura_fixtures:
+  bundles: []
+  persister: orm
+  defaults:
+    converter: default
+    validation:
+        enable: true
+        group: default
+```
+
+
+Create fixtures
+---------------
+
+YAML
+
+``` yaml
+# @YourBundle/Resource/fixtures/install.yml
+fixtures:
+    user:
+        converter: user # optional (default configuration is "default")
+        tags: [install] # optional
+        validation: [enable: true, group: default] # optional
+        data:
+            david:
+                name: David
+                email: "d.badura@gmx.de"
+                groups: ["@group:admin"] # <- reference to group.admin
+            other_user:
+                name: "other user"
+                ...
+
+    group:
+        tags: [install]
+        data:
+            admin:
+                name: Admin
+            member:
+                name: Member
+```
+
+
+Create own fixture converter
 --------------------
 
-Create user fixture type (with annotation)
-
 ``` php
-// YourBundle/FixtureTypes/UserType.php
-namespace YourBundle\FixtureTypes;
+// YourBundle/FixtureConverter/UserConverter.php
+namespace YourBundle\FixtureConverter;
 
-use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-use DavidBadura\FixturesBundle\Configuration as Fixture;
+use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter;
 
-/**
- * @Fixture\Type(name="user", group="install")
- * @Fixture\Validation(group="registration")
- * @Fixture\Persister(name="orm")
- */
-class UserType extends FixtureType
+class UserConverter extends FixtureConverter
 {
 
     public function createObject($data)
@@ -72,79 +106,33 @@ class UserType extends FixtureType
         return $user;
     }
 
-}
-```
-
-Create group fixture type (without annotation)
-
-``` php
-// YourBundle/FixtureTypes/GroupType.php
-namespace YourBundle\FixtureTypes;
-
-use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-
-class GroupType extends FixtureType
-{
-
-    public function createObject($data)
-    {
-        $group = new Group($data['name']);
-        return $group;
-    }
-
     public function getName()
     {
-        return 'group';
+        return 'user';
     }
-
-    public function getGroup()
-    {
-        return 'install';
-    }
-
-    public function getValidateObjects()
-    {
-        return true;
-    }
-
-    public function getValidationGroup()
-    {
-        return 'registration';
-    }
-
-    public function getPerister()
-    {
-        return 'orm';
-    }
-
 }
 ```
 
-**Notice:** The fixture type must have only a `name`, everything else is optional.
-
-
-Create fixtures
----------------
-
-
-YAML
-
-``` yaml
-# @YourBundle/Resource/fixtures/example.yml
-user:
-    david:
-        name: David
-        email: "d.badura@gmx.de"
-        groups: ["@group:admin"] # <- reference to group.admin
-group:
-    admin:
-        name: Admin
-```
 
 
 Load fixtures
 -------------
 
 ``` shell
-php app/console davidbadura:fixtures:load --group install
+php app/console davidbadura:fixtures:load
+```
+
+optional attributes:
+
+``` shell
+php app/console davidbadura:fixtures:load -tag install
+php app/console davidbadura:fixtures:load -dir "src/..."
+php app/console davidbadura:fixtures:load -file "src/..."
+```
+
+``` php
+# service
+$this->get('david_badura_fixtures.fixture_manager')->load(array(
+    'tags' => array('install')
+));
 ```
