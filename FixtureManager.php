@@ -30,6 +30,10 @@ class FixtureManager
      */
     private $defaultFixturesPath;
 
+    /**
+     *
+     * @param PersisterInterface $persister
+     */
     public function __construct(PersisterInterface $persister)
     {
         $this->persister = $persister;
@@ -137,6 +141,10 @@ class FixtureManager
             $options['fixtures'] = $this->defaultFixturesPath;
         }
 
+        if(!is_array($options['tags'])) {
+            $options['tags'] = array($options['tags']);
+        }
+
         // find and create fixtures
         $fixtures = $this->loadFixtures($options['fixtures']);
         $fixtures = $this->filterFixtures($fixtures, $options['tags']);
@@ -150,17 +158,36 @@ class FixtureManager
         return $fixtures;
     }
 
+    /**
+     *
+     * @param Fixture[] $fixtures
+     */
     private function validateObjects($fixtures)
     {
-
+        foreach($fixtures as $fixture) {
+            // validate
+        }
     }
 
+    /**
+     *
+     * @param Fixture[] $fixtures
+     */
     private function persistObjects($fixtures)
     {
-
+        foreach($fixtures as $fixture) {
+            // persist
+        }
+        $this->getPersister()->save();
     }
 
-    private function filterFixtures($fixtures, $tags)
+    /**
+     *
+     * @param Fixture[] $fixtures
+     * @param array $tags
+     * @return Fixture[]
+     */
+    private function filterFixtures(array $fixtures, array $tags)
     {
         if (empty($tags)) {
             return $fixtures;
@@ -175,29 +202,47 @@ class FixtureManager
         return $filteredFixtures;
     }
 
+    /**
+     *
+     * @param mixed $path
+     * @return Fixture[]
+     */
     private function loadFixtures($path)
     {
         $finder = new Finder();
         $finder->in($path)->name('*.yml');
 
         $fixtures = array();
-
         foreach ($finder->files() as $file) {
-
             $data = Yaml::parse($file->getPathname());
             if (is_array($data)) {
-
-                foreach($data as $name => $info) {
-                    $fixtures[] = $this->createFixture($name, $info);
-                }
-
+                $fixtures = array_merge($fixtures, $this->createFixtures($data));
             }
         }
-
         return $fixtures;
     }
 
-    private function createFixture($name, array $data)
+    /**
+     *
+     * @param array $data
+     * @return Fixture[]
+     */
+    public function createFixtures(array $data)
+    {
+        $fixtures = array();
+        foreach($data as $name => $info) {
+            $fixtures[] = $this->createFixture($name, $info);
+        }
+        return $fixtures;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param array $data
+     * @return Fixture
+     */
+    public function createFixture($name, array $data)
     {
         $builder = new FixtureBuilder();
         $builder->setName($name);
