@@ -5,10 +5,16 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="davidbadura_fixtures.fixture_manager.class">DavidBadura\FixturesBundle\FixtureManager</parameter>
         <parameter key="davidbadura_fixtures.converter.default.class">DavidBadura\FixturesBundle\Converter\DefaultConverter</parameter>
     </parameters>
 
     <services>
+        <service id="davidbadura_fixtures.fixture_manager"
+            class="DavidBadura\FixturesBundle\FixtureManager">
+            <argument type="service" id="davidbadura_fixtures.persister" />
+        </service>
+
         <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
             <tag name="davidbadura_fixtures.converter" />
         </service>

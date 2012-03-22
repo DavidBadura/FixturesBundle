@@ -8,17 +8,16 @@ use Symfony\Component\Yaml\Parser;
 
 class DavidBaduraFixturesExtensionTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testLoadServices()
+    public function testLoadDefaultServices()
     {
+        $config = array();
+
         $containerBuilder = new ContainerBuilder();
         $loader = new DavidBaduraFixturesExtension();
-        $loader->load(array(), $containerBuilder);
+        $loader->load($config, $containerBuilder);
 
-        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.fixture_loader'));
-        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.relation_manager'));
-        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.fixture_type_loader'));
-        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.fixture_file_loader'));
+        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.fixture_manager'));
+        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.persister'));
+        $this->assertTrue($containerBuilder->has('davidbadura_fixtures.converter.default'));
     }
-
 }
