@@ -2,9 +2,6 @@
 
 namespace DavidBadura\FixturesBundle;
 
-use DavidBadura\FixturesBundle\Persister\PersisterInterface;
-use DavidBadura\FixturesBundle\FixtureType\FixtureType;
-
 /**
  * @author David Badura <d.badura@gmx.de>
  */
@@ -30,6 +27,7 @@ class Executor
      */
     public function execute(array $fixtures)
     {
+        $this->checkFixtures($fixtures);
         $this->createObjects($fixtures);
         return $this->finalizeObjects($fixtures);
     }
@@ -159,6 +157,20 @@ class Executor
         $object = $fixtureData->getObject();
 
         $fixture->getConverter()->finalizeObject($object, $fixtureData);
+    }
+
+    /**
+     *
+     * @param array $fixtures
+     * @throws \Exception
+     */
+    protected function checkFixtures(array $fixtures)
+    {
+        foreach($fixtures as $fixture) {
+            if(!$fixture instanceof Fixture) {
+                throw new \Exception();
+            }
+        }
     }
 
 }

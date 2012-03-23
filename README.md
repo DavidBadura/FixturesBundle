@@ -85,7 +85,7 @@ fixtures:
             member:
                 name: Member
 ```
-It will be automatically loaded the fixture files from the **Resources\fixtures** folder
+It will be automatically loaded the fixture files from the `Resources\fixtures` folder
 
 
 Converter
@@ -120,8 +120,8 @@ class UserConverter extends FixtureConverter
 }
 ```
 
-Automatically the converter loaded from the **FixtureConverter** folder.
-To register a converter as a service, you must add the **davidbadura_fixtures.converter** tag.
+Automatically the converter loaded from the `FixtureConverter` folder.
+To register a converter as a service, you must add the `davidbadura_fixtures.converter` tag.
 
 ``` xml
 <services>

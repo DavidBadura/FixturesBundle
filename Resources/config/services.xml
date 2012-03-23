@@ -5,18 +5,51 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="davidbadura_fixtures.executor.class">DavidBadura\FixturesBundle\Executor</parameter>
+        <parameter key="davidbadura_fixtures.fixture_loader.class">DavidBadura\FixturesBundle\FixtureLoader</parameter>
         <parameter key="davidbadura_fixtures.fixture_manager.class">DavidBadura\FixturesBundle\FixtureManager</parameter>
         <parameter key="davidbadura_fixtures.converter.default.class">DavidBadura\FixturesBundle\Converter\DefaultConverter</parameter>
+
+        <parameter key="davidbadura_fixtures.event_listener.validate.class">DavidBadura\FixturesBundle\EventListener\ValidateListener</parameter>
+        <parameter key="davidbadura_fixtures.event_listener.persist.class">DavidBadura\FixturesBundle\EventListener\PersistListener</parameter>
+        <parameter key="davidbadura_fixtures.event_listener.tag_filter.class">DavidBadura\FixturesBundle\EventListener\TagFilterListener</parameter>
     </parameters>
 
     <services>
+        <service id="davidbadura_fixtures.executor" class="%davidbadura_fixtures.executor.class%" />
+
+        <service id="davidbadura_fixtures.fixture_loader" class="%davidbadura_fixtures.fixture_loader.class%" />
+
+        <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
+            <tag name="davidbadura_fixtures.converter" />
+        </service>
+
         <service id="davidbadura_fixtures.fixture_manager"
             class="DavidBadura\FixturesBundle\FixtureManager">
-            <argument type="service" id="davidbadura_fixtures.persister" />
+            <argument type="service" id="davidbadura_fixtures.executor" />
+            <argument type="service" id="davidbadura_fixtures.fixture_loader" />
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
             <tag name="davidbadura_fixtures.converter" />
+        </service>
+
+        <service id="davidbadura_fixtures.event_listener.validate"
+            class="%davidbadura_fixtures.event_listener.validate.class%">
+            <argument type="service" id="validator" />
+            <tag name="kernel.event_listener" event="david_badura_fixtures.post_execute" method="onPostExecute" priority="1" />
+        </service>
+
+        <service id="davidbadura_fixtures.event_listener.persist"
+            class="%davidbadura_fixtures.event_listener.persist.class%">
+            <argument type="service" id="davidbadura_fixtures.persister" />
+            <tag name="kernel.event_listener" event="david_badura_fixtures.post_execute" method="onPostExecute" priority="24" />
+        </service>
+
+        <service id="davidbadura_fixtures.event_listener.tag_filter"
+            class="%davidbadura_fixtures.event_listener.tag_filter.class%">
+            <tag name="kernel.event_listener" event="david_badura_fixtures.pre_execute" method="onPreExecute" />
         </service>
     </services>
 

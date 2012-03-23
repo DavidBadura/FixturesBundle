@@ -3,7 +3,9 @@
 namespace DavidBadura\FixturesBundle;
 
 use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter;
-use DavidBadura\FixturesBundle\Persister\PersisterInterface;
+use DavidBadura\FixturesBundle\Event\PreExecuteEvent;
+use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  *
@@ -20,32 +22,50 @@ class FixtureManager
 
     /**
      *
-     * @var PersisterInterface
+     * @var FixtureFactory
      */
-    private $persister;
+    private $fixtureLoader;
 
     /**
      *
-     * @var array
+     * @var Executor
      */
-    private $defaultFixturesPath;
+    private $executor;
+
+    /**
+     *
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      *
      * @param PersisterInterface $persister
      */
-    public function __construct(PersisterInterface $persister)
+    public function __construct(FixtureFactory $fixtureLoader,
+        Executor $executor, EventDispatcherInterface $eventDispatcher)
     {
-        $this->persister = $persister;
+        $this->fixtureLoader = $fixtureLoader;
+        $this->executor = $executor;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      *
-     * @return PersisterInterface
+     * @return FixtureFactory
      */
-    public function getPersister()
+    public function getFixtureLoader()
     {
-        return $this->persister;
+        return $this->fixtureLoader;
+    }
+
+    /**
+     *
+     * @return Executor
+     */
+    public function getExecutor()
+    {
+        return $this->executor;
     }
 
     /**
@@ -108,146 +128,27 @@ class FixtureManager
 
     /**
      *
-     * @param array $dirs
-     * @return \DavidBadura\FixturesBundle\FixtureManager
-     */
-    public function setDefaultFixturesPath($fixturesPath)
-    {
-        if (!is_array($fixturesPath)) {
-            $this->defaultFixturesPath = array($fixturesPath);
-        } else {
-            $this->defaultFixturesPath = $fixturesPath;
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getDefaultFixturesPath()
-    {
-        return $this->defaultFixturesPath;
-    }
-
-    /**
-     *
      * @param array $options
      */
     public function load(array $options = array())
     {
+        $fixtures = $this->factory->loadFixtures(($options['fixtures']) ?: null);
 
-        if (!isset($options['fixtures'])) {
-            $options['fixtures'] = $this->defaultFixturesPath;
-        }
+        $event = new PreExecuteEvent($fixtures, $options);
+        $this->eventDispatcher->dispatch(FixtureEvents::onPreExecute, $event);
 
-        if(!is_array($options['tags'])) {
-            $options['tags'] = array($options['tags']);
-        }
+        $fixtures = $event->getFixtures();
+        $options = $event->getOptions();
 
-        // find and create fixtures
-        $fixtures = $this->loadFixtures($options['fixtures']);
-        $fixtures = $this->filterFixtures($fixtures, $options['tags']);
+        $this->executor->execute($fixtures);
 
-        $executor = new Executor();
-        $executor->execute($fixtures);
+        $event = new PostExecuteEvent($fixtures, $options);
+        $this->eventDispatcher->dispatch(FixtureEvents::onPostExecute, $event);
 
-        $this->validateObjects($fixtures);
-        $this->persistObjects($fixtures);
+        $fixtures = $event->getFixtures();
+        $options = $event->getOptions();
 
         return $fixtures;
-    }
-
-    /**
-     *
-     * @param Fixture[] $fixtures
-     */
-    private function validateObjects($fixtures)
-    {
-        foreach($fixtures as $fixture) {
-            // validate
-        }
-    }
-
-    /**
-     *
-     * @param Fixture[] $fixtures
-     */
-    private function persistObjects($fixtures)
-    {
-        foreach($fixtures as $fixture) {
-            // persist
-        }
-        $this->getPersister()->save();
-    }
-
-    /**
-     *
-     * @param Fixture[] $fixtures
-     * @param array $tags
-     * @return Fixture[]
-     */
-    private function filterFixtures(array $fixtures, array $tags)
-    {
-        if (empty($tags)) {
-            return $fixtures;
-        }
-
-        $filteredFixtures = array();
-        foreach($fixtures as $fixture) {
-            if(in_array($tags, $fixture->getTags())) {
-                $filteredFixtures[] = $fixture;
-            }
-        }
-        return $filteredFixtures;
-    }
-
-    /**
-     *
-     * @param mixed $path
-     * @return Fixture[]
-     */
-    private function loadFixtures($path)
-    {
-        $finder = new Finder();
-        $finder->in($path)->name('*.yml');
-
-        $fixtures = array();
-        foreach ($finder->files() as $file) {
-            $data = Yaml::parse($file->getPathname());
-            if (is_array($data)) {
-                $fixtures = array_merge($fixtures, $this->createFixtures($data));
-            }
-        }
-        return $fixtures;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return Fixture[]
-     */
-    public function createFixtures(array $data)
-    {
-        $fixtures = array();
-        foreach($data as $name => $info) {
-            $fixtures[] = $this->createFixture($name, $info);
-        }
-        return $fixtures;
-    }
-
-    /**
-     *
-     * @param string $name
-     * @param array $data
-     * @return Fixture
-     */
-    public function createFixture($name, array $data)
-    {
-        $builder = new FixtureBuilder();
-        $builder->setName($name);
-
-        return $builder->createFixture();
     }
 
 }
