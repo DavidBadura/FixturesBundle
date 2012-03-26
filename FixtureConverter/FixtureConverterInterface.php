@@ -21,7 +21,7 @@ interface FixtureConverterInterface
      *
      * @return object
      */
-    public function createObject(FixtureData $fixtureData, $properties);
+    public function createObject(FixtureData $fixtureData);
 
     /**
      *

@@ -18,7 +18,9 @@ class DefaultConverter extends FixtureConverter
         $data = $fixtureData->getData();
         $class = $properties['class'];
 
-        $constructor = $properties['constructor'];
+
+
+        $constructor = (isset($properties['constructor'])) ? $properties['constructor'] : array() ;
 
         $object = null;
         if(empty($constructor)) {
@@ -29,7 +31,7 @@ class DefaultConverter extends FixtureConverter
                 $args[] = $data[$arg];
             }
 
-            $reflection = new ReflectionClass($class);
+            $reflection = new \ReflectionClass($class);
             $object = $reflection->newInstanceArgs($args);
         }
 
@@ -88,4 +90,10 @@ class DefaultConverter extends FixtureConverter
             throw new InvalidPropertyException(sprintf('Neither element "%s" nor method "%s()" exists in class "%s"', $property, $setter, $reflClass->getName()));
         }
     }
+
+    protected function camelize($property)
+    {
+        return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.' === $match[1] ? '_' : '').strtoupper($match[2]); }, $property);
+    }
+
 }
