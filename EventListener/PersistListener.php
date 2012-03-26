@@ -50,7 +50,9 @@ class PersistListener
         $fixtures = $event->getFixtures();
 
         foreach ($fixtures as $fixture) {
-            $this->persister->addObject($fixture->getObject);
+            foreach($fixture as $data) {
+                $this->persister->addObject($data->getObject());
+            }
         }
 
         $this->persister->save();

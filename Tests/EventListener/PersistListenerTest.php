@@ -11,7 +11,7 @@ use DavidBadura\FixturesBundle\FixtureBuilder;
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class PersistListenerTest
+class PersistListenerTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -28,8 +28,8 @@ class PersistListenerTest
     public function setUp()
     {
         $this->persister = $this->getMock('DavidBadura\FixturesBundle\Persister\PersisterInterface');
-        $this->persister->method('addObject');
-        $this->persister->method('save');
+        $this->persister->expects($this->exactly(2))->method('addObject');
+        $this->persister->expects($this->once())->method('save');
 
         $this->listener = new PersistListener($this->persister);
 
@@ -40,7 +40,7 @@ class PersistListenerTest
     {
         $builder = new FixtureBuilder();
         $builder->setName('test');
-        $builder->setData(array());
+        $builder->setData(array(array('test')));
         $builder->setConverter($this->converter);
 
         $event = new PostExecuteEvent(array(

@@ -8,7 +8,7 @@ use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class Fixture
+class Fixture implements \IteratorAggregate
 {
 
     /**
@@ -220,6 +220,15 @@ class Fixture
     {
         $this->properties =  $this->converter->prepareProperties($properties);
         return $this;
+    }
+
+    /**
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->fixtureData);
     }
 
 }

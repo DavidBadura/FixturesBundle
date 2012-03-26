@@ -218,7 +218,7 @@ class FixtureBuilder
      */
     public function createFixture()
     {
-        if(!($this->name && $this->converter && $this->data))
+        if(!($this->name && $this->converter))
         {
             throw new \Exception();
         }
