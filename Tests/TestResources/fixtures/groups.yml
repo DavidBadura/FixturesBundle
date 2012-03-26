@@ -1,4 +1,7 @@
 group:
-  developer:
-    name: Developer
-    leader: "@@user:david"
+  properties:
+    class: DavidBadura\FixturesBundle\Tests\TestObjects\Group
+  data:
+    developer:
+      name: Developer
+      leader: "@@user:david"

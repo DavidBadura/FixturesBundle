@@ -15,9 +15,20 @@ class FixtureLoader
 
     /**
      *
+     * @var ConverterRepository
+     */
+    private $converterRepository;
+
+    /**
+     *
      * @var array
      */
     private $defaultFixturesPath = array();
+
+    public function __construct(ConverterRepository $repository)
+    {
+        $this->converterRepository = $repository;
+    }
 
     /**
      *
@@ -50,7 +61,7 @@ class FixtureLoader
      */
     public function loadFixtures($path = null)
     {
-        if(empty($path)) {
+        if (empty($path)) {
             $path = $this->defaultFixturesPath;
         }
 
@@ -61,7 +72,7 @@ class FixtureLoader
         foreach ($finder->files() as $file) {
             $data = Yaml::parse($file->getPathname());
             if (is_array($data)) {
-                $fixtures = array_merge($fixtures, $this->createFixtures($data));
+                $fixtures = array_merge_recursive($fixtures, $this->createFixtures($data));
             }
         }
         return $fixtures;
@@ -76,7 +87,7 @@ class FixtureLoader
     {
         $fixtures = array();
         foreach ($data as $name => $info) {
-            $fixtures[] = $this->createFixture($name, $info);
+            $fixtures[$name] = $this->createFixture($name, $info);
         }
         return $fixtures;
     }
@@ -89,9 +100,17 @@ class FixtureLoader
      */
     public function createFixture($name, array $data)
     {
+        if(isset($data['converter'])) {
+            $converter = $this->converterRepository->getConverter($data['converter']);
+        } else {
+            $converter = $this->converterRepository->getConverter('default');
+        }
+
         $builder = new FixtureBuilder();
         $builder->setName($name)
-                ->setData($data['data']);
+            ->setData($data['data'])
+            ->setConverter($converter)
+        ;
 
         return $builder->createFixture();
     }

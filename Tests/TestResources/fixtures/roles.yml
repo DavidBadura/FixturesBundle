@@ -1,5 +1,8 @@
 role:
-  admin:
-    name: Admin
-  user:
-    name: User
+  properties:
+    class: DavidBadura\FixturesBundle\Tests\TestObjects\Role
+  data:
+    admin:
+      name: Admin
+    user:
+      name: User

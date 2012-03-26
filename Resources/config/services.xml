@@ -8,6 +8,7 @@
         <parameter key="davidbadura_fixtures.executor.class">DavidBadura\FixturesBundle\Executor</parameter>
         <parameter key="davidbadura_fixtures.fixture_loader.class">DavidBadura\FixturesBundle\FixtureLoader</parameter>
         <parameter key="davidbadura_fixtures.fixture_manager.class">DavidBadura\FixturesBundle\FixtureManager</parameter>
+        <parameter key="davidbadura_fixtures.converter_repository.class">DavidBadura\FixturesBundle\ConverterRepository</parameter>
         <parameter key="davidbadura_fixtures.converter.default.class">DavidBadura\FixturesBundle\Converter\DefaultConverter</parameter>
 
         <parameter key="davidbadura_fixtures.event_listener.validate.class">DavidBadura\FixturesBundle\EventListener\ValidateListener</parameter>
@@ -18,7 +19,11 @@
     <services>
         <service id="davidbadura_fixtures.executor" class="%davidbadura_fixtures.executor.class%" />
 
-        <service id="davidbadura_fixtures.fixture_loader" class="%davidbadura_fixtures.fixture_loader.class%" />
+        <service id="davidbadura_fixtures.converter_repository" class="davidbadura_fixtures.converter_repository.class" />
+
+        <service id="davidbadura_fixtures.fixture_loader" class="%davidbadura_fixtures.fixture_loader.class%">
+            <argument type="service" id="davidbadura_fixtures.converter_repository" />
+        </service>
 
         <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
             <tag name="davidbadura_fixtures.converter" />
@@ -28,6 +33,7 @@
             class="DavidBadura\FixturesBundle\FixtureManager">
             <argument type="service" id="davidbadura_fixtures.executor" />
             <argument type="service" id="davidbadura_fixtures.fixture_loader" />
+            <argument type="service" id="davidbadura_fixtures.converter_repository" />
             <argument type="service" id="event_dispatcher" />
         </service>
 

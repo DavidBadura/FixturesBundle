@@ -1,9 +1,15 @@
 user:
-  david:
-    name: "David Badura"
-    group: ["@group:owner", "@group:developer"]
-    role: ["@role:admin"]
-  other:
-    name: "Somebody"
-    group: ["@group:developer"]
-    role: ["@role:user"]
+  properties:
+    class: DavidBadura\FixturesBundle\Tests\TestObjects\User
+    constructor: [name, email]
+  data:
+    david:
+      name: "David Badura"
+      email: "d.badura@gmx.de"
+      group: ["@group:owner", "@group:developer"]
+      role: ["@role:admin"]
+    other:
+      name: "Somebody"
+      email: "test@example.de"
+      group: ["@group:developer"]
+      role: ["@role:user"]

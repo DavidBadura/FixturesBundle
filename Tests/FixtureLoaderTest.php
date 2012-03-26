@@ -1,99 +1,41 @@
 <?php
 
-namespace DavidBadura\FixturesBundle;
+namespace DavidBadura\FixturesBundle\Tests;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
-use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\FixtureLoader;
+use DavidBadura\FixturesBundle\ConverterRepository;
+use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
 
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class FixtureLoader
+class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      *
-     * @var array
+     * @var FixtureLoader
      */
-    private $defaultFixturesPath = array();
+    private $loader;
 
-    /**
-     *
-     * @param array $dirs
-     * @return \DavidBadura\FixturesBundle\FixtureManager
-     */
-    public function setDefaultFixturesPath($fixturesPath)
+    public function setUp()
     {
-        if (!is_array($fixturesPath)) {
-            $this->defaultFixturesPath = array($fixturesPath);
-        } else {
-            $this->defaultFixturesPath = $fixturesPath;
-        }
-        return $this;
+        $repo = new ConverterRepository();
+        $repo->addConverter(new DefaultConverter());
+
+        $this->loader = new FixtureLoader($repo);
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getDefaultFixturesPath()
+    public function testLoadFixturesByPath()
     {
-        return $this->defaultFixturesPath;
-    }
+        $fixtures = $this->loader->loadFixtures(__DIR__ . '/TestResources/fixtures');
 
-    /**
-     *
-     * @param mixed $path
-     * @return Fixture[]
-     */
-    public function loadFixtures($path = null)
-    {
-        if(empty($path)) {
-            $path = $this->defaultFixturesPath;
-        }
+        $this->assertCount(3, $fixtures);
 
-        $finder = new Finder();
-        $finder->in($path)->name('*.yml');
-
-        $fixtures = array();
-        foreach ($finder->files() as $file) {
-            $data = Yaml::parse($file->getPathname());
-            if (is_array($data)) {
-                $fixtures = array_merge($fixtures, $this->createFixtures($data));
-            }
-        }
-        return $fixtures;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return Fixture[]
-     */
-    public function createFixtures(array $data)
-    {
-        $fixtures = array();
-        foreach ($data as $name => $info) {
-            $fixtures[] = $this->createFixture($name, $info);
-        }
-        return $fixtures;
-    }
-
-    /**
-     *
-     * @param string $name
-     * @param array $data
-     * @return Fixture
-     */
-    public function createFixture($name, array $data)
-    {
-        $builder = new FixtureBuilder();
-        $builder->setName($name)
-                ->setData($data['data']);
-
-        return $builder->createFixture();
+        $this->assertEquals('user', $fixtures['user']->getName());
+        $this->assertEquals('group', $fixtures['group']->getName());
+        $this->assertEquals('role', $fixtures['role']->getName());
     }
 
 }

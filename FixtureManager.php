@@ -16,9 +16,9 @@ class FixtureManager
 
     /**
      *
-     * @var FixtureConverterInterface[]
+     * @var ConverterRepository
      */
-    private $converters = array();
+    private $converterRepository;
 
     /**
      *
@@ -43,11 +43,13 @@ class FixtureManager
      * @param PersisterInterface $persister
      */
     public function __construct(FixtureFactory $fixtureLoader,
-        Executor $executor, EventDispatcherInterface $eventDispatcher)
+        Executor $executor, ConverterRepository $repository,
+        EventDispatcherInterface $eventDispatcher)
     {
         $this->fixtureLoader = $fixtureLoader;
         $this->executor = $executor;
         $this->eventDispatcher = $eventDispatcher;
+        $this->converterRepository = $repository;
     }
 
     /**
@@ -70,18 +72,22 @@ class FixtureManager
 
     /**
      *
+     * @return ConverterRepository
+     */
+    public function getConverterRepository()
+    {
+        return $this->converterRepository;
+    }
+
+    /**
+     *
      * @param FixtureConverterInterface $converter
      * @return \DavidBadura\FixturesBundle\FixtureManager
      * @throws \Exception
      */
     public function addConverter(FixtureConverterInterface $converter)
     {
-        $name = $converter->getName();
-        if (isset($this->converters[$name])) {
-            throw new \Exception();
-        }
-
-        $this->converters[$name] = $converter;
+        $this->converterRepository->addConverter($converter);
         return $this;
     }
 
@@ -92,7 +98,7 @@ class FixtureManager
      */
     public function hasConverter($name)
     {
-        return isset($this->converters[$name]);
+        return isset($this->converterRepository->hasConverter($name));
     }
 
     /**
@@ -103,11 +109,7 @@ class FixtureManager
      */
     public function getConverter($name)
     {
-        if (!$this->hasConverter($name)) {
-            throw new \Exception();
-        }
-
-        return $this->converters[$name];
+        return $this->converterRepository->getConverter($name);
     }
 
     /**
@@ -118,11 +120,7 @@ class FixtureManager
      */
     public function removeConverter($name)
     {
-        if (!$this->hasConverter($name)) {
-            throw new \Exception();
-        }
-
-        unset($this->converters[$name]);
+        $this->converterRepository->removeConverter($name);
         return $this;
     }
 
