@@ -35,6 +35,12 @@ class FixtureData
 
     /**
      *
+     * @var int
+     */
+    private $order;
+
+    /**
+     *
      * @param string $key
      * @param array $data
      */
@@ -125,6 +131,26 @@ class FixtureData
     public function getFixture()
     {
         return $this->fixture;
+    }
+
+    /**
+     *
+     * @param int $order
+     * @return \DavidBadura\FixturesBundle\Fixture
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function getOrder()
+    {
+        return $this->order;
     }
 
 }

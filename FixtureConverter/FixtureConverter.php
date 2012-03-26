@@ -2,24 +2,14 @@
 
 namespace DavidBadura\FixturesBundle\FixtureConverter;
 
+use DavidBadura\FixturesBundle\FixtureData;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-abstract class FixtureConverter
+abstract class FixtureConverter implements FixtureConverterInterface
 {
-
-    /**
-     *
-     * @return string
-     */
-    abstract public function getName();
-
-    /**
-     *
-     * @return object
-     */
-    abstract public function createObject(FixtureData $fixtureData, $properties);
 
     /**
      *

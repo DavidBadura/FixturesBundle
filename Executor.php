@@ -20,6 +20,12 @@ class Executor
      */
     private $stack = array();
 
+    /**
+     *
+     * @var type
+     */
+    private $order = 0;
+
 
     /**
      *
@@ -110,6 +116,7 @@ class Executor
         $object = $fixture->getConverter()->createObject($fixtureData);
 
         $fixtureData->setObject($object);
+        $fixtureData->setOrder(++$this->order);
 
         unset($this->stack[$name . ':' . $key]);
     }

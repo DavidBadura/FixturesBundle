@@ -2,6 +2,8 @@
 
 namespace DavidBadura\FixturesBundle;
 
+use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>
@@ -102,6 +104,18 @@ class FixtureBuilder
 
     /**
      *
+     * @param array $tags
+     * @return \DavidBadura\FixturesBundle\FixtureBuilder
+     */
+    public function setTags(array $tags) {
+        $this->tags = array();
+        $this->addTags($tags);
+        return $this;
+    }
+
+
+    /**
+     *
      * @return boolean
      */
     public function isEnableValidation()
@@ -142,7 +156,7 @@ class FixtureBuilder
 
     /**
      *
-     * @return type
+     * @return FixtureConverterInterface
      */
     public function getConverter()
     {
@@ -151,10 +165,10 @@ class FixtureBuilder
 
     /**
      *
-     * @param type $converter
+     * @param FixtureConverterInterface $converter
      * @return \DavidBadura\FixturesBundle\FixtureBuilder
      */
-    public function setConverter($converter)
+    public function setConverter(FixtureConverterInterface $converter)
     {
         $this->converter = $converter;
         return $this;
@@ -177,7 +191,24 @@ class FixtureBuilder
      */
     public function setData(array $data)
     {
-        $this->data = $data;
+        foreach($data as $key => $value)
+        {
+            if(!$value instanceof FixtureData) {
+                $value = new FixtureData($key, $value);
+            }
+            $this->addFixtureData($value);
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * @param FixtureData $data
+     * @return \DavidBadura\FixturesBundle\FixtureBuilder
+     */
+    public function addFixtureData(FixtureData $data)
+    {
+        $this->data[] = $data;
         return $this;
     }
 
@@ -187,6 +218,11 @@ class FixtureBuilder
      */
     public function createFixture()
     {
+        if(!($this->name && $this->converter && $this->data))
+        {
+            throw new \Exception();
+        }
+
         $fixture = new Fixture($this->name, $this->converter, $this->data);
         return $fixture->addTags(array_keys($this->tags))
             ->setEnableValidation($this->enableValidation)

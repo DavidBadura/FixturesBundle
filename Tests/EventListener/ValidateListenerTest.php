@@ -1,6 +1,6 @@
 <?php
 
-namespace DavidBadura\FixturesBundle\EventListener;
+namespace Symfony\Bundle\FrameworkBundle\EventListener;
 
 use Symfony\Component\Validator\ValidatorInterface;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;

@@ -2,7 +2,7 @@
 
 namespace DavidBadura\FixturesBundle;
 
-use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter;
+use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
 
 /**
  *
@@ -37,7 +37,7 @@ class Fixture
 
     /**
      *
-     * @var type
+     * @var FixtureConverterInterface
      */
     private $converter;
 
@@ -56,11 +56,11 @@ class Fixture
     /**
      *
      * @param string $name
-     * @param type $converter
+     * @param FixtureConverterInterface $converter
      * @param type $persister
      * @param array $data
      */
-    public function __construct($name, FixtureConverter $converter, array $fixtureData)
+    public function __construct($name, FixtureConverterInterface $converter, array $fixtureData)
     {
         $this->name = $name;
         $this->converter = $converter;
@@ -154,7 +154,7 @@ class Fixture
 
     /**
      *
-     * @return type
+     * @return FixtureConverterInterface
      */
     public function getConverter()
     {
@@ -214,10 +214,12 @@ class Fixture
     /**
      *
      * @param array $properties
+     * @return \DavidBadura\FixturesBundle\Fixture
      */
     public function setProperties(array $properties)
     {
         $this->properties =  $this->converter->prepareProperties($properties);
+        return $this;
     }
 
 }

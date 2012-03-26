@@ -2,6 +2,8 @@
 
 namespace DavidBadura\FixturesBundle\FixtureConverter;
 
+use DavidBadura\FixturesBundle\FixtureData;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>

@@ -2,7 +2,7 @@
 
 namespace DavidBadura\FixturesBundle;
 
-use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter;
+use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
 use DavidBadura\FixturesBundle\Event\PreExecuteEvent;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -16,7 +16,7 @@ class FixtureManager
 
     /**
      *
-     * @var FixtureConverter[]
+     * @var FixtureConverterInterface[]
      */
     private $converters = array();
 
@@ -70,11 +70,11 @@ class FixtureManager
 
     /**
      *
-     * @param FixtureConverter $converter
+     * @param FixtureConverterInterface $converter
      * @return \DavidBadura\FixturesBundle\FixtureManager
      * @throws \Exception
      */
-    public function addConverter(FixtureConverter $converter)
+    public function addConverter(FixtureConverterInterface $converter)
     {
         $name = $converter->getName();
         if (isset($this->converters[$name])) {
@@ -98,7 +98,7 @@ class FixtureManager
     /**
      *
      * @param string $name
-     * @return FixtureConverter
+     * @return FixtureConverterInterface
      * @throws \Exception
      */
     public function getConverter($name)

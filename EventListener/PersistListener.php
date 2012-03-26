@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Bundle\FrameworkBundle\EventListener;
+namespace DavidBadura\FixturesBundle\EventListener;
 
 use DavidBadura\FixturesBundle\Persister\PersisterInterface;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
