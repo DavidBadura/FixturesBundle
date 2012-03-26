@@ -25,6 +25,12 @@ class PersistListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $listener;
 
+    /**
+     *
+     * @var DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter
+     */
+    private $converter;
+
     public function setUp()
     {
         $this->persister = $this->getMock('DavidBadura\FixturesBundle\Persister\PersisterInterface');
