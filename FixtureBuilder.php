@@ -49,6 +49,12 @@ class FixtureBuilder
 
     /**
      *
+     * @var array
+     */
+    private $properties = array();
+
+    /**
+     *
      * @return string
      */
     public function getName()
@@ -174,6 +180,25 @@ class FixtureBuilder
         return $this;
     }
 
+    /**
+     *
+     * @param array $properties
+     * @return \DavidBadura\FixturesBundle\FixtureBuilder
+     */
+    public function setProperties(array $properties)
+    {
+        $this->properites = $properties;
+        return $this;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
 
     /**
      *
@@ -227,6 +252,7 @@ class FixtureBuilder
         return $fixture->addTags(array_keys($this->tags))
             ->setEnableValidation($this->enableValidation)
             ->setValidationGroup($this->validationGroup)
+            ->setProperties($this->properties)
         ;
     }
 

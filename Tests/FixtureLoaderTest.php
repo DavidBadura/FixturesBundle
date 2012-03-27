@@ -19,10 +19,14 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
      */
     private $loader;
 
+    private $converter;
+
     public function setUp()
     {
+        $this->converter = new DefaultConverter();
+
         $repo = new ConverterRepository();
-        $repo->addConverter(new DefaultConverter());
+        $repo->addConverter($this->converter);
 
         $this->loader = new FixtureLoader($repo);
     }
@@ -31,11 +35,15 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $fixtures = $this->loader->loadFixtures(__DIR__ . '/TestResources/fixtures');
 
-        $this->assertCount(3, $fixtures);
+        $this->assertEquals(3, count($fixtures));
 
         $this->assertEquals('user', $fixtures['user']->getName());
         $this->assertEquals('group', $fixtures['group']->getName());
         $this->assertEquals('role', $fixtures['role']->getName());
+
+        $this->assertEquals($this->converter, $fixtures['user']->getConverter());
+        $this->assertEquals($this->converter, $fixtures['group']->getConverter());
+        $this->assertEquals($this->converter, $fixtures['role']->getConverter());
     }
 
 }
