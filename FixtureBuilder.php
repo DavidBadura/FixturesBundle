@@ -187,7 +187,7 @@ class FixtureBuilder
      */
     public function setProperties(array $properties)
     {
-        $this->properites = $properties;
+        $this->properties = $properties;
         return $this;
     }
 
@@ -248,7 +248,12 @@ class FixtureBuilder
             throw new \Exception();
         }
 
-        $fixture = new Fixture($this->name, $this->converter, $this->data);
+        $data = array();
+        foreach($this->data as $d) {
+            $data[] = clone $d;
+        }
+
+        $fixture = new Fixture($this->name, $this->converter, $data);
         return $fixture->addTags(array_keys($this->tags))
             ->setEnableValidation($this->enableValidation)
             ->setValidationGroup($this->validationGroup)

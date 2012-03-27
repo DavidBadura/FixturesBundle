@@ -199,6 +199,7 @@ class Fixture implements \IteratorAggregate
         }
 
         $this->fixtureData[$key] = $fixtureData;
+        $fixtureData->setFixture($this);
         return $this;
     }
 
@@ -218,7 +219,7 @@ class Fixture implements \IteratorAggregate
      */
     public function setProperties(array $properties)
     {
-        $this->properties =  $this->converter->prepareProperties($properties);
+        $this->properties =  $properties;
         return $this;
     }
 

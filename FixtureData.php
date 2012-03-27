@@ -19,6 +19,12 @@ class FixtureData
      *
      * @var array
      */
+    protected $dirty;
+
+    /**
+     *
+     * @var array
+     */
     protected $data;
 
     /**
@@ -48,6 +54,7 @@ class FixtureData
     {
         $this->key = $key;
         $this->data = $data;
+        $this->dirty = $data;
     }
 
     /**
@@ -81,13 +88,22 @@ class FixtureData
 
     /**
      *
+     * @return array
+     */
+    public function getDirtyData()
+    {
+        return $this->dirty;
+    }
+
+    /**
+     *
      * @param object $object
      * @return \DavidBadura\FixturesBundle\FixtureData
      */
     public function setObject($object)
     {
         if($this->object) {
-            throw new \Exception();
+            throw new \Exception("object exist already");
         }
         $this->object = $object;
         return $this;
@@ -100,6 +116,15 @@ class FixtureData
     public function getObject()
     {
         return $this->object;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function hasObject()
+    {
+        return ($this->object);
     }
 
     /**

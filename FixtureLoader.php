@@ -19,12 +19,6 @@ class FixtureLoader
      */
     private $converterRepository;
 
-    /**
-     *
-     * @var array
-     */
-    private $defaultFixturesPath = array();
-
     public function __construct(ConverterRepository $repository)
     {
         $this->converterRepository = $repository;
@@ -32,39 +26,11 @@ class FixtureLoader
 
     /**
      *
-     * @param array $dirs
-     * @return \DavidBadura\FixturesBundle\FixtureManager
-     */
-    public function setDefaultFixturesPath($fixturesPath)
-    {
-        if (!is_array($fixturesPath)) {
-            $this->defaultFixturesPath = array($fixturesPath);
-        } else {
-            $this->defaultFixturesPath = $fixturesPath;
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getDefaultFixturesPath()
-    {
-        return $this->defaultFixturesPath;
-    }
-
-    /**
-     *
      * @param mixed $path
      * @return Fixture[]
      */
-    public function loadFixtures($path = null)
+    public function loadFixtures($path)
     {
-        if (empty($path)) {
-            $path = $this->defaultFixturesPath;
-        }
-
         $finder = new Finder();
         $finder->in($path)->name('*.yml');
 

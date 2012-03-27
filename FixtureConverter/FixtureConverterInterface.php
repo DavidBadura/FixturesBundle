@@ -30,11 +30,4 @@ interface FixtureConverterInterface
      */
     public function finalizeObject($object, FixtureData $fixtureData);
 
-    /**
-     *
-     * @param array $properties
-     * @return array
-     */
-    public function prepareProperties(array $properties);
-
 }

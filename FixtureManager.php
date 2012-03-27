@@ -22,7 +22,7 @@ class FixtureManager
 
     /**
      *
-     * @var FixtureFactory
+     * @var FixtureLoader
      */
     private $fixtureLoader;
 
@@ -40,9 +40,15 @@ class FixtureManager
 
     /**
      *
+     * @var array
+     */
+    private $defaultFixturesPath = array();
+
+    /**
+     *
      * @param PersisterInterface $persister
      */
-    public function __construct(FixtureFactory $fixtureLoader,
+    public function __construct(FixtureLoader $fixtureLoader,
         Executor $executor, ConverterRepository $repository,
         EventDispatcherInterface $eventDispatcher)
     {
@@ -124,13 +130,38 @@ class FixtureManager
         return $this;
     }
 
+
+    /**
+     *
+     * @param array $dirs
+     * @return \DavidBadura\FixturesBundle\FixtureManager
+     */
+    public function setDefaultFixturesPath($fixturesPath)
+    {
+        if (!is_array($fixturesPath)) {
+            $this->defaultFixturesPath = array($fixturesPath);
+        } else {
+            $this->defaultFixturesPath = $fixturesPath;
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getDefaultFixturesPath()
+    {
+        return $this->defaultFixturesPath;
+    }
+
     /**
      *
      * @param array $options
      */
     public function load(array $options = array())
     {
-        $fixtures = $this->factory->loadFixtures(($options['fixtures']) ?: null);
+        $fixtures = $this->factory->loadFixtures(($options['fixtures']) ?: $this->defaultFixturesPath);
 
         $event = new PreExecuteEvent($fixtures, $options);
         $this->eventDispatcher->dispatch(FixtureEvents::onPreExecute, $event);

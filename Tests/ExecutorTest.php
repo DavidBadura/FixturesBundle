@@ -33,13 +33,13 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
             'david' => array(
                 'name' => 'David Badura',
                 'email' => 'd.badura@gmx.de',
-                'group' => '@group:users',
+                'groups' => array('@group:users'),
                 'roles' => array('@role:admin', '@role:dev')
             ),
             'test' => array(
                 'name' => 'test',
                 'email' => 'test@example.de',
-                'group' => '@group:users',
+                'groups' => array('@group:users'),
                 'roles' => array('@role:dev')
             )
         ));
@@ -61,6 +61,16 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->executor->execute(array($userFixture, $groupFixture, $roleFixture));
+
+        $david = $userFixture->getFixtureData('david')->getObject();
+
+        $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $david);
+        $this->assertEquals('David Badura', $david->getName());
+
+        $groups = $david->getGroups();
+        $this->assertEquals(1, count($groups));
+        $this->assertEquals('Users', $groups[0]->name);
+        $this->assertEquals($david, $groups[0]->leader);
     }
 
 

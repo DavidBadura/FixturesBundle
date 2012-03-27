@@ -45,7 +45,10 @@ class DefaultConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $object);
         $this->assertEquals('test_name', $object->getName());
         $this->assertEquals('test_email', $object->getEmail());
+
+        $this->converter->finalizeObject($object, $data);
+
         $this->assertEquals(array('xyz', 'abc'), $object->getGroups());
     }
-    
+
 }

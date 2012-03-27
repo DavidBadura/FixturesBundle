@@ -21,14 +21,4 @@ abstract class FixtureConverter implements FixtureConverterInterface
 
     }
 
-    /**
-     *
-     * @param array $properties
-     * @return array
-     */
-    public function prepareProperties(array $properties)
-    {
-        return $properties;
-    }
-
 }

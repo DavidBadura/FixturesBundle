@@ -30,12 +30,14 @@ class FixtureBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->setEnableValidation(true);
         $builder->setValidationGroup('test_group');
         $builder->setData($data);
+        $builder->setProperties(array('class' => 'abc'));
 
         $this->assertEquals('test_name', $builder->getName());
         $this->assertEquals($this->converter, $builder->getConverter());
         $this->assertEquals(array('test_tag_1', 'test_tag_2', 'test_tag_3'), $builder->getTags());
         $this->assertTrue($builder->isEnableValidation());
         $this->assertEquals('test_group', $builder->getValidationGroup());
+        $this->assertEquals(array('class' => 'abc'), $builder->getProperties());
     }
 
     public function testFixtureBuilderCreate()
@@ -50,6 +52,7 @@ class FixtureBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->setEnableValidation(true);
         $builder->setValidationGroup('test_group');
         $builder->setData($data);
+        $builder->setProperties(array('class' => 'abc'));
 
         $fixture = $builder->createFixture();
 
@@ -58,6 +61,7 @@ class FixtureBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('test_tag_1', 'test_tag_2', 'test_tag_3'), $fixture->getTags());
         $this->assertTrue($fixture->isEnableValidation());
         $this->assertEquals('test_group', $fixture->getValidationGroup());
+        $this->assertEquals(array('class' => 'abc'), $fixture->getProperties());
     }
 
 }

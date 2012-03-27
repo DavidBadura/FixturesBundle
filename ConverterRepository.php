@@ -27,7 +27,7 @@ class ConverterRepository
     {
         $name = $converter->getName();
         if (isset($this->converters[$name])) {
-            throw new \Exception();
+            throw new \Exception(sprintf('Converter "%s" exist already', $name));
         }
 
         $this->converters[$name] = $converter;
@@ -53,7 +53,7 @@ class ConverterRepository
     public function getConverter($name)
     {
         if (!$this->hasConverter($name)) {
-            throw new \Exception();
+            throw new \Exception(sprintf('Converter "%s" not exist', $name));
         }
 
         return $this->converters[$name];
@@ -68,7 +68,7 @@ class ConverterRepository
     public function removeConverter($name)
     {
         if (!$this->hasConverter($name)) {
-            throw new \Exception();
+            throw new \Exception(sprintf('Converter "%s" not exist', $name));
         }
 
         unset($this->converters[$name]);

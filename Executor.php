@@ -12,12 +12,6 @@ class Executor
      *
      * @var array
      */
-    private $loaded = array();
-
-    /**
-     *
-     * @var array
-     */
     private $stack = array();
 
     /**
@@ -33,7 +27,7 @@ class Executor
      */
     public function execute(array $fixtures)
     {
-        $this->checkFixtures($fixtures);
+        $fixtures = $this->prepareFixtures($fixtures);
         $this->createObjects($fixtures);
         return $this->finalizeObjects($fixtures);
     }
@@ -50,7 +44,7 @@ class Executor
         foreach ($fixtures as $fixture) {
             foreach ($fixture as $data) {
 
-                if (isset($this->loaded[$fixture->getName()][$data->getKey()])) {
+                if($data->hasObject()) {
                     continue;
                 }
 
@@ -105,10 +99,10 @@ class Executor
                     $object = $fixtures[$hit[1]]->getFixtureData($hit[2])->getObject();
 
                     if(!$object) {
-                        $executor->createObject($hit[1], $hit[2], $fixtures);
+                        $executor->createObject($fixtures, $hit[1], $hit[2]);
                     }
 
-                    $value = $rm->getRepository($hit[1])->get($hit[2]);
+                    $value = $fixtures[$hit[1]]->getFixtureData($hit[2])->getObject();
                 }
             });
 
@@ -169,15 +163,19 @@ class Executor
     /**
      *
      * @param array $fixtures
+     * @return array
      * @throws \Exception
      */
-    protected function checkFixtures(array $fixtures)
+    protected function prepareFixtures(array $fixtures)
     {
+        $new = array();
         foreach($fixtures as $fixture) {
             if(!$fixture instanceof Fixture) {
                 throw new \Exception();
             }
+            $new[$fixture->getName()] = $fixture;
         }
+        return $new;
     }
 
 }
