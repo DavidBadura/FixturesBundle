@@ -4,7 +4,7 @@ namespace DavidBadura\FixturesBundle;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use DavidBadura\FixturesBundle\FixtureBuilder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  *
@@ -15,13 +15,41 @@ class FixtureLoader
 
     /**
      *
-     * @var ConverterRepository
+     * @var KernelInterface
      */
-    private $converterRepository;
+    private $kernel;
 
-    public function __construct(ConverterRepository $repository)
+    /**
+     *
+     * @var array
+     */
+    private $bundles;
+
+    /**
+     *
+     * @param KernelInterface $kernel
+     * @param array $bundles
+     */
+    public function __construct(KernelInterface $kernel = null, array $bundles = array())
     {
-        $this->converterRepository = $repository;
+        $this->kernel = $kernel;
+        $this->bundles = $bundles;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getFixturesByBundles()
+    {
+        $paths = array();
+
+        foreach($this->bundles as $name) {
+            $bundle = $this->kernel->getBundle($name);
+            $paths[] = $bundle->getPath() . '/Resources/fixtures';
+        }
+
+        return $paths;
     }
 
     /**
@@ -29,8 +57,10 @@ class FixtureLoader
      * @param mixed $path
      * @return Fixture[]
      */
-    public function loadFixtures($path)
+    public function loadFixtures($path = null)
     {
+        $path = (empty($path)) ? $this->getFixturesByBundles() : $path ;
+
         $finder = new Finder();
         $finder->in($path)->name('*.yml');
 
@@ -38,47 +68,11 @@ class FixtureLoader
         foreach ($finder->files() as $file) {
             $data = Yaml::parse($file->getPathname());
             if (is_array($data)) {
-                $fixtures = array_merge_recursive($fixtures, $this->createFixtures($data));
+                $fixtures = array_merge_recursive($fixtures, $data);
             }
         }
         return $fixtures;
     }
 
-    /**
-     *
-     * @param array $data
-     * @return Fixture[]
-     */
-    public function createFixtures(array $data)
-    {
-        $fixtures = array();
-        foreach ($data as $name => $info) {
-            $fixtures[$name] = $this->createFixture($name, $info);
-        }
-        return $fixtures;
-    }
-
-    /**
-     *
-     * @param string $name
-     * @param array $data
-     * @return Fixture
-     */
-    public function createFixture($name, array $data)
-    {
-        if(isset($data['converter'])) {
-            $converter = $this->converterRepository->getConverter($data['converter']);
-        } else {
-            $converter = $this->converterRepository->getConverter('default');
-        }
-
-        $builder = new FixtureBuilder();
-        $builder->setName($name)
-            ->setData($data['data'])
-            ->setConverter($converter)
-        ;
-
-        return $builder->createFixture();
-    }
 
 }

@@ -2,11 +2,13 @@
 
 namespace DavidBadura\FixturesBundle\Event;
 
+use Symfony\Component\EventDispatcher\Event;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class PreExecuteEvent
+class PreExecuteEvent extends Event
 {
 
     /**

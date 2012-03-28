@@ -24,6 +24,7 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
             ->setDescription('Load data fixtures and save it.')
             ->addOption('tag', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Load fixtures by tag', array())
             ->addOption('fixture', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.', array())
+            ->addOption('test', null, InputOption::VALUE_NONE, 'Test process (dont save fixtures)')
         ;
     }
 
@@ -34,7 +35,8 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
 
         $manager->load(array(
             'tags' => $input->getOption('tag'),
-            'fixtures' => $input->getOption('fixture')
+            'fixtures' => $input->getOption('fixture'),
+            'test' => $input->getOption('test')
         ));
 
         $output->writeln('<info>Ok</info>');

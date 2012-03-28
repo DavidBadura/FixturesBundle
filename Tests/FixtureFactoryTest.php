@@ -2,30 +2,43 @@
 
 namespace DavidBadura\FixturesBundle\Tests;
 
-use DavidBadura\FixturesBundle\FixtureLoader;
+use DavidBadura\FixturesBundle\FixtureFactory;
+use DavidBadura\FixturesBundle\ConverterRepository;
+use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
 
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
+class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      *
-     * @var FixtureLoader
+     * @var FixtureFactory
      */
-    private $loader;
+    private $factory;
+
+    /**
+     *
+     * @var DefaultConverter
+     */
+    private $converter;
 
     public function setUp()
     {
-        $this->loader = new FixtureLoader();
+        $this->converter = new DefaultConverter();
+
+        $repo = new ConverterRepository();
+        $repo->addConverter($this->converter);
+
+        $this->factory = new FixtureFactory($repo);
     }
 
     public function testLoadFixturesByPath()
     {
 
-        $expects = array(
+        $data = array(
             'user' =>
             array(
                 'properties' =>
@@ -103,8 +116,17 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $data = $this->loader->loadFixtures(__DIR__ . '/TestResources/fixtures');
-        $this->assertEquals($expects, $data);
+        $fixtures = $this->factory->createFixtures($data);
+
+        $this->assertEquals(3, count($fixtures));
+
+        $this->assertEquals('user', $fixtures['user']->getName());
+        $this->assertEquals('group', $fixtures['group']->getName());
+        $this->assertEquals('role', $fixtures['role']->getName());
+
+        $this->assertEquals($this->converter, $fixtures['user']->getConverter());
+        $this->assertEquals($this->converter, $fixtures['group']->getConverter());
+        $this->assertEquals($this->converter, $fixtures['role']->getConverter());
     }
 
 }

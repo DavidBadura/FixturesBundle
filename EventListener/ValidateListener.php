@@ -44,8 +44,10 @@ class ValidateListener
         $fixtures = $event->getFixtures();
 
         foreach ($fixtures as $fixture) {
-            $object = $fixture->getObject();
-            $this->validator->validate($object);
+            foreach ($fixture as $data) {
+                $object = $data->getObject();
+                $this->validator->validate($object);
+            }
         }
     }
 

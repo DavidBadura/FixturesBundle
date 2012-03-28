@@ -4,10 +4,6 @@ DavidBaduraFixturesBundle
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
 
 
-**WARNING:** The Bundle `isn't working` yet! It is still in its infancy.
-Currently, it has only a rough structure to show how it should look like at the end.
-
-
 Installation
 ------------
 
@@ -120,7 +116,6 @@ class UserConverter extends FixtureConverter
 }
 ```
 
-Automatically the converter loaded from the `FixtureConverter` folder.
 To register a converter as a service, you must add the `davidbadura_fixtures.converter` tag.
 
 ``` xml

@@ -19,6 +19,17 @@ class ConverterRepository
 
     /**
      *
+     * @param array $converters
+     */
+    public function __construct(array $converters = array())
+    {
+        foreach($converters as $converter) {
+            $this->addConverter($converter);
+        }
+    }
+
+    /**
+     *
      * @param FixtureConverterInterface $converter
      * @return \DavidBadura\FixturesBundle\FixtureManager
      * @throws \Exception
