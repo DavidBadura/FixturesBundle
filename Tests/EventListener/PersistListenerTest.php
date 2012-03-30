@@ -6,6 +6,7 @@ use DavidBadura\FixturesBundle\EventListener\PersistListener;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
 use DavidBadura\FixturesBundle\Persister\PersisterInterface;
 use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
@@ -45,14 +46,15 @@ class PersistListenerTest extends \PHPUnit_Framework_TestCase
     public function testPersistListener()
     {
         $builder = new FixtureBuilder();
-        $builder->setName('test');
         $builder->setData(array(array('test')));
         $builder->setConverter($this->converter);
 
-        $event = new PostExecuteEvent(array(
-            $builder->createFixture(),
-            $builder->createFixture()
-        ), array());
+        $fixtures = new FixtureCollection(array(
+            $builder->setName('test1')->createFixture(),
+            $builder->setName('test2')->createFixture()
+        ));
+
+        $event = new PostExecuteEvent($fixtures, array());
         $this->listener->onPostExecute($event);
     }
 

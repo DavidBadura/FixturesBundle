@@ -29,13 +29,13 @@ class FixtureFactory
     /**
      *
      * @param array $data
-     * @return Fixture[]
+     * @return FixtureCollection
      */
     public function createFixtures(array $data)
     {
-        $fixtures = array();
+        $fixtures = new FixtureCollection();
         foreach ($data as $name => $info) {
-            $fixtures[$name] = $this->createFixture($name, $info);
+            $fixtures->add($this->createFixture($name, $info));
         }
         return $fixtures;
     }

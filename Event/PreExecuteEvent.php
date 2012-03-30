@@ -3,6 +3,7 @@
 namespace DavidBadura\FixturesBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
@@ -13,7 +14,7 @@ class PreExecuteEvent extends Event
 
     /**
      *
-     * @var array
+     * @var FixtureCollection
      */
     private $fixtures;
 
@@ -25,10 +26,10 @@ class PreExecuteEvent extends Event
 
     /**
      *
-     * @param array $fixtures
+     * @param FixtureCollection $fixtures
      * @param array $options
      */
-    public function __construct(array $fixtures, array $options = array())
+    public function __construct(FixtureCollection $fixtures, array $options = array())
     {
         $this->fixtures = $fixtures;
         $this->options = $options;
@@ -36,7 +37,7 @@ class PreExecuteEvent extends Event
 
     /**
      *
-     * @return array
+     * @return FixtureCollection
      */
     public function getFixtures()
     {
@@ -45,10 +46,10 @@ class PreExecuteEvent extends Event
 
     /**
      *
-     * @param array $fixtures
+     * @param FixtureCollection $fixtures
      * @return \DavidBadura\FixturesBundle\Event\PreExecuteEvent
      */
-    public function setFixtures(array $fixtures)
+    public function setFixtures(FixtureCollection $fixtures)
     {
         $this->fixtures = $fixtures;
         return $this;

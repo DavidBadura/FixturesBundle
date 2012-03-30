@@ -28,18 +28,14 @@ class TagFilterListener
             $options['tags'] = array($options['tags']);
         }
 
-        $return = array();
-
-        foreach ($fixtures as $key => $fixture) {
+        foreach ($fixtures as $fixture) {
             foreach($fixture->getTags() as $tag) {
                 if (in_array($tag, $options['tags'])) {
-                    $return[] = $fixture;
                     continue 2;
                 }
             }
+            $fixtures->remove($fixture->getName());
         }
-
-        $event->setFixtures($return);
     }
 
 }

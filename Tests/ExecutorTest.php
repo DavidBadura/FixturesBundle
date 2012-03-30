@@ -5,6 +5,7 @@ namespace DavidBadura\FixturesBundle\Tests;
 use DavidBadura\FixturesBundle\Executor;
 use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
 use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
@@ -60,7 +61,8 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $this->executor->execute(array($userFixture, $groupFixture, $roleFixture));
+        $fixtures = new FixtureCollection(array($userFixture, $groupFixture, $roleFixture));
+        $this->executor->execute($fixtures);
 
         $david = $userFixture->getFixtureData('david')->getObject();
 

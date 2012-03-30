@@ -5,6 +5,7 @@ namespace DavidBadura\FixturesBundle\Tests\EventListener;
 use DavidBadura\FixturesBundle\EventListener\TagFilterListener;
 use DavidBadura\FixturesBundle\Event\PreExecuteEvent;
 use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
@@ -34,28 +35,25 @@ class TagFilterListenerTest extends \PHPUnit_Framework_TestCase
     public function testTagFilterListener()
     {
         $builder = new FixtureBuilder();
-        $builder->setName('test');
         $builder->setData(array());
         $builder->setConverter($this->converter);
 
-        $fixture1 = $builder->createFixture()->addTag('test')->addTag('install');
-        $fixture2 = $builder->createFixture()->addTag('test');
-        $fixture3 = $builder->createFixture()->addTag('install');
-        $fixture4 = $builder->createFixture();
+        $fixture1 = $builder->setName('test1')->createFixture()->addTag('test')->addTag('install');
+        $fixture2 = $builder->setName('test2')->createFixture()->addTag('test');
+        $fixture3 = $builder->setName('test3')->createFixture()->addTag('install');
+        $fixture4 = $builder->setName('test4')->createFixture();
 
-        $fixtures = array($fixture1, $fixture2, $fixture3, $fixture4);
-
-        $event = new PreExecuteEvent($fixtures, array('tags' => array()));
+        $event = new PreExecuteEvent(new FixtureCollection(array($fixture1, $fixture2, $fixture3, $fixture4)), array('tags' => array()));
         $this->listener->onPreExecute($event);
-        $this->assertEquals($fixtures, $event->getFixtures());
+        $this->assertEquals(new FixtureCollection(array($fixture1, $fixture2, $fixture3, $fixture4)), $event->getFixtures());
 
-        $event = new PreExecuteEvent($fixtures, array('tags' => array('install')));
+        $event = new PreExecuteEvent(new FixtureCollection(array($fixture1, $fixture2, $fixture3, $fixture4)), array('tags' => array('install')));
         $this->listener->onPreExecute($event);
-        $this->assertEquals(array($fixture1, $fixture3), $event->getFixtures());
+        $this->assertEquals(new FixtureCollection(array($fixture1, $fixture3)), $event->getFixtures());
 
-        $event = new PreExecuteEvent($fixtures, array('tags' => array('install', 'test')));
+        $event = new PreExecuteEvent(new FixtureCollection(array($fixture1, $fixture2, $fixture3, $fixture4)), array('tags' => array('install', 'test')));
         $this->listener->onPreExecute($event);
-        $this->assertEquals(array($fixture1, $fixture2, $fixture3), $event->getFixtures());
+        $this->assertEquals(new FixtureCollection(array($fixture1, $fixture2, $fixture3)), $event->getFixtures());
     }
 
 }

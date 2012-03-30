@@ -120,13 +120,13 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(3, count($fixtures));
 
-        $this->assertEquals('user', $fixtures['user']->getName());
-        $this->assertEquals('group', $fixtures['group']->getName());
-        $this->assertEquals('role', $fixtures['role']->getName());
+        $this->assertEquals('user', $fixtures->get('user')->getName());
+        $this->assertEquals('group', $fixtures->get('group')->getName());
+        $this->assertEquals('role', $fixtures->get('role')->getName());
 
-        $this->assertEquals($this->converter, $fixtures['user']->getConverter());
-        $this->assertEquals($this->converter, $fixtures['group']->getConverter());
-        $this->assertEquals($this->converter, $fixtures['role']->getConverter());
+        $this->assertEquals($this->converter, $fixtures->get('user')->getConverter());
+        $this->assertEquals($this->converter, $fixtures->get('group')->getConverter());
+        $this->assertEquals($this->converter, $fixtures->get('role')->getConverter());
     }
 
 }
