@@ -3,6 +3,8 @@
 namespace DavidBadura\FixturesBundle;
 
 use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  *
@@ -13,17 +15,52 @@ class ConverterRepository
 
     /**
      *
+     * @var KernelInterface
+     */
+    private $kernel;
+
+    /**
+     *
+     * @var array
+     */
+    private $bundles;
+
+    /**
+     *
+     * @var boolean
+     */
+    private $loaded = false;
+
+    /**
+     *
      * @var FixtureConverterInterface[]
      */
     private $converters = array();
 
     /**
      *
+     * @var array
+     */
+    private $classes = array();
+
+    /**
+     *
+     * @param KernelInterface $kernel
+     * @param array $bundles
+     */
+    public function __construct(KernelInterface $kernel = null, array $bundles = array())
+    {
+        $this->kernel = $kernel;
+        $this->bundles = $bundles;
+    }
+
+    /**
+     *
      * @param array $converters
      */
-    public function __construct(array $converters = array())
+    public function addConverters(array $converters = array())
     {
-        foreach($converters as $converter) {
+        foreach ($converters as $converter) {
             $this->addConverter($converter);
         }
     }
@@ -38,10 +75,11 @@ class ConverterRepository
     {
         $name = $converter->getName();
         if (isset($this->converters[$name])) {
-            throw new \Exception(sprintf('Converter "%s" exist already', $name));
+            throw new \Exception(sprintf('a converter with the name "%s" exist already', $name));
         }
 
         $this->converters[$name] = $converter;
+        $this->classes[get_class($converter)] = true;
         return $this;
     }
 
@@ -52,6 +90,7 @@ class ConverterRepository
      */
     public function hasConverter($name)
     {
+        $this->init();
         return isset($this->converters[$name]);
     }
 
@@ -63,8 +102,9 @@ class ConverterRepository
      */
     public function getConverter($name)
     {
-        if (!$this->hasConverter($name)) {
-            throw new \Exception(sprintf('Converter "%s" not exist', $name));
+        $this->init();
+        if (!isset($this->converters[$name])) {
+            return null;
         }
 
         return $this->converters[$name];
@@ -78,12 +118,70 @@ class ConverterRepository
      */
     public function removeConverter($name)
     {
-        if (!$this->hasConverter($name)) {
-            throw new \Exception(sprintf('Converter "%s" not exist', $name));
+        $this->init();
+        if (isset($this->converters[$name])) {
+            unset($this->converters[$name]);
+            unset($this->classes[get_class($this->converters[$name])]);
+        }
+        return $this;
+    }
+
+    /**
+     *
+     *
+     */
+    public function init()
+    {
+        if ($this->loaded)
+            return;
+
+        if (!$this->kernel || empty($this->bundles)) {
+            $this->loaded = true;
+            return;
         }
 
-        unset($this->converters[$name]);
-        return $this;
+        $paths = array();
+
+        foreach ($this->bundles as $name) {
+            $bundle = $this->kernel->getBundle($name);
+            $paths[] = $bundle->getPath() . '/FixtureConverter';
+        }
+
+        $finder = new Finder();
+        $finder->in($paths)->name('*Converter.php');
+
+        foreach ($finder->files() as $file) {
+            require_once $file->getPath();
+        }
+
+        $declared = get_declared_classes();
+
+        foreach ($declared as $class) {
+
+            if (isset($this->classes[$class]) || $this->isTransient($class)) {
+                continue;
+            }
+
+            $converter = new $class;
+            $this->addConverter($converter);
+        }
+
+        $this->loaded = true;
+    }
+
+    /**
+     *
+     * @param string $className
+     * @return boolean
+     */
+    public function isTransient($className)
+    {
+        $rc = new \ReflectionClass($className);
+        if ($rc->isAbstract())
+            return true;
+
+        $interfaces = class_implements($className);
+        return in_array('DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface', $interfaces) ? false : true;
     }
 
 }
