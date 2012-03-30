@@ -30,7 +30,15 @@ class DefaultConverter extends FixtureConverter
         } else {
             $args = array();
             foreach ($constructor as $arg) {
-                $args[] = $data[$arg];
+
+                $optional = (substr($arg, 0, 1) == '?');
+                $arg = ($optional) ? substr($arg, 1) : $arg ;
+
+                if(!isset($data[$arg]) && !$optional) {
+                    throw new \Exception(sprintf('missing "%s" property', $arg));
+                } elseif(isset($data[$arg])) {
+                    $args[] = $data[$arg];
+                }
             }
 
             $reflection = new \ReflectionClass($class);
