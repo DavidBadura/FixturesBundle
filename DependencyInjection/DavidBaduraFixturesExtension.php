@@ -39,6 +39,9 @@ class DavidBaduraFixturesExtension extends Extension
         if(isset($config['bundles'])) {
             $loader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
             $loader->addArgument($config['bundles']);
+
+            $loader = $container->getDefinition('davidbadura_fixtures.converter_repository');
+            $loader->addArgument($config['bundles']);
         }
 
     }

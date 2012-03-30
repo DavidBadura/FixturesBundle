@@ -151,7 +151,7 @@ class ConverterRepository
         $finder->in($paths)->name('*Converter.php');
 
         foreach ($finder->files() as $file) {
-            require_once $file->getPath();
+            require_once $file->getRealpath();
         }
 
         $declared = get_declared_classes();
