@@ -44,7 +44,7 @@ class Executor
         foreach ($fixtures as $fixture) {
             foreach ($fixture as $data) {
 
-                if($data->hasObject()) {
+                if($data->hasObject() || $data->isLoaded()) {
                     continue;
                 }
 
@@ -62,6 +62,11 @@ class Executor
     {
         foreach ($fixtures as $fixture) {
             foreach ($fixture as $data) {
+
+                if($data->isLoaded()) {
+                    continue;
+                }
+
                 $this->finalizeObject($fixtures, $fixture->getName(), $data->getKey());
             }
         }
@@ -158,6 +163,7 @@ class Executor
         $object = $fixtureData->getObject();
 
         $fixture->getConverter()->finalizeObject($object, $fixtureData);
+        $fixtureData->setLoaded();
     }
 
     /**

@@ -47,6 +47,12 @@ class FixtureData
 
     /**
      *
+     * @var boolean
+     */
+    private $loaded = false;
+
+    /**
+     *
      * @param string $key
      * @param array $data
      */
@@ -176,6 +182,26 @@ class FixtureData
     public function getOrder()
     {
         return $this->order;
+    }
+
+    /**
+     *
+     * @param boolean $loaded
+     * @return \DavidBadura\FixturesBundle\FixtureData
+     */
+    public function setLoaded($loaded = true)
+    {
+        $this->loaded = $loaded;
+        return $this;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isLoaded()
+    {
+        return $this->loaded;
     }
 
 }
