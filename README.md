@@ -11,7 +11,7 @@ Features
 * Easy to create your own converter
 * Extendable by events
 * Fixture filtering by tags
-* Object valdiation
+* Object validation
 * Fixturemanager as a service
 * Fixture data validating and normalizing by symfony config component
 
