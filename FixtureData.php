@@ -53,6 +53,12 @@ class FixtureData
 
     /**
      *
+     * @var array
+     */
+    private $params = array();
+
+    /**
+     *
      * @param string $key
      * @param array $data
      */
@@ -202,6 +208,39 @@ class FixtureData
     public function isLoaded()
     {
         return $this->loaded;
+    }
+
+    /**
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getParam($key)
+    {
+        if(!isset($this->params[$key])) {
+            return null;
+        }
+        return $this->params[$key];
+    }
+
+    /**
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public function hasParam($key)
+    {
+        return isset($this->params[$key]);
+    }
+
+    /**
+     *
+     * @param string $key
+     * @param string $value
+     */
+    public function setParam($key, $value)
+    {
+        $this->params[$key] = $value;
     }
 
 }
