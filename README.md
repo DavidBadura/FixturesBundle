@@ -4,6 +4,19 @@ DavidBaduraFixturesBundle
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
 
 
+Features
+--------
+
+* Configurable default fixture converter
+* Easy to create your own converter
+* Extendable by events
+* Fixture filtering by tags
+* Object valdiation
+* Fixturemanager as a service
+* Fixture data validating and normalizing by symfony config component
+
+
+
 Installation
 ------------
 
@@ -141,3 +154,12 @@ optional parameters:
 $this->get('david_badura_fixtures.fixture_manager')->load(array('tags' => array('install')));
 $this->get('david_badura_fixtures.fixture_manager')->load(array('fixtures' => array('src/...')));
 ```
+
+
+Todos
+--------
+
+* Object valdiation
+* Fixture data validating and normalizing by symfony config component
+* More tests
+* Error handling
