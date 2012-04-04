@@ -35,7 +35,7 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory = new FixtureFactory($repo);
     }
 
-    public function testLoadFixturesByPath()
+    public function testCreateFixtures()
     {
 
         $data = array(

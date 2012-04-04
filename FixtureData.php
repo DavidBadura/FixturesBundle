@@ -17,13 +17,13 @@ class FixtureData
 
     /**
      *
-     * @var array
+     * @var mixed
      */
     protected $dirty;
 
     /**
      *
-     * @var array
+     * @var mixed
      */
     protected $data;
 
@@ -60,9 +60,9 @@ class FixtureData
     /**
      *
      * @param string $key
-     * @param array $data
+     * @param mixed $data
      */
-    public function __construct($key, array $data)
+    public function __construct($key, $data)
     {
         $this->key = $key;
         $this->data = $data;
@@ -80,7 +80,7 @@ class FixtureData
 
     /**
      *
-     * @return array
+     * @return mixed
      */
     public function getData()
     {
@@ -89,10 +89,10 @@ class FixtureData
 
     /**
      *
-     * @param array $data
+     * @param mixed $data
      * @return \FixtureData
      */
-    public function setData(array $data)
+    public function setData($data)
     {
         $this->data = $data;
         return $this;
@@ -100,7 +100,7 @@ class FixtureData
 
     /**
      *
-     * @return array
+     * @return mixed
      */
     public function getDirtyData()
     {
@@ -115,7 +115,7 @@ class FixtureData
     public function setObject($object)
     {
         if($this->object) {
-            throw new \Exception("object exist already");
+            throw new \Exception("fixture data has already a object");
         }
         $this->object = $object;
         return $this;

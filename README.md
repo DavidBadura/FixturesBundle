@@ -33,22 +33,6 @@ david_badura_fixtures:
   bundles: [YourBundle]
 ```
 
-
-Defaults:
-
-``` yaml
-# app/config/config.yml
-david_badura_fixtures:
-  bundles: []
-  persister: orm
-  defaults:
-    converter: default
-    validation:
-        enable: true
-        group: default
-```
-
-
 Create fixtures
 ---------------
 
@@ -87,7 +71,7 @@ It will be automatically loaded the fixture files from the `Resources\fixtures` 
 Converter
 --------------------
 
-The standard converter uses the getter and setter methods of the class.
+The standard converter uses the setter methods of the class.
 You can also implement your own Converter:
 
 ``` php
@@ -115,6 +99,8 @@ class UserConverter extends FixtureConverter
     }
 }
 ```
+The fixture converter are loaded automatically from the `YourBundle\FixtureConverter` folder.
+
 
 To register a converter as a service, you must add the `davidbadura_fixtures.converter` tag.
 

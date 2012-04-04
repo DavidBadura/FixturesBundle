@@ -16,7 +16,7 @@ class DefaultConverter extends FixtureConverter
         $properties = $fixtureData->getProperties();
 
         if (!isset($properties['class'])) {
-            throw new \Exception('missing "class" property');
+            throw new \Exception('Missing fixture "class" property');
         }
 
         $class = $properties['class'];
@@ -35,7 +35,7 @@ class DefaultConverter extends FixtureConverter
                 $arg = ($optional) ? substr($arg, 1) : $arg ;
 
                 if(!isset($data[$arg]) && !$optional) {
-                    throw new \Exception(sprintf('missing "%s" property', $arg));
+                    throw new FixtureConverterException(sprintf('Missing "%s" attribute', $arg));
                 } elseif(isset($data[$arg])) {
                     $args[] = $data[$arg];
                 }
@@ -75,7 +75,7 @@ class DefaultConverter extends FixtureConverter
 
         if ($reflClass->hasMethod($setter)) {
             if (!$reflClass->getMethod($setter)->isPublic()) {
-                throw new \Exception(sprintf('Method "%s()" is not public in class "%s"', $setter, $reflClass->getName()));
+                throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $setter, $reflClass->getName()));
             }
 
             $object->$setter($value);
@@ -84,7 +84,7 @@ class DefaultConverter extends FixtureConverter
             $object->$property = $value;
         } elseif ($reflClass->hasProperty($property)) {
             if (!$reflClass->getProperty($property)->isPublic()) {
-                throw new \Exception(sprintf('Property "%s" is not public in class "%s". Maybe you should create the method "%s()"?', $property, $reflClass->getName(), $setter));
+                throw new FixtureConverterException(sprintf('Property "%s" is not public in class "%s". Maybe you should create the method "%s()"?', $property, $reflClass->getName(), $setter));
             }
 
             $object->$property = $value;
@@ -92,7 +92,7 @@ class DefaultConverter extends FixtureConverter
             // needed to support \stdClass instances
             $object->$property = $value;
         } else {
-            throw new \Exception(sprintf('Neither element "%s" nor method "%s()" exists in class "%s"', $property, $setter, $reflClass->getName()));
+            throw new FixtureConverterException(sprintf('Neither element "%s" nor method "%s()" exists in class "%s"', $property, $setter, $reflClass->getName()));
         }
     }
 

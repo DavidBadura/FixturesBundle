@@ -4,14 +4,14 @@ namespace DavidBadura\FixturesBundle\Tests\EventListener;
 
 use DavidBadura\FixturesBundle\EventListener\TagFilterListener;
 use DavidBadura\FixturesBundle\Event\PreExecuteEvent;
-use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\Tests\AbstractFixtureTest;
 use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class TagFilterListenerTest extends \PHPUnit_Framework_TestCase
+class TagFilterListenerTest extends AbstractFixtureTest
 {
 
     /**
@@ -20,28 +20,20 @@ class TagFilterListenerTest extends \PHPUnit_Framework_TestCase
      */
     protected $listener;
 
-    /**
-     *
-     * @var DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter
-     */
-    protected $converter;
+
 
     public function setUp()
     {
+        parent::setUp();
         $this->listener = new TagFilterListener();
-        $this->converter = $this->getMock('DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter');
     }
 
     public function testTagFilterListener()
     {
-        $builder = new FixtureBuilder();
-        $builder->setData(array());
-        $builder->setConverter($this->converter);
-
-        $fixture1 = $builder->setName('test1')->createFixture()->addTag('test')->addTag('install');
-        $fixture2 = $builder->setName('test2')->createFixture()->addTag('test');
-        $fixture3 = $builder->setName('test3')->createFixture()->addTag('install');
-        $fixture4 = $builder->setName('test4')->createFixture();
+        $fixture1 = $this->createFixture('test1')->addTag('test')->addTag('install');
+        $fixture2 = $this->createFixture('test2')->addTag('test');
+        $fixture3 = $this->createFixture('test3')->addTag('install');
+        $fixture4 = $this->createFixture('test4');
 
         $event = new PreExecuteEvent(new FixtureCollection(array($fixture1, $fixture2, $fixture3, $fixture4)), array('tags' => array()));
         $this->listener->onPreExecute($event);

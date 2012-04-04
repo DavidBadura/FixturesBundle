@@ -8,7 +8,7 @@ use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class Fixture implements \IteratorAggregate
+class Fixture implements \IteratorAggregate, \Countable
 {
 
     /**
@@ -53,6 +53,8 @@ class Fixture implements \IteratorAggregate
      */
     private $fixtureData = array();
 
+
+
     /**
      *
      * @param string $name
@@ -60,14 +62,10 @@ class Fixture implements \IteratorAggregate
      * @param type $persister
      * @param array $data
      */
-    public function __construct($name, FixtureConverterInterface $converter, array $fixtureData)
+    public function __construct($name, FixtureConverterInterface $converter)
     {
         $this->name = $name;
         $this->converter = $converter;
-
-        foreach($fixtureData as $data) {
-            $this->addFixtureData($data);
-        }
     }
 
     /**
@@ -109,6 +107,29 @@ class Fixture implements \IteratorAggregate
     public function addTag($tag)
     {
         $this->tags[$tag] = true;
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $tag
+     * @return boolean
+     */
+    public function hasTag($tag)
+    {
+        return isset($this->tags[$tag]);
+    }
+
+    /**
+     *
+     * @param string $tag
+     * @return \DavidBadura\FixturesBundle\Fixture
+     */
+    public function removeTag($tag)
+    {
+        if(isset($this->tags[$tag])) {
+            unset($this->tags[$tag]);
+        }
         return $this;
     }
 
@@ -180,7 +201,7 @@ class Fixture implements \IteratorAggregate
     public function getFixtureData($key)
     {
         if(!$this->hasFixtureData($key)) {
-            throw new \Exception();
+            throw new \Exception(sprintf('fixture data with key "%s" does not exist', $key));
         }
         return $this->fixtureData[$key];
     }
@@ -191,15 +212,30 @@ class Fixture implements \IteratorAggregate
      * @return \DavidBadura\FixturesBundle\Fixture
      * @throws \Exception
      */
-    private function addFixtureData(FixtureData $fixtureData)
+    public function addFixtureData(FixtureData $fixtureData)
     {
         $key = $fixtureData->getKey();
         if($this->hasFixtureData($key)) {
-            throw new \Exception();
+            throw new \Exception(sprintf('fixture data with key "%s" already exists', $key));
         }
 
         $this->fixtureData[$key] = $fixtureData;
         $fixtureData->setFixture($this);
+        return $this;
+    }
+
+    /**
+     *
+     * @param FixtureData $fixtureData
+     * @return \DavidBadura\FixturesBundle\Fixture
+     */
+    public function removeFixtureData(FixtureData $fixtureData)
+    {
+        $key = $fixtureData->getKey();
+        if($this->hasFixtureData($key)) {
+            unset($this->fixtureData[$key]);
+        }
+
         return $this;
     }
 
@@ -230,6 +266,15 @@ class Fixture implements \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->fixtureData);
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->fixtureData);
     }
 
 }

@@ -58,17 +58,17 @@ class FixtureFactory
             throw new \Exception("missing data property");
         }
 
-        $builder = new FixtureBuilder();
-        $builder->setName($name)
-            ->setData($data['data'])
-            ->setConverter($converter)
-        ;
-
-        if(isset($data['properties'])) {
-            $builder->setProperties($data['properties']);
+        $fixture = new Fixture($name, $converter);
+        foreach($data['data'] as $key => $value)
+        {
+            $fixture->addFixtureData(new FixtureData($key, $value));
         }
 
-        return $builder->createFixture();
+        if(isset($data['properties'])) {
+            $fixture->setProperties($data['properties']);
+        }
+
+        return $fixture;
     }
 
 }

@@ -4,14 +4,15 @@ namespace DavidBadura\FixturesBundle\Tests;
 
 use DavidBadura\FixturesBundle\Executor;
 use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
-use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\Fixture;
+use DavidBadura\FixturesBundle\FixtureData;
 use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class ExecutorTest extends \PHPUnit_Framework_TestCase
+class ExecutorTest extends AbstractFixtureTest
 {
 
     /**
@@ -20,12 +21,10 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
      */
     private $executor;
 
-    private $converter;
-
     public function setUp()
     {
+        parent::setUp();
         $this->executor = new Executor();
-        $this->converter = new DefaultConverter();
     }
 
     public function testExecute()
@@ -73,47 +72,6 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($groups));
         $this->assertEquals('Users', $groups[0]->name);
         $this->assertEquals($david, $groups[0]->leader);
-    }
-
-
-    protected function createUserFixture($data)
-    {
-        $builder = new FixtureBuilder();
-        $builder->setName('user')
-                ->setConverter($this->converter)
-                ->setData($data)
-                ->setProperties(array(
-                    'class' => 'DavidBadura\FixturesBundle\Tests\TestObjects\User',
-                    'constructor' => array('name', 'email')
-                ))
-        ;
-        return $builder->createFixture();
-    }
-
-    protected function createGroupFixture($data)
-    {
-        $builder = new FixtureBuilder();
-        $builder->setName('group')
-                ->setConverter($this->converter)
-                ->setData($data)
-                ->setProperties(array(
-                    'class' => 'DavidBadura\FixturesBundle\Tests\TestObjects\Group'
-                ))
-        ;
-        return $builder->createFixture();
-    }
-
-    protected function createRoleFixture($data)
-    {
-        $builder = new FixtureBuilder();
-        $builder->setName('role')
-                ->setConverter($this->converter)
-                ->setData($data)
-                ->setProperties(array(
-                    'class' => 'DavidBadura\FixturesBundle\Tests\TestObjects\Role'
-                ))
-        ;
-        return $builder->createFixture();
     }
 
 }

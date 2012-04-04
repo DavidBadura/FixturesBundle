@@ -36,7 +36,7 @@ class FixtureCollection implements \IteratorAggregate, \Countable
     {
         $name = $fixture->getName();
         if($this->has($name)) {
-            throw new \Exception(sprintf('a fixture with the name "%s" exist already', $name));
+            throw new \Exception(sprintf('fixture with the name "%s" already exists', $name));
         }
         $this->fixtures[$name] = $fixture;
         return $this;

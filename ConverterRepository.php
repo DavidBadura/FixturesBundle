@@ -75,7 +75,7 @@ class ConverterRepository
     {
         $name = $converter->getName();
         if (isset($this->converters[$name])) {
-            throw new \Exception(sprintf('a converter with the name "%s" exist already', $name));
+            throw new \Exception(sprintf('Converter with the name "%s" already exists', $name));
         }
 
         $this->converters[$name] = $converter;
