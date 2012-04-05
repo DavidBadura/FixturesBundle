@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="davidbadura_fixtures.executor.class">DavidBadura\FixturesBundle\Executor</parameter>
+        <parameter key="davidbadura_fixtures.executor.class">DavidBadura\FixturesBundle\Executor\Executor</parameter>
         <parameter key="davidbadura_fixtures.fixture_loader.class">DavidBadura\FixturesBundle\FixtureLoader</parameter>
         <parameter key="davidbadura_fixtures.fixture_factory.class">DavidBadura\FixturesBundle\FixtureFactory</parameter>
         <parameter key="davidbadura_fixtures.fixture_manager.class">DavidBadura\FixturesBundle\FixtureManager</parameter>
