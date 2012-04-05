@@ -147,7 +147,7 @@ class Executor
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
 
                     if(!$object) {
-                        throw new \Exception("Object for %s:%s does not exist", $hit[1], $hit[2]);
+                        throw new \Exception(sprintf("Object for %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $value = $object;
