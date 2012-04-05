@@ -3,6 +3,7 @@
 namespace DavidBadura\FixturesBundle\FixtureConverter;
 
 use DavidBadura\FixturesBundle\FixtureData;
+use DavidBadura\FixturesBundle\Exception\FixtureConverterException;
 
 /**
  *
@@ -16,7 +17,7 @@ class DefaultConverter extends FixtureConverter
         $properties = $fixtureData->getProperties();
 
         if (!isset($properties['class'])) {
-            throw new \Exception('Missing fixture "class" property');
+            throw new FixtureConverterException('Missing fixture "class" property');
         }
 
         $class = $properties['class'];

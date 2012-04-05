@@ -3,6 +3,9 @@
 namespace DavidBadura\FixturesBundle\Executor;
 
 use DavidBadura\FixturesBundle\FixtureCollection;
+use DavidBadura\FixturesBundle\Exception\CircularReferenceException;
+use DavidBadura\FixturesBundle\Exception\FixtureException;
+use DavidBadura\FixturesBundle\Exception\ReferenceNotFoundException;
 
 /**
  * @author David Badura <d.badura@gmx.de>
@@ -96,7 +99,7 @@ class Executor implements ExecutorInterface
                 if (preg_match('/^@(\w*):(\w*)$/', $value, $hit)) {
 
                     if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
-                        throw new RuntimeException(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
+                        throw new ReferenceNotFoundException($hit[1], $hit[2]);
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
@@ -143,13 +146,13 @@ class Executor implements ExecutorInterface
                 if (preg_match('/^@@(\w*):(\w*)$/', $value, $hit)) {
 
                     if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
-                        throw new RuntimeException(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
+                        throw new ReferenceNotFoundException($hit[1], $hit[2]);
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
 
                     if(!$object) {
-                        throw new RuntimeException(sprintf("Object for %s:%s does not exist", $hit[1], $hit[2]));
+                        throw new FixtureException(sprintf("Object for %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $value = $object;

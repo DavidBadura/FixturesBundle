@@ -6,7 +6,7 @@ namespace DavidBadura\FixturesBundle\Exception;
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class RuntimeException extends \RuntimeException
+class RuntimeException extends FixtureException
 {
 
     /**
