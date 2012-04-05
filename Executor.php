@@ -94,7 +94,7 @@ class Executor
                 if (preg_match('/^@(\w*):(\w*)$/', $value, $hit)) {
 
                     if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
-                        throw new \Exception();
+                        throw new \Exception(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
@@ -141,13 +141,13 @@ class Executor
                 if (preg_match('/^@@(\w*):(\w*)$/', $value, $hit)) {
 
                     if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
-                        throw new \Exception();
+                        throw new \Exception(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
 
                     if(!$object) {
-                        throw new \Exception();
+                        throw new \Exception("Object for %s:%s does not exist", $hit[1], $hit[2]);
                     }
 
                     $value = $object;
