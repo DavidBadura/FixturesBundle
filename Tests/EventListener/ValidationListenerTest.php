@@ -29,14 +29,13 @@ class ValidationListenerTest extends AbstractFixtureTest
     public function setUp()
     {
         parent::setUp();
-        $this->persister = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-        $this->persister->expects($this->exactly(2))->method('addObject');
-        $this->persister->expects($this->once())->method('save');
+        $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $this->validator->expects($this->never())->method('validate')->will($this->returnValue(array()));
 
-        $this->listener = new PersistListener($this->persister);
+        $this->listener = new ValidationListener($this->validator);
     }
 
-    public function testPersistListener()
+    public function testValidationListener()
     {
         $fixtures = new FixtureCollection(array(
             $this->createFixture('test1', array('key1' => 'data1')),
