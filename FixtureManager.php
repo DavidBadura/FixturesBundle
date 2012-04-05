@@ -4,6 +4,7 @@ namespace DavidBadura\FixturesBundle;
 
 use DavidBadura\FixturesBundle\Event\PreExecuteEvent;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
+use DavidBadura\FixturesBundle\Event\PostFixtureLoadEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use DavidBadura\FixturesBundle\Executor\ExecutorInterface;
 
@@ -86,6 +87,13 @@ class FixtureManager
     public function load(array $options = array())
     {
         $data = $this->fixtureLoader->loadFixtures(($options['fixtures']));
+
+        $event = new PostFixtureLoadEvent($data, $options);
+        $this->eventDispatcher->dispatch(FixtureEvents::onPostFixtureLoad, $event);
+
+        $data = $event->getData();
+        $options = $event->getOptions();
+
         $fixtures = $this->fixtureFactory->createFixtures($data);
 
         $event = new PreExecuteEvent($fixtures, $options);
