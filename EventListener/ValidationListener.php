@@ -3,13 +3,15 @@
 namespace DavidBadura\FixturesBundle\EventListener;
 
 use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
+use DavidBadura\FixturesBundle\Exception\ValidationException;
 
 /**
  *
  * @author David Badura <d.badura@gmx.de>
  */
-class ValidateListener
+class ValidationListener
 {
 
     /**
@@ -46,7 +48,16 @@ class ValidateListener
         foreach ($fixtures as $fixture) {
             foreach ($fixture as $data) {
                 $object = $data->getObject();
-                $this->validator->validate($object);
+
+                if(!$object) {
+                    continue;
+                }
+
+                $violationList = $this->validator->validate($object);
+
+                if(count($violationList) != 0) {
+                    throw new ValidationException($fixture->getName(), $data->getKey(), $violationList);
+                }
             }
         }
     }

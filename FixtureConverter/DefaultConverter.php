@@ -32,11 +32,11 @@ class DefaultConverter extends FixtureConverter
             foreach ($constructor as $arg) {
 
                 $optional = (substr($arg, 0, 1) == '?');
-                $arg = ($optional) ? substr($arg, 1) : $arg ;
+                $arg = ($optional) ? substr($arg, 1) : $arg;
 
-                if(!isset($data[$arg]) && !$optional) {
+                if (!isset($data[$arg]) && !$optional) {
                     throw new FixtureConverterException(sprintf('Missing "%s" attribute', $arg));
-                } elseif(isset($data[$arg])) {
+                } elseif (isset($data[$arg])) {
                     $args[] = $data[$arg];
                 }
             }
@@ -50,9 +50,23 @@ class DefaultConverter extends FixtureConverter
 
     public function finalizeObject($object, FixtureData $fixtureData)
     {
+        $properties = $fixtureData->getProperties();
         $data = $fixtureData->getData();
+
+        $constructor = (isset($properties['constructor'])) ? $properties['constructor'] : array();
+        $args = array();
+
+        if (!empty($constructor)) {
+            foreach ($constructor as $key) {
+                $key = (substr($key, 0, 1) == '?') ? substr($key, 1) : $key;
+                $args[$key] = true;
+            }
+        }
+
         foreach ($data as $property => $value) {
-            $this->writeProperty($object, $property, $value);
+            if (!isset($args[$property])) {
+                $this->writeProperty($object, $property, $value);
+            }
         }
     }
 

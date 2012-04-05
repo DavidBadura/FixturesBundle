@@ -78,7 +78,7 @@ fixtures:
             member:
                 name: Member
 ```
-It will be automatically loaded the fixture files from the `Resources\fixtures` folder
+%he fixture files will be automatically loaded from the `Resources\fixtures` folder
 
 
 Converter
@@ -159,7 +159,6 @@ $this->get('david_badura_fixtures.fixture_manager')->load(array('fixtures' => ar
 Todos
 --------
 
-* Object valdiation
 * Fixture data validating and normalizing by symfony config component
 * More tests
 * Error handling
