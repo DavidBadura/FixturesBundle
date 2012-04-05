@@ -1,11 +1,13 @@
 <?php
 
-namespace DavidBadura\FixturesBundle;
+namespace DavidBadura\FixturesBundle\Executor;
+
+use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  * @author David Badura <d.badura@gmx.de>
  */
-class Executor
+class Executor implements ExecutorInterface
 {
 
     /**
@@ -80,7 +82,7 @@ class Executor
     {
 
         if (isset($this->stack[$name . ':' . $key])) {
-            throw new \Exception('circle');
+            throw new CircularReferenceException($name, $key, $this->stack);
         }
 
         $this->stack[$name . ':' . $key] = true;
@@ -94,7 +96,7 @@ class Executor
                 if (preg_match('/^@(\w*):(\w*)$/', $value, $hit)) {
 
                     if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
-                        throw new \Exception(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
+                        throw new RuntimeException(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
@@ -141,13 +143,13 @@ class Executor
                 if (preg_match('/^@@(\w*):(\w*)$/', $value, $hit)) {
 
                     if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
-                        throw new \Exception(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
+                        throw new RuntimeException(sprintf("Fixture data %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
 
                     if(!$object) {
-                        throw new \Exception(sprintf("Object for %s:%s does not exist", $hit[1], $hit[2]));
+                        throw new RuntimeException(sprintf("Object for %s:%s does not exist", $hit[1], $hit[2]));
                     }
 
                     $value = $object;

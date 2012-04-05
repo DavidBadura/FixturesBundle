@@ -5,6 +5,7 @@ namespace DavidBadura\FixturesBundle;
 use DavidBadura\FixturesBundle\Event\PreExecuteEvent;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use DavidBadura\FixturesBundle\Executor\ExecutorInterface;
 
 /**
  *
@@ -27,7 +28,7 @@ class FixtureManager
 
     /**
      *
-     * @var Executor
+     * @var ExecutorInterface
      */
     private $executor;
 
@@ -42,7 +43,7 @@ class FixtureManager
      * @param PersisterInterface $persister
      */
     public function __construct(FixtureLoader $fixtureLoader,
-        FixtureFactory $fixtureFactory, Executor $executor,
+        FixtureFactory $fixtureFactory, ExecutorInterface $executor,
         EventDispatcherInterface $eventDispatcher)
     {
         $this->fixtureLoader = $fixtureLoader;
@@ -71,7 +72,7 @@ class FixtureManager
 
     /**
      *
-     * @return Executor
+     * @return ExecutorInterface
      */
     public function getExecutor()
     {
