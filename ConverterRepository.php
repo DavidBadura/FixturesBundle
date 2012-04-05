@@ -5,6 +5,7 @@ namespace DavidBadura\FixturesBundle;
 use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
+use DavidBadura\FixturesBundle\Exception\FixtureException;
 
 /**
  *
@@ -75,7 +76,7 @@ class ConverterRepository
     {
         $name = $converter->getName();
         if (isset($this->converters[$name])) {
-            throw new \Exception(sprintf('Converter with the name "%s" already exists', $name));
+            throw new FixtureException(sprintf('Converter with the name "%s" already exists', $name));
         }
 
         $this->converters[$name] = $converter;

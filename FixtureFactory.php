@@ -3,6 +3,7 @@
 namespace DavidBadura\FixturesBundle;
 
 use DavidBadura\FixturesBundle\FixtureBuilder;
+use DavidBadura\FixturesBundle\Exception\FixtureException;
 
 /**
  *
@@ -55,7 +56,7 @@ class FixtureFactory
         }
 
         if(!isset($data['data'])) {
-            throw new \Exception("missing data property");
+            throw new FixtureException("missing data property");
         }
 
         $fixture = new Fixture($name, $converter);

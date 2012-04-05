@@ -2,6 +2,8 @@
 
 namespace DavidBadura\FixturesBundle;
 
+use DavidBadura\FixturesBundle\Exception\FixtureException;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>
@@ -30,13 +32,13 @@ class FixtureCollection implements \IteratorAggregate, \Countable
      *
      * @param Fixture $fixture
      * @return \DavidBadura\FixturesBundle\FixtureCollection
-     * @throws \Exception
+     * @throws FixtureException
      */
     public function add(Fixture $fixture)
     {
         $name = $fixture->getName();
         if($this->has($name)) {
-            throw new \Exception(sprintf('fixture with the name "%s" already exists', $name));
+            throw new FixtureException(sprintf('fixture with the name "%s" already exists', $name));
         }
         $this->fixtures[$name] = $fixture;
         return $this;

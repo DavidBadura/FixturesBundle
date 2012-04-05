@@ -3,6 +3,7 @@
 namespace DavidBadura\FixturesBundle;
 
 use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
+use DavidBadura\FixturesBundle\Exception\FixtureException;
 
 /**
  *
@@ -196,12 +197,12 @@ class Fixture implements \IteratorAggregate, \Countable
      *
      * @param string $key
      * @return FixtureData
-     * @throws \Exception
+     * @throws FixtureException
      */
     public function getFixtureData($key)
     {
         if(!$this->hasFixtureData($key)) {
-            throw new \Exception(sprintf('fixture data with key "%s" does not exist', $key));
+            throw new FixtureException(sprintf('Fixture data with key "%s" does not exist in "%s" fixture', $key, $this->name));
         }
         return $this->fixtureData[$key];
     }
@@ -210,13 +211,13 @@ class Fixture implements \IteratorAggregate, \Countable
      *
      * @param FixtureData $fixtureData
      * @return \DavidBadura\FixturesBundle\Fixture
-     * @throws \Exception
+     * @throws FixtureException
      */
     public function addFixtureData(FixtureData $fixtureData)
     {
         $key = $fixtureData->getKey();
         if($this->hasFixtureData($key)) {
-            throw new \Exception(sprintf('fixture data with key "%s" already exists', $key));
+            throw new FixtureException(sprintf('fixture data with key "%s" already exists in "%s" fixture', $key, $this->name));
         }
 
         $this->fixtureData[$key] = $fixtureData;

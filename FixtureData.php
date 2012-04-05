@@ -2,6 +2,8 @@
 
 namespace DavidBadura\FixturesBundle;
 
+use DavidBadura\FixturesBundle\Exception\FixtureException;
+
 /**
  *
  * @author David Badura <d.badura@gmx.de>
@@ -115,7 +117,7 @@ class FixtureData
     public function setObject($object)
     {
         if($this->object) {
-            throw new \Exception("fixture data has already a object");
+            throw new FixtureException("fixture data has already an object");
         }
         $this->object = $object;
         return $this;
@@ -151,12 +153,12 @@ class FixtureData
     /**
      *
      * @param Fixture $fixture
-     * @throws \Exception
+     * @throws FixtureException
      */
     public function setFixture(Fixture $fixture)
     {
         if($this->fixture) {
-            throw new \Exception();
+            throw new FixtureException("Fixture data has a parent already");
         }
         $this->fixture = $fixture;
     }
