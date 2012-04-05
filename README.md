@@ -161,4 +161,3 @@ Todos
 
 * Fixture data validating and normalizing by symfony config component
 * More tests
-* Error handling

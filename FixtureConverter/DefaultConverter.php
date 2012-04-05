@@ -87,6 +87,7 @@ class DefaultConverter extends FixtureConverter
     {
         $reflClass = new \ReflectionClass($object);
         $setter = 'set' . $this->camelize($property);
+        $adder = 'add' . $this->camelize($property);
 
         if ($reflClass->hasMethod($setter)) {
             if (!$reflClass->getMethod($setter)->isPublic()) {
@@ -106,6 +107,14 @@ class DefaultConverter extends FixtureConverter
         } elseif (property_exists($object, $property)) {
             // needed to support \stdClass instances
             $object->$property = $value;
+        } elseif(is_array($value) && $reflClass->hasMethod($adder)) {
+            if (!$reflClass->getMethod($adder)->isPublic()) {
+                throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $adder, $reflClass->getName()));
+            }
+
+            foreach($value as $val) {
+                $object->$adder($val);
+            }
         } else {
             throw new FixtureConverterException(sprintf('Neither element "%s" nor method "%s()" exists in class "%s"', $property, $setter, $reflClass->getName()));
         }
