@@ -46,6 +46,10 @@ class ValidationListener
         $fixtures = $event->getFixtures();
 
         foreach ($fixtures as $fixture) {
+            if(!$fixture->isEnableValidation()) {
+                continue;
+            }
+
             foreach ($fixture as $data) {
                 $object = $data->getObject();
 
@@ -53,7 +57,7 @@ class ValidationListener
                     continue;
                 }
 
-                $violationList = $this->validator->validate($object);
+                $violationList = $this->validator->validate($object, $fixture->getValidationGroups());
 
                 if(count($violationList) != 0) {
                     throw new ValidationException($fixture->getName(), $data->getKey(), $violationList);

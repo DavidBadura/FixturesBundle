@@ -57,7 +57,9 @@ fixtures:
     user:
         converter: user # optional (default configuration is "default")
         tags: [install] # optional
-        validation: [enable: true, group: default] # optional
+        validation: # optional
+            enable: true
+            groups: [Default]
         data:
             david:
                 name: David

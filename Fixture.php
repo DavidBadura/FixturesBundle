@@ -28,13 +28,13 @@ class Fixture implements \IteratorAggregate, \Countable
      *
      * @var boolean
      */
-    private $enableValidation = 'false';
+    private $enableValidation = false;
 
     /**
      *
-     * @var string
+     * @var array|null
      */
-    private $validationGroup = 'default';
+    private $validationGroups = null;
 
     /**
      *
@@ -158,9 +158,9 @@ class Fixture implements \IteratorAggregate, \Countable
      *
      * @return string
      */
-    public function getValidationGroup()
+    public function getValidationGroups()
     {
-        return $this->validationGroup;
+        return $this->validationGroups;
     }
 
     /**
@@ -168,9 +168,18 @@ class Fixture implements \IteratorAggregate, \Countable
      * @param string $validationGroup
      * @return \DavidBadura\FixturesBundle\Fixture
      */
-    public function setValidationGroup($validationGroup)
+    public function setValidationGroups($validationGroups)
     {
-        $this->validationGroup = $validationGroup;
+        if(is_null($validationGroups)) {
+            $this->validationGroups = null;
+            return $this;
+        }
+
+        if(!is_array($validationGroups)) {
+            $validationGroups = array($validationGroups);
+        }
+
+        $this->validationGroups = $validationGroups;
         return $this;
     }
 

@@ -69,6 +69,15 @@ class FixtureFactory
             $fixture->setProperties($data['properties']);
         }
 
+        if(isset($data['validation'])) {
+            if(isset($data['validation']['enable']) && $data['validation']['enable']) {
+                $fixture->setEnableValidation(true);
+            }
+            if(isset($data['validation']['groups'])) {
+                $fixture->setValidationGroups($data['validation']['groups']);
+            }
+        }
+
         return $fixture;
     }
 
