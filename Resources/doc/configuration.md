@@ -1,4 +1,8 @@
-Defaults:
+Configuration
+=============
+
+Defaults
+--------
 
 ``` yaml
 # app/config/config.yml
