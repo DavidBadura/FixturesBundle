@@ -27,7 +27,7 @@ Todos
 Documentation
 -------------
 
-[Documentation](Resources/doc/index.md)
+[documentation](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/index.md)
 
 
 1. Installation
@@ -71,8 +71,6 @@ david_badura_fixtures:
   bundles: [YourBundle]
 ```
 
-For more information read the [Configuration](Resources/doc/configuration.md) chapter.
-
 3. Create fixtures
 ---------------
 
@@ -98,8 +96,7 @@ group:
         member:
             name: Member
 ```
-The fixture files will be automatically loaded from the `Resources\fixtures` folder
-For more information read the [Fixtures](Resources/doc/fixtures.md) chapter.
+The fixture files will be automatically loaded from the `Resources\fixtures` folder.
 
 4. Load fixtures
 ----------------
@@ -109,5 +106,4 @@ Command:
 ``` shell
 php app/console davidbadura:fixtures:load
 ```
-For more information you can read the [Command](Resources/doc/command.md) chapter.
 

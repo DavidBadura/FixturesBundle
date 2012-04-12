@@ -16,7 +16,7 @@ fixtures:
                 email: "d.badura@gmx.de"
 ```
 
-The fixtures are loaded automatically from `YourBundle\Resources\fixtures` folder.
+The fixture files will be automatically loaded from the `Resources\fixtures` folder.
 
 References
 ----------
