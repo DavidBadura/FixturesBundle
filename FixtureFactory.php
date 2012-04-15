@@ -70,8 +70,8 @@ class FixtureFactory
         }
 
         if(isset($data['validation'])) {
-            if(isset($data['validation']['enable']) && $data['validation']['enable']) {
-                $fixture->setEnableValidation(true);
+            if(isset($data['validation']['enable']) && !$data['validation']['enable']) {
+                $fixture->setEnableValidation(false);
             }
             if(isset($data['validation']['groups'])) {
                 $fixture->setValidationGroups($data['validation']['groups']);

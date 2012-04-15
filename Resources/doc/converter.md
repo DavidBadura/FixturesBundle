@@ -203,7 +203,6 @@ class UserConverter extends FixtureConverter implements ConverterDataValidate
 ```
 
 
-
 Converter as a service
 ----------------------
 

@@ -28,7 +28,7 @@ class Fixture implements \IteratorAggregate, \Countable
      *
      * @var boolean
      */
-    private $enableValidation = false;
+    private $enableValidation = true;
 
     /**
      *
