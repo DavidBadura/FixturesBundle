@@ -28,20 +28,59 @@ class ExecutorTest extends AbstractFixtureTest
         $this->executor = new Executor();
     }
 
-    public function testExecute()
+    public function testSimpleFixture()
+    {
+        $userFixture = $this->createUserFixture(array(
+            'david' => array(
+                'name' => 'David Badura',
+                'email' => 'd.badura@gmx.de'
+            )
+        ));
+
+        $fixtures = new FixtureCollection(array($userFixture));
+        $this->executor->execute($fixtures);
+
+        $this->assertTrue($fixtures->get('user')->hasFixtureData('david'));
+        $fixtureData = $fixtures->get('user')->getFixtureData('david');
+        $this->assertTrue($fixtureData->hasObject());
+        $object = $fixtureData->getObject();
+        $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $object);
+        $this->assertEquals('David Badura', $object->getName());
+        $this->assertEquals('d.badura@gmx.de', $object->getEmail());
+    }
+
+    public function testReference()
     {
         $userFixture = $this->createUserFixture(array(
             'david' => array(
                 'name' => 'David Badura',
                 'email' => 'd.badura@gmx.de',
-                'groups' => array('@group:users'),
-                'roles' => array('@role:admin', '@role:dev')
-            ),
-            'test' => array(
-                'name' => 'test',
-                'email' => 'test@example.de',
-                'groups' => array('@group:users'),
-                'roles' => array('@role:dev')
+                'roles' => array('@role:admin')
+            )
+        ));
+
+        $roleFixture = $this->createRoleFixture(array(
+            'admin' => array(
+                'name' => 'Admin'
+            )
+        ));
+
+        $fixtures = new FixtureCollection(array($userFixture, $roleFixture));
+        $this->executor->execute($fixtures);
+
+        $david = $fixtures->get('user')->getFixtureData('david')->getObject();
+        $admin = $fixtures->get('role')->getFixtureData('admin')->getObject();
+
+        $this->assertEquals(array($admin), $david->getRoles());
+    }
+
+    public function testBiReference()
+    {
+        $userFixture = $this->createUserFixture(array(
+            'david' => array(
+                'name' => 'David Badura',
+                'email' => 'd.badura@gmx.de',
+                'groups' => array('@group:users')
             )
         ));
 
@@ -52,27 +91,57 @@ class ExecutorTest extends AbstractFixtureTest
             )
         ));
 
-        $roleFixture = $this->createRoleFixture(array(
-            'admin' => array(
-                'name' => 'Admin'
-            ),
-            'dev' => array(
-                'name' => 'Developer'
+        $fixtures = new FixtureCollection(array($userFixture, $groupFixture));
+        $this->executor->execute($fixtures);
+
+        $david = $fixtures->get('user')->getFixtureData('david')->getObject();
+        $users = $fixtures->get('group')->getFixtureData('users')->getObject();
+
+        $this->assertEquals(array($users), $david->getGroups());
+        $this->assertEquals($david, $users->leader);
+    }
+
+    /**
+     * @expectedException DavidBadura\FixturesBundle\Exception\CircularReferenceException
+     */
+    public function testCircleReferenceException()
+    {
+
+        $userFixture = $this->createUserFixture(array(
+            'david' => array(
+                'name' => 'David Badura',
+                'email' => 'd.badura@gmx.de',
+                'groups' => array('@group:users')
             )
         ));
 
-        $fixtures = new FixtureCollection(array($userFixture, $groupFixture, $roleFixture));
+        $groupFixture = $this->createGroupFixture(array(
+            'users' => array(
+                'name' => 'Users',
+                'leader' => '@user:david'
+            )
+        ));
+
+        $fixtures = new FixtureCollection(array($userFixture, $groupFixture));
         $this->executor->execute($fixtures);
+    }
 
-        $david = $userFixture->getFixtureData('david')->getObject();
+    /**
+     * @expectedException DavidBadura\FixturesBundle\Exception\ReferenceNotFoundException
+     */
+    public function testReferenceNotFoundException()
+    {
 
-        $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $david);
-        $this->assertEquals('David Badura', $david->getName());
+        $userFixture = $this->createUserFixture(array(
+            'david' => array(
+                'name' => 'David Badura',
+                'email' => 'd.badura@gmx.de',
+                'groups' => array('@group:users')
+            )
+        ));
 
-        $groups = $david->getGroups();
-        $this->assertEquals(1, count($groups));
-        $this->assertEquals('Users', $groups[0]->name);
-        $this->assertEquals($david, $groups[0]->leader);
+        $fixtures = new FixtureCollection(array($userFixture, ));
+        $this->executor->execute($fixtures);
     }
 
 }

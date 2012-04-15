@@ -23,7 +23,7 @@ class CircularReferenceException extends RuntimeException
      */
     public function __construct($name, $key, array $path)
     {
-        parent::__construct($name, $key, sprintf('Circular reference detected for fixture "%s:%s", path: "%s".', $name, $key, implode(' -> ', $path)));
+        parent::__construct($name, $key, sprintf('Circular reference detected for fixture "%s:%s", path: "%s -> %s:%s".', $name, $key, implode(' -> ', array_keys($path)), $name, $key));
 
         $this->path = $path;
     }

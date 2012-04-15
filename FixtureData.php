@@ -138,7 +138,7 @@ class FixtureData
      */
     public function hasObject()
     {
-        return ($this->object);
+        return ($this->object != null);
     }
 
     /**
