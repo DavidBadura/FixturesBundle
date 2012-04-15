@@ -12,6 +12,7 @@
         <parameter key="davidbadura_fixtures.converter_repository.class">DavidBadura\FixturesBundle\ConverterRepository</parameter>
         <parameter key="davidbadura_fixtures.converter.default.class">DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter</parameter>
 
+        <parameter key="davidbadura_fixtures.event_listener.tree.class">DavidBadura\FixturesBundle\EventListener\TreeListener</parameter>
         <parameter key="davidbadura_fixtures.event_listener.validation.class">DavidBadura\FixturesBundle\EventListener\ValidationListener</parameter>
         <parameter key="davidbadura_fixtures.event_listener.persist.class">DavidBadura\FixturesBundle\EventListener\PersistListener</parameter>
         <parameter key="davidbadura_fixtures.event_listener.tag_filter.class">DavidBadura\FixturesBundle\EventListener\TagFilterListener</parameter>
@@ -46,6 +47,12 @@
 
         <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
             <tag name="davidbadura_fixtures.converter" />
+        </service>
+
+        <service id="davidbadura_fixtures.event_listener.tree"
+            class="%davidbadura_fixtures.event_listener.tree.class%">
+            <argument type="service" id="davidbadura_fixtures.converter_repository" />
+            <tag name="kernel.event_listener" event="david_badura_fixtures.post_fixture_load" method="onPostFixtureLoad" />
         </service>
 
         <service id="davidbadura_fixtures.event_listener.validation"

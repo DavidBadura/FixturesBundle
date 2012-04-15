@@ -14,11 +14,11 @@ Features
 * Fixture filtering by tags
 * Object validation
 * Fixturemanager as a service
+* Fixture data validating and normalizing by symfony config component
 
 Todos
 -----
 
-* Fixture data validating and normalizing by symfony config component
 * XML Fixtures support
 * Support MongoDB
 * More tests
@@ -61,7 +61,6 @@ public function registerBundles()
 
 2. Configuration
 ----------------
-YAML
 
 Configure DavidBaduraFixturesBundle:
 
