@@ -73,3 +73,35 @@ fixtures:
                 ladder: "@@user:david"
                 name: Member
 ```
+
+Change converter
+----------------
+
+To change the converter you must change the `converter` property.
+
+``` yaml
+# @YourBundle/Resource/fixtures/install.yml
+fixtures:
+    user:
+        converter: default
+        data: #...
+```
+
+You can read more about converter in [Converter](converter.md).
+
+Object validation
+-----------------
+
+Object validation is enabled by default.
+To disable validation `validation.enable` must be set `false`.
+You can also define validation groups.
+
+``` yaml
+# @YourBundle/Resource/fixtures/install.yml
+fixtures:
+    user:
+        validation:
+            enable: true
+            groups: [Default]
+        data: #...
+```

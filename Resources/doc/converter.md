@@ -177,7 +177,31 @@ class GroupConverter extends FixtureConverter
 }
 ```
 
-How define dependencies in your fixtures you can read the [Fixtures](fixtures.md) chapter.
+Data validation (config tree)
+-----------------------------
+
+``` php
+// YourBundle/FixtureConverter/UserConverter.php
+namespace YourBundle\FixtureConverter;
+
+use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverter;
+use DavidBadura\FixturesBundle\FixtureConverter\ConverterDataValidate;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+
+class UserConverter extends FixtureConverter implements ConverterDataValidate
+{
+
+    // ...
+
+    public function addNodeSchema(NodeBuilder $node)
+    {
+        $node->scalarNode('name')->isRequired()->end()
+             ->scalarNode('email')->end()
+    }
+
+}
+```
+
 
 
 Converter as a service

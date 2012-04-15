@@ -27,7 +27,7 @@ Todos
 Documentation
 -------------
 
-[documentation](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/index.md)
+Read [Documentation](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/index.md)
 
 
 1. Installation
