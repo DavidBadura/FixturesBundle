@@ -1,6 +1,17 @@
 Configuration
 =============
 
+Minimal configuration
+---------------------
+
+You must only add your bundle in `bundles`, so your fixtures and converters can be found.
+
+``` yaml
+# app/config/config.yml
+david_badura_fixtures:
+  bundles: [YourBundle]
+```
+
 Defaults
 --------
 
