@@ -145,7 +145,15 @@ class ConverterRepository
 
         foreach ($this->bundles as $name) {
             $bundle = $this->kernel->getBundle($name);
-            $paths[] = $bundle->getPath() . '/FixtureConverter';
+
+            if(file_exists($bundle->getPath() . '/FixtureConverter')) {
+                $paths[] = $bundle->getPath() . '/FixtureConverter';
+            }
+        }
+
+        if(empty($paths)) {
+            $this->loaded = true;
+            return;
         }
 
         $finder = new Finder();
