@@ -89,6 +89,13 @@ class DefaultConverter extends FixtureConverter
         $setter = 'set' . $this->camelize($property);
         $adder = 'add' . $this->camelize($property);
 
+
+        if (substr($property, -1, 1) == 's' && !$reflClass->hasMethod($adder) && is_array($value)) {
+            // adder may be non plural...
+            $single = substr($property, 0, -1);
+            $adder = 'add' . $this->camelize($single);
+        }
+
         if ($reflClass->hasMethod($setter)) {
             if (!$reflClass->getMethod($setter)->isPublic()) {
                 throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $setter, $reflClass->getName()));
@@ -98,6 +105,15 @@ class DefaultConverter extends FixtureConverter
         } elseif ($reflClass->hasMethod('__set')) {
             // needed to support magic method __set
             $object->$property = $value;
+        } elseif(is_array($value) && $reflClass->hasMethod($adder)) {
+            if (!$reflClass->getMethod($adder)->isPublic()) {
+                throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $adder, $reflClass->getName()));
+            }
+
+            foreach($value as $val) {
+                $object->$adder($val);
+            }
+
         } elseif ($reflClass->hasProperty($property)) {
             if (!$reflClass->getProperty($property)->isPublic()) {
                 throw new FixtureConverterException(sprintf('Property "%s" is not public in class "%s". Maybe you should create the method "%s()"?', $property, $reflClass->getName(), $setter));
@@ -107,14 +123,6 @@ class DefaultConverter extends FixtureConverter
         } elseif (property_exists($object, $property)) {
             // needed to support \stdClass instances
             $object->$property = $value;
-        } elseif(is_array($value) && $reflClass->hasMethod($adder)) {
-            if (!$reflClass->getMethod($adder)->isPublic()) {
-                throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $adder, $reflClass->getName()));
-            }
-
-            foreach($value as $val) {
-                $object->$adder($val);
-            }
         } else {
             throw new FixtureConverterException(sprintf('Neither element "%s" nor method "%s()" exists in class "%s"', $property, $setter, $reflClass->getName()));
         }
