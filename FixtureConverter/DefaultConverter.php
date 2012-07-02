@@ -4,6 +4,7 @@ namespace DavidBadura\FixturesBundle\FixtureConverter;
 
 use DavidBadura\FixturesBundle\FixtureData;
 use DavidBadura\FixturesBundle\Exception\FixtureConverterException;
+use DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccess;
 
 /**
  *
@@ -64,9 +65,11 @@ class DefaultConverter extends FixtureConverter
             }
         }
 
+        $objectAccess = new ObjectAccess($object);
+
         foreach ($data as $property => $value) {
             if (!isset($args[$property])) {
-                $this->writeProperty($object, $property, $value);
+                $objectAccess->writeProperty($property, $value);
             }
         }
     }
@@ -74,65 +77,6 @@ class DefaultConverter extends FixtureConverter
     public function getName()
     {
         return 'default';
-    }
-
-    /**
-     * Sets the value of the property at the given index in the path
-     *
-     * @param object  $objectOrArray The object or array to traverse
-     * @param integer $currentIndex  The index of the modified property in the path
-     * @param mixed $value           The value to set
-     */
-    protected function writeProperty($object, $property, $value)
-    {
-        $reflClass = new \ReflectionClass($object);
-        $setter = 'set' . $this->camelize($property);
-        $adder = 'add' . $this->camelize($property);
-
-
-        if (substr($property, -1, 1) == 's' && !$reflClass->hasMethod($adder) && is_array($value)) {
-            // adder may be non plural...
-            $single = substr($property, 0, -1);
-            $adder = 'add' . $this->camelize($single);
-        }
-
-        if ($reflClass->hasMethod($setter)) {
-            if (!$reflClass->getMethod($setter)->isPublic()) {
-                throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $setter, $reflClass->getName()));
-            }
-
-            $object->$setter($value);
-        } elseif ($reflClass->hasMethod('__set')) {
-            // needed to support magic method __set
-            $object->$property = $value;
-        } elseif(is_array($value) && $reflClass->hasMethod($adder)) {
-            if (!$reflClass->getMethod($adder)->isPublic()) {
-                throw new FixtureConverterException(sprintf('Method "%s()" is not public in class "%s"', $adder, $reflClass->getName()));
-            }
-
-            foreach($value as $val) {
-                $object->$adder($val);
-            }
-
-        } elseif ($reflClass->hasProperty($property)) {
-            if (!$reflClass->getProperty($property)->isPublic()) {
-                throw new FixtureConverterException(sprintf('Property "%s" is not public in class "%s". Maybe you should create the method "%s()"?', $property, $reflClass->getName(), $setter));
-            }
-
-            $object->$property = $value;
-        } elseif (property_exists($object, $property)) {
-            // needed to support \stdClass instances
-            $object->$property = $value;
-        } else {
-            throw new FixtureConverterException(sprintf('Neither element "%s" nor method "%s()" exists in class "%s"', $property, $setter, $reflClass->getName()));
-        }
-    }
-
-    protected function camelize($property)
-    {
-        return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) {
-                    return ('.' === $match[1] ? '_' : '') . strtoupper($match[2]);
-                }, $property);
     }
 
 }
