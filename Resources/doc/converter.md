@@ -16,8 +16,8 @@ fixtures:
     user:
         properties:
             class: 'YourBundle\Entity\User'
-    data:
-        # ...
+        data:
+            # ...
 ```
 
 The converter handles all attributes and he trying to pass values ​​to the object.
@@ -27,10 +27,10 @@ fixtures:
     user:
         properties:
             class: 'YourBundle\Entity\User'
-    data:
-        david:
-            name: 'David Badura'
-            email: 'd.badura@gmx.de'
+        data:
+            david:
+                name: 'David Badura'
+                email: 'd.badura@gmx.de'
 ```
 
 Order to pass data:
@@ -48,10 +48,10 @@ fixtures:
         properties:
             class: 'YourBundle\Entity\User'
             constructor: [name, email]
-    data:
-        david:
-            name: 'David Badura'
-            email: 'd.badura@gmx.de'
+        data:
+            david:
+                name: 'David Badura'
+                email: 'd.badura@gmx.de'
 ```
 
 Also you can mark optional constructor attributes with a `?` symbole.
@@ -62,9 +62,9 @@ fixtures:
         properties:
             class: 'YourBundle\Entity\User'
             constructor: [name, ?email]
-    data:
-        david:
-            name: 'David Badura'
+        data:
+            david:
+                name: 'David Badura'
 ```
 
 
@@ -110,6 +110,7 @@ In your fixture files your fixtures must add/change the converter property in `u
 fixtures:
     user:
         converter: user
+        data: # ...
 ```
 
 Your converter can also access the properties section.
@@ -120,6 +121,7 @@ fixtures:
         converter: user
         properties:
             foo: bar
+        data: # ...
 ```
 
 ``` php
