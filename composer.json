@@ -1,7 +1,7 @@
 {
     "name": "davidbadura/fixtures-bundle",
-    "description": "",
-    "keywords": ["symfony2", "fixtures", "doctrine"],
+    "description": "A Symfony2 bundle to load yaml fixtures",
+    "keywords": ["symfony2", "fixtures", "doctrine", "yaml", "database", "orm"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [{
