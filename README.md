@@ -21,8 +21,6 @@ Todos
 
 * XML Fixtures support
 * Support MongoDB
-* More tests
-* Write documentations
 
 Documentation
 -------------

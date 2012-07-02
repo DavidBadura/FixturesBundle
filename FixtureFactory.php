@@ -69,6 +69,10 @@ class FixtureFactory
             $fixture->setProperties($data['properties']);
         }
 
+        if(isset($data['tags'])) {
+            $fixture->addTags($data['tags']);
+        }
+
         if(isset($data['validation'])) {
             if(isset($data['validation']['enable']) && !$data['validation']['enable']) {
                 $fixture->setEnableValidation(false);

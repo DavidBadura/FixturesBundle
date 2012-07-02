@@ -52,6 +52,7 @@ class TreeListener
         foreach(array_keys($data) as $key) {
             $data[$key]['data'] = $temp[$key]['data'];
             $data[$key]['properties'] = (isset($temp[$key]['properties']) ? $temp[$key]['properties'] : array());
+            $data[$key]['tags'] = (isset($temp[$key]['tags']) ? $temp[$key]['tags'] : array());
             $data[$key] = $this->validate($data[$key]);
         }
 
@@ -71,6 +72,7 @@ class TreeListener
         $root->useAttributeAsKey('type')->prototype('array')
             ->children()
                 ->arrayNode('properties')->ignoreExtraKeys()->end()
+                ->arrayNode('tags')->ignoreExtraKeys()->end()
                 ->scalarNode('converter')->defaultValue('default')->end()
                 ->arrayNode('validation')
                     ->children()

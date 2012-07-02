@@ -44,11 +44,7 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
                 'properties' =>
                 array(
                     'class' => 'DavidBadura\\FixturesBundle\\Tests\\TestObjects\\User',
-                    'constructor' =>
-                    array(
-                        0 => 'name',
-                        1 => 'email',
-                    ),
+                    'constructor' => array('name', 'email'),
                 ),
                 'data' =>
                 array(
@@ -56,28 +52,15 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
                     array(
                         'name' => 'David Badura',
                         'email' => 'd.badura@gmx.de',
-                        'group' =>
-                        array(
-                            0 => '@group:owner',
-                            1 => '@group:developer',
-                        ),
-                        'role' =>
-                        array(
-                            0 => '@role:admin',
-                        ),
+                        'group' => array('@group:owner', '@group:developer'),
+                        'role' => array('@role:admin'),
                     ),
                     'other' =>
                     array(
                         'name' => 'Somebody',
                         'email' => 'test@example.de',
-                        'group' =>
-                        array(
-                            0 => '@group:developer',
-                        ),
-                        'role' =>
-                        array(
-                            0 => '@role:user',
-                        ),
+                        'group' => array('@group:developer'),
+                        'role' => array('@role:user'),
                     ),
                 ),
             ),
@@ -87,6 +70,7 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
                 array(
                     'class' => 'DavidBadura\\FixturesBundle\\Tests\\TestObjects\\Group',
                 ),
+                'tags' => array('install', 'test'),
                 'data' =>
                 array(
                     'developer' =>
@@ -102,6 +86,7 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
                 array(
                     'class' => 'DavidBadura\\FixturesBundle\\Tests\\TestObjects\\Role',
                 ),
+                'tags' => array('test'),
                 'data' =>
                 array(
                     'admin' =>
@@ -127,6 +112,21 @@ class FixtureFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->converter, $fixtures->get('user')->getConverter());
         $this->assertEquals($this->converter, $fixtures->get('group')->getConverter());
         $this->assertEquals($this->converter, $fixtures->get('role')->getConverter());
+
+        $this->assertEquals(array(), $fixtures->get('user')->getTags());
+        $this->assertEquals(array('install', 'test'), $fixtures->get('group')->getTags());
+        $this->assertEquals(array('test'), $fixtures->get('role')->getTags());
+
+        $this->assertEquals(array('class' => 'DavidBadura\\FixturesBundle\\Tests\\TestObjects\\User',
+            'constructor' => array('name', 'email')),
+            $fixtures->get('user')->getProperties());
+
+        $this->assertEquals(array('class' => 'DavidBadura\\FixturesBundle\\Tests\\TestObjects\\Group'),
+            $fixtures->get('group')->getProperties());
+
+        $this->assertEquals(array('class' => 'DavidBadura\\FixturesBundle\\Tests\\TestObjects\\Role'),
+            $fixtures->get('role')->getProperties());
+
     }
 
 }
