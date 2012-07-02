@@ -15,7 +15,7 @@ The default converter needs the `class` property so that it knows which class to
 fixtures:
     user:
         properties:
-        class: 'YourBundle\Entity\User'
+            class: 'YourBundle\Entity\User'
     data:
         # ...
 ```
@@ -26,7 +26,7 @@ The converter handles all attributes and he trying to pass values ​​to the o
 fixtures:
     user:
         properties:
-        class: 'YourBundle\Entity\User'
+            class: 'YourBundle\Entity\User'
     data:
         david:
             name: 'David Badura'
@@ -46,8 +46,8 @@ If you have a class with a constructor you can add the `constructor` property.
 fixtures:
     user:
         properties:
-        class: 'YourBundle\Entity\User'
-        constructor: [name, email]
+            class: 'YourBundle\Entity\User'
+            constructor: [name, email]
     data:
         david:
             name: 'David Badura'
@@ -60,8 +60,8 @@ Also you can mark optional constructor attributes with a `?` symbole.
 fixtures:
     user:
         properties:
-        class: 'YourBundle\Entity\User'
-        constructor: [name, ?email]
+            class: 'YourBundle\Entity\User'
+            constructor: [name, ?email]
     data:
         david:
             name: 'David Badura'
@@ -118,8 +118,8 @@ Your converter can also access the properties section.
 fixtures:
     user:
         converter: user
-    properties:
-        foo: bar
+        properties:
+            foo: bar
 ```
 
 ``` php

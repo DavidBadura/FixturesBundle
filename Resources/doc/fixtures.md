@@ -105,3 +105,16 @@ fixtures:
             groups: [Default]
         data: #...
 ```
+
+Tags
+----
+
+You can give your fixtures some tags, then you can filter these.
+
+``` yaml
+# @YourBundle/Resource/fixtures/install.yml
+fixtures:
+    user:
+        tags: [install, test]
+        data: #...
+```
