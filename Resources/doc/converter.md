@@ -34,10 +34,11 @@ fixtures:
 ```
 
 Order to pass data:
-- $object->setName()
-- $object->__set
-- $object->name
-- foreach($name as $n) $object->addName($n)
+- $object->set{PropertyName}()
+- $object->add{PropertyName}() (foreach)
+- $object->get{PropertyName}() (instanceof ArrayCollection)
+- $object->{PropertyName}
+- $object->__set()
 
 If you have a class with a constructor you can add the `constructor` property.
 

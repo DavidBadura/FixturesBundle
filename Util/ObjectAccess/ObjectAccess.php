@@ -41,16 +41,7 @@ class ObjectAccess
 
             $noPublic[] = sprintf('Method "%s()" is not public', $setter);
         }
-
-
-        /*
-         * try with magic __set method
-         */
-        if ($this->reflClass->hasMethod('__set')) {
-            $this->object->$property = $value;
-            return;
-        }
-
+        
 
         /*
          * try with adder method
@@ -120,6 +111,14 @@ class ObjectAccess
          * needed to support \stdClass instances
          */
         if ($this->object instanceof \stdClass) {
+            $this->object->$property = $value;
+            return;
+        }
+
+        /*
+         * try with magic __set method
+         */
+        if ($this->reflClass->hasMethod('__set')) {
             $this->object->$property = $value;
             return;
         }
