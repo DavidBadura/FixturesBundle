@@ -5,7 +5,6 @@ namespace DavidBadura\FixturesBundle\Tests;
 use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
 use DavidBadura\FixturesBundle\Fixture;
 use DavidBadura\FixturesBundle\FixtureData;
-use DavidBadura\FixturesBundle\FixtureCollection;
 
 /**
  *
@@ -52,8 +51,8 @@ abstract class AbstractFixtureTest extends \PHPUnit_Framework_TestCase
         }
 
         $fixture->setProperties($properties);
+
         return $fixture;
     }
 
 }
-

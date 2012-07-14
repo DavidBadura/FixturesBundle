@@ -123,4 +123,3 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
     }
 
 }
-

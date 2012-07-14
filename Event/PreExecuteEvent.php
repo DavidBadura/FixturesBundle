@@ -27,7 +27,7 @@ class PreExecuteEvent extends Event
     /**
      *
      * @param FixtureCollection $fixtures
-     * @param array $options
+     * @param array             $options
      */
     public function __construct(FixtureCollection $fixtures, array $options = array())
     {
@@ -46,12 +46,13 @@ class PreExecuteEvent extends Event
 
     /**
      *
-     * @param FixtureCollection $fixtures
+     * @param  FixtureCollection                                 $fixtures
      * @return \DavidBadura\FixturesBundle\Event\PreExecuteEvent
      */
     public function setFixtures(FixtureCollection $fixtures)
     {
         $this->fixtures = $fixtures;
+
         return $this;
     }
 
@@ -66,14 +67,14 @@ class PreExecuteEvent extends Event
 
     /**
      *
-     * @param array $options
+     * @param  array                                             $options
      * @return \DavidBadura\FixturesBundle\Event\PreExecuteEvent
      */
     public function setOptions(array $options)
     {
         $this->options = $options;
+
         return $this;
     }
 
 }
-

@@ -9,4 +9,3 @@ namespace DavidBadura\FixturesBundle\Exception;
 class FixtureConverterException extends FixtureException
 {
 }
-

@@ -25,7 +25,6 @@ class Executor implements ExecutorInterface
      */
     private $order = 0;
 
-
     /**
      *
      * @param FixtureCollection $fixtures
@@ -33,6 +32,7 @@ class Executor implements ExecutorInterface
     public function execute(FixtureCollection $fixtures)
     {
         $this->createObjects($fixtures);
+
         return $this->finalizeObjects($fixtures);
     }
 
@@ -47,7 +47,7 @@ class Executor implements ExecutorInterface
         foreach ($fixtures as $fixture) {
             foreach ($fixture as $data) {
 
-                if($data->hasObject() || $data->isLoaded()) {
+                if ($data->hasObject() || $data->isLoaded()) {
                     continue;
                 }
 
@@ -65,7 +65,7 @@ class Executor implements ExecutorInterface
         foreach ($fixtures as $fixture) {
             foreach ($fixture as $data) {
 
-                if($data->isLoaded()) {
+                if ($data->isLoaded()) {
                     continue;
                 }
 
@@ -76,9 +76,9 @@ class Executor implements ExecutorInterface
 
     /**
      *
-     * @param FixtureCollection $fixtures
-     * @param string $name
-     * @param string $key
+     * @param  FixtureCollection $fixtures
+     * @param  string            $name
+     * @param  string            $key
      * @throws \Exception
      */
     public function createObject(FixtureCollection $fixtures, $name, $key)
@@ -98,13 +98,13 @@ class Executor implements ExecutorInterface
         array_walk_recursive($data, function(&$value, $key) use ($executor, $fixtures) {
                 if (preg_match('/^@([\w-_]*):([\w-_]*)$/', $value, $hit)) {
 
-                    if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
+                    if (!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
                         throw new ReferenceNotFoundException($hit[1], $hit[2]);
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
 
-                    if(!$object) {
+                    if (!$object) {
                         $executor->createObject($fixtures, $hit[1], $hit[2]);
                     }
 
@@ -123,9 +123,9 @@ class Executor implements ExecutorInterface
 
     /**
      *
-     * @param FixtureCollection $fixtures
-     * @param type $name
-     * @param type $key
+     * @param  FixtureCollection $fixtures
+     * @param  type              $name
+     * @param  type              $key
      * @throws \Exception
      */
     public function finalizeObject(FixtureCollection $fixtures, $name, $key)
@@ -145,13 +145,13 @@ class Executor implements ExecutorInterface
 
                 if (preg_match('/^@@([\w-_]*):([\w-_]*)$/', $value, $hit)) {
 
-                    if(!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
+                    if (!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
                         throw new ReferenceNotFoundException($hit[1], $hit[2]);
                     }
 
                     $object = $fixtures->get($hit[1])->getFixtureData($hit[2])->getObject();
 
-                    if(!$object) {
+                    if (!$object) {
                         throw new FixtureException(sprintf("Object for %s:%s does not exist", $hit[1], $hit[2]));
                     }
 

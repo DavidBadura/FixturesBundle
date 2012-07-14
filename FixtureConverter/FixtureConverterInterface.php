@@ -26,7 +26,7 @@ interface FixtureConverterInterface
     /**
      *
      * @param object $object
-     * @param array $data
+     * @param array  $data
      */
     public function finalizeObject($object, FixtureData $fixtureData);
 

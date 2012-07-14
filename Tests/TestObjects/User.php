@@ -37,12 +37,11 @@ class User
      * @param string $name
      * @param string $email
      */
-    function __construct($name, $email)
+    public function __construct($name, $email)
     {
         $this->name = $name;
         $this->email = $email;
     }
-
 
     public function getName()
     {
@@ -52,6 +51,7 @@ class User
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -63,6 +63,7 @@ class User
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -74,6 +75,7 @@ class User
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -85,6 +87,7 @@ class User
     public function setGroups(array $groups)
     {
         $this->groups = $groups;
+
         return $this;
     }
 

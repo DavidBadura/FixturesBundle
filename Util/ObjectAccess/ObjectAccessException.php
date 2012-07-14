@@ -10,4 +10,3 @@ class ObjectAccessException extends \Exception
 {
 
 }
-

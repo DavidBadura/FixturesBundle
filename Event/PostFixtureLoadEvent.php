@@ -45,12 +45,13 @@ class PostFixtureLoadEvent extends Event
 
     /**
      *
-     * @param array $data
+     * @param  array                                              $data
      * @return \DavidBadura\FixturesBundle\Event\PostExecuteEvent
      */
     public function setData(array $data)
     {
         $this->data = $data;
+
         return $this;
     }
 
@@ -65,14 +66,14 @@ class PostFixtureLoadEvent extends Event
 
     /**
      *
-     * @param array $options
+     * @param  array                                              $options
      * @return \DavidBadura\FixturesBundle\Event\PostExecuteEvent
      */
     public function setOptions(array $options)
     {
         $this->options = $options;
+
         return $this;
     }
 
 }
-

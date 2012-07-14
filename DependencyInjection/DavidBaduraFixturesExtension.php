@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Definition\Processor;
 
 /**
@@ -29,14 +28,14 @@ class DavidBaduraFixturesExtension extends Extension
 
         $loader->load('services.xml');
 
-        if($config['persister'] == 'orm') {
+        if ($config['persister'] == 'orm') {
                 $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\DoctrinePersister');
                 $persister->addArgument(new Reference('doctrine.orm.entity_manager'));
         } else {
             throw new \Exception();
         }
 
-        if(isset($config['bundles'])) {
+        if (isset($config['bundles'])) {
             $loader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
             $loader->addArgument($config['bundles']);
 

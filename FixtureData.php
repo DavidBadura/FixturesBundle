@@ -62,7 +62,7 @@ class FixtureData
     /**
      *
      * @param string $key
-     * @param mixed $data
+     * @param mixed  $data
      */
     public function __construct($key, $data)
     {
@@ -91,12 +91,13 @@ class FixtureData
 
     /**
      *
-     * @param mixed $data
+     * @param  mixed        $data
      * @return \FixtureData
      */
     public function setData($data)
     {
         $this->data = $data;
+
         return $this;
     }
 
@@ -111,15 +112,16 @@ class FixtureData
 
     /**
      *
-     * @param object $object
+     * @param  object                                  $object
      * @return \DavidBadura\FixturesBundle\FixtureData
      */
     public function setObject($object)
     {
-        if($this->object) {
+        if ($this->object) {
             throw new FixtureException("fixture data has already an object");
         }
         $this->object = $object;
+
         return $this;
     }
 
@@ -152,12 +154,12 @@ class FixtureData
 
     /**
      *
-     * @param Fixture $fixture
+     * @param  Fixture          $fixture
      * @throws FixtureException
      */
     public function setFixture(Fixture $fixture)
     {
-        if($this->fixture) {
+        if ($this->fixture) {
             throw new FixtureException("Fixture data has a parent already");
         }
         $this->fixture = $fixture;
@@ -174,12 +176,13 @@ class FixtureData
 
     /**
      *
-     * @param int $order
+     * @param  int                                 $order
      * @return \DavidBadura\FixturesBundle\Fixture
      */
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -194,12 +197,13 @@ class FixtureData
 
     /**
      *
-     * @param boolean $loaded
+     * @param  boolean                                 $loaded
      * @return \DavidBadura\FixturesBundle\FixtureData
      */
     public function setLoaded($loaded = true)
     {
         $this->loaded = $loaded;
+
         return $this;
     }
 
@@ -214,20 +218,21 @@ class FixtureData
 
     /**
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function getParam($key)
     {
-        if(!isset($this->params[$key])) {
+        if (!isset($this->params[$key])) {
             return null;
         }
+
         return $this->params[$key];
     }
 
     /**
      *
-     * @param string $key
+     * @param  string  $key
      * @return boolean
      */
     public function hasParam($key)

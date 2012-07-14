@@ -21,4 +21,3 @@ class MagicAccessObject
         return $this->array[$property];
     }
 }
-

@@ -4,7 +4,6 @@ namespace DavidBadura\FixturesBundle\Tests\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use DavidBadura\FixturesBundle\DependencyInjection\DavidBaduraFixturesExtension;
-use Symfony\Component\Yaml\Parser;
 
 class DavidBaduraFixturesExtensionTest extends \PHPUnit_Framework_TestCase
 {

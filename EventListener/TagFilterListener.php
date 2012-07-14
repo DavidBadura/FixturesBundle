@@ -29,7 +29,7 @@ class TagFilterListener
         }
 
         foreach ($fixtures as $fixture) {
-            foreach($fixture->getTags() as $tag) {
+            foreach ($fixture->getTags() as $tag) {
                 if (in_array($tag, $options['tags'])) {
                     continue 2;
                 }

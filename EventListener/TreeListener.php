@@ -49,7 +49,7 @@ class TreeListener
         $data = $tree->normalize($data);
         $data = $tree->finalize($data);
 
-        foreach(array_keys($data) as $key) {
+        foreach (array_keys($data) as $key) {
             $data[$key]['data'] = $temp[$key]['data'];
             $data[$key]['properties'] = (isset($temp[$key]['properties']) ? $temp[$key]['properties'] : array());
             $data[$key]['tags'] = (isset($temp[$key]['tags']) ? $temp[$key]['tags'] : array());
@@ -88,11 +88,10 @@ class TreeListener
         return $tree->buildTree();
     }
 
-
     protected function validate($data)
     {
         $converter = $this->converterRepository->getConverter($data['converter']);
-        if(!$converter instanceof \DavidBadura\FixturesBundle\FixtureConverter\ConverterDataValidate) {
+        if (!$converter instanceof \DavidBadura\FixturesBundle\FixtureConverter\ConverterDataValidate) {
             return $data;
         }
 

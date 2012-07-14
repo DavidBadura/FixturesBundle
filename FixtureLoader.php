@@ -28,7 +28,7 @@ class FixtureLoader
     /**
      *
      * @param KernelInterface $kernel
-     * @param array $bundles
+     * @param array           $bundles
      */
     public function __construct(KernelInterface $kernel = null, array $bundles = array())
     {
@@ -44,7 +44,7 @@ class FixtureLoader
     {
         $paths = array();
 
-        foreach($this->bundles as $name) {
+        foreach ($this->bundles as $name) {
             $bundle = $this->kernel->getBundle($name);
             $paths[] = $bundle->getPath() . '/Resources/fixtures';
         }
@@ -54,7 +54,7 @@ class FixtureLoader
 
     /**
      *
-     * @param mixed $path
+     * @param  mixed     $path
      * @return Fixture[]
      */
     public function loadFixtures($path = null)
@@ -71,8 +71,8 @@ class FixtureLoader
                 $fixtures = array_merge_recursive($fixtures, $data);
             }
         }
+
         return $fixtures;
     }
-
 
 }

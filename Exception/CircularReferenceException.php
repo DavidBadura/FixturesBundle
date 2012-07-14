@@ -19,7 +19,7 @@ class CircularReferenceException extends RuntimeException
      *
      * @param string $name
      * @param string $key
-     * @param array $path
+     * @param array  $path
      */
     public function __construct($name, $key, array $path)
     {

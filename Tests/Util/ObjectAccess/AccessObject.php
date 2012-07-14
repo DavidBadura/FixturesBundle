@@ -21,7 +21,6 @@ class AccessObject
 
     public $addPublicTestMethodArrayVar = array();
 
-
     public function __construct()
     {
         $this->arrayCollection = new ArrayCollection();
@@ -63,4 +62,3 @@ class AccessObject
     }
 
 }
-

@@ -3,7 +3,6 @@
 namespace DavidBadura\FixturesBundle\EventListener;
 
 use Symfony\Component\Validator\ValidatorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
 use DavidBadura\FixturesBundle\Exception\ValidationException;
 
@@ -46,20 +45,20 @@ class ValidationListener
         $fixtures = $event->getFixtures();
 
         foreach ($fixtures as $fixture) {
-            if(!$fixture->isEnableValidation()) {
+            if (!$fixture->isEnableValidation()) {
                 continue;
             }
 
             foreach ($fixture as $data) {
                 $object = $data->getObject();
 
-                if(!$object) {
+                if (!$object) {
                     continue;
                 }
 
                 $violationList = $this->validator->validate($object, $fixture->getValidationGroups());
 
-                if(count($violationList) != 0) {
+                if (count($violationList) != 0) {
                     throw new ValidationException($fixture->getName(), $data->getKey(), $violationList);
                 }
             }

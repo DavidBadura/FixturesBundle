@@ -28,7 +28,6 @@ class ObjectAccess
         $setter = 'set' . $camelizeProperty;
         $adder = 'add' . $camelizeProperty;
 
-
         /*
          * try with setter method (set*)
          */
@@ -36,12 +35,12 @@ class ObjectAccess
 
             if ($this->reflClass->getMethod($setter)->isPublic()) {
                 $this->object->$setter($value);
+
                 return;
             }
 
             $noPublic[] = sprintf('Method "%s()" is not public', $setter);
         }
-        
 
         /*
          * try with adder method
@@ -54,6 +53,7 @@ class ObjectAccess
                     foreach ($value as $val) {
                         $this->object->$adder($val);
                     }
+
                     return;
                 }
 
@@ -73,6 +73,7 @@ class ObjectAccess
                         foreach ($value as $val) {
                             $this->object->$singularAdder($val);
                         }
+
                         return;
                     }
 
@@ -89,11 +90,11 @@ class ObjectAccess
                     foreach ($value as $val) {
                         $collection->add($val);
                     }
+
                     return;
                 }
             }
         }
-
 
         /*
          * try property
@@ -101,6 +102,7 @@ class ObjectAccess
         if ($this->reflClass->hasProperty($property)) {
             if ($this->reflClass->getProperty($property)->isPublic()) {
                 $this->object->$property = $value;
+
                 return;
             }
 
@@ -112,6 +114,7 @@ class ObjectAccess
          */
         if ($this->object instanceof \stdClass) {
             $this->object->$property = $value;
+
             return;
         }
 
@@ -120,10 +123,11 @@ class ObjectAccess
          */
         if ($this->reflClass->hasMethod('__set')) {
             $this->object->$property = $value;
+
             return;
         }
 
-        if(count($noPublic) > 0) {
+        if (count($noPublic) > 0) {
             throw new ObjectAccessException(sprintf('property "%s" is not writeable in class "%s"' . "\n"
                 . implode("\n", $noPublic), $property, $this->reflClass->getName()));
         }
@@ -140,4 +144,3 @@ class ObjectAccess
     }
 
 }
-

@@ -3,8 +3,6 @@
 namespace DavidBadura\FixturesBundle\Tests\Executor;
 
 use DavidBadura\FixturesBundle\Executor\Executor;
-use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
-use DavidBadura\FixturesBundle\Fixture;
 use DavidBadura\FixturesBundle\FixtureData;
 use DavidBadura\FixturesBundle\FixtureCollection;
 use DavidBadura\FixturesBundle\Tests\AbstractFixtureTest;

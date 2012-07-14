@@ -47,7 +47,7 @@ class ConverterRepository
     /**
      *
      * @param KernelInterface $kernel
-     * @param array $bundles
+     * @param array           $bundles
      */
     public function __construct(KernelInterface $kernel = null, array $bundles = array())
     {
@@ -68,7 +68,7 @@ class ConverterRepository
 
     /**
      *
-     * @param FixtureConverterInterface $converter
+     * @param  FixtureConverterInterface                  $converter
      * @return \DavidBadura\FixturesBundle\FixtureManager
      * @throws \Exception
      */
@@ -81,23 +81,25 @@ class ConverterRepository
 
         $this->converters[$name] = $converter;
         $this->classes[get_class($converter)] = true;
+
         return $this;
     }
 
     /**
      *
-     * @param string $name
+     * @param  string  $name
      * @return boolean
      */
     public function hasConverter($name)
     {
         $this->init();
+
         return isset($this->converters[$name]);
     }
 
     /**
      *
-     * @param string $name
+     * @param  string                    $name
      * @return FixtureConverterInterface
      * @throws \Exception
      */
@@ -113,7 +115,7 @@ class ConverterRepository
 
     /**
      *
-     * @param string $name
+     * @param  string                                     $name
      * @return \DavidBadura\FixturesBundle\FixtureManager
      * @throws \Exception
      */
@@ -124,6 +126,7 @@ class ConverterRepository
             unset($this->converters[$name]);
             unset($this->classes[get_class($this->converters[$name])]);
         }
+
         return $this;
     }
 
@@ -134,10 +137,12 @@ class ConverterRepository
     public function init()
     {
         if ($this->loaded)
+
             return;
 
         if (!$this->kernel || empty($this->bundles)) {
             $this->loaded = true;
+
             return;
         }
 
@@ -146,13 +151,14 @@ class ConverterRepository
         foreach ($this->bundles as $name) {
             $bundle = $this->kernel->getBundle($name);
 
-            if(file_exists($bundle->getPath() . '/FixtureConverter')) {
+            if (file_exists($bundle->getPath() . '/FixtureConverter')) {
                 $paths[] = $bundle->getPath() . '/FixtureConverter';
             }
         }
 
-        if(empty($paths)) {
+        if (empty($paths)) {
             $this->loaded = true;
+
             return;
         }
 
@@ -180,18 +186,19 @@ class ConverterRepository
 
     /**
      *
-     * @param string $className
+     * @param  string  $className
      * @return boolean
      */
     public function isTransient($className)
     {
         $rc = new \ReflectionClass($className);
         if ($rc->isAbstract())
+
             return true;
 
         $interfaces = class_implements($className);
+
         return in_array('DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface', $interfaces) ? false : true;
     }
 
 }
-

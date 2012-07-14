@@ -20,8 +20,6 @@ class TagFilterListenerTest extends AbstractFixtureTest
      */
     protected $listener;
 
-
-
     public function setUp()
     {
         parent::setUp();

@@ -23,43 +23,45 @@ class FixtureCollection implements \IteratorAggregate, \Countable
      */
     public function __construct(array $fixtures = array())
     {
-        foreach($fixtures as $fixture) {
+        foreach ($fixtures as $fixture) {
             $this->add($fixture);
         }
     }
 
     /**
      *
-     * @param Fixture $fixture
+     * @param  Fixture                                       $fixture
      * @return \DavidBadura\FixturesBundle\FixtureCollection
      * @throws FixtureException
      */
     public function add(Fixture $fixture)
     {
         $name = $fixture->getName();
-        if($this->has($name)) {
+        if ($this->has($name)) {
             throw new FixtureException(sprintf('fixture with the name "%s" already exists', $name));
         }
         $this->fixtures[$name] = $fixture;
+
         return $this;
     }
 
     /**
      *
-     * @param string $name
+     * @param  string  $name
      * @return Fixture
      */
     public function get($name)
     {
-        if(!$this->has($name)) {
+        if (!$this->has($name)) {
             return null;
         }
+
         return $this->fixtures[$name];
     }
 
     /**
      *
-     * @param string $name
+     * @param  string  $name
      * @return boolean
      */
     public function has($name)
@@ -69,14 +71,15 @@ class FixtureCollection implements \IteratorAggregate, \Countable
 
     /**
      *
-     * @param string $name
+     * @param  string                                        $name
      * @return \DavidBadura\FixturesBundle\FixtureCollection
      */
     public function remove($name)
     {
-        if($this->has($name)) {
+        if ($this->has($name)) {
             unset($this->fixtures[$name]);
         }
+
         return $this;
     }
 
@@ -99,4 +102,3 @@ class FixtureCollection implements \IteratorAggregate, \Countable
     }
 
 }
-
