@@ -15,12 +15,12 @@ Features
 * Object validation
 * Fixturemanager as a service
 * Fixture data validating and normalizing by symfony config component
+* MongoDB Support
 
 Todos
 -----
 
 * XML Fixtures support
-* Support MongoDB
 
 Documentation
 -------------
@@ -67,6 +67,15 @@ Configure DavidBaduraFixturesBundle:
 david_badura_fixtures:
   bundles: [YourBundle]
 ```
+
+Activate support for MongoDB:
+
+``` yaml
+# app/config/config.yml
+david_badura_fixtures:
+  persister: odm
+```
+
 
 3. Create fixtures
 ---------------
