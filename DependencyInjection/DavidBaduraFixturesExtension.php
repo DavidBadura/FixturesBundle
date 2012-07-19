@@ -13,6 +13,7 @@ use Symfony\Component\Config\Definition\Processor;
 /**
  *
  * @author David Badura <d.badura@gmx.de>
+ * @author Florian Eckerstorfer <florian@theroadtojoy.at>
  */
 class DavidBaduraFixturesExtension extends Extension
 {
@@ -29,8 +30,11 @@ class DavidBaduraFixturesExtension extends Extension
         $loader->load('services.xml');
 
         if ($config['persister'] == 'orm') {
-                $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\DoctrinePersister');
-                $persister->addArgument(new Reference('doctrine.orm.entity_manager'));
+            $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\DoctrinePersister');
+            $persister->addArgument(new Reference('doctrine.orm.entity_manager'));
+        } elseif ($config['persister'] === 'odm') {
+            $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\MongoDBPersister');
+                $persister->addArgument(new Reference('doctrine.odm.mongodb.document_manager'));
         } else {
             throw new \Exception();
         }

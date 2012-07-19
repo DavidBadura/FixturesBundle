@@ -12,6 +12,16 @@ david_badura_fixtures:
   bundles: [YourBundle]
 ```
 
+Activate MongoDB support
+------------------------
+
+``` yaml
+# app/config/config.yml
+david_badura_fixtures:
+  persister: odm
+```
+
+
 Defaults
 --------
 
