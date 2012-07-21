@@ -37,7 +37,7 @@ Add DavidBaduraFixtureBundle in your composer.json
 
 {
     "require": {
-        "davidbadura/fixtures-bundle": "*"
+        "davidbadura/fixtures-bundle": "1.0.*"
     }
 }
 
