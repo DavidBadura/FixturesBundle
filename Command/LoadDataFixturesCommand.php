@@ -40,8 +40,6 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
             'fixtures' => $input->getOption('fixture'),
             'test' => $input->getOption('test')
         ), $logger);
-
-        $output->writeln('<info>Ok</info>');
     }
 
 }
