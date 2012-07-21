@@ -41,7 +41,7 @@ class ConsoleOutputLogger implements Logger
      */
     public function log($message)
     {
-        $this->output->writeln('<comment>' . $message . '</comment>');
+        $this->output->writeln('<comment>> ' . $message . '</comment>');
     }
 
 }
