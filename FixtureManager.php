@@ -7,6 +7,8 @@ use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
 use DavidBadura\FixturesBundle\Event\PostFixtureLoadEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use DavidBadura\FixturesBundle\Executor\ExecutorInterface;
+use DavidBadura\FixturesBundle\Logger\Logger;
+use DavidBadura\FixturesBundle\Logger\NullLogger;
 
 /**
  *
@@ -84,12 +86,20 @@ class FixtureManager
      *
      * @param array $options
      */
-    public function load(array $options = array())
+    public function load(array $options = array(), Logger $logger = null)
     {
-        $data = $this->fixtureLoader->loadFixtures(($options['fixtures']));
+        if(!$logger) {
+            $logger = new NullLogger();
+        }
+
+        $logger->headline('search fixture files...');
+
+        $data = $this->fixtureLoader->loadFixtures($options['fixtures'], $logger);
 
         $event = new PostFixtureLoadEvent($data, $options);
         $this->eventDispatcher->dispatch(FixtureEvents::onPostFixtureLoad, $event);
+
+        $logger->headline('load fixtures...');
 
         $data = $event->getData();
         $options = $event->getOptions();
@@ -109,6 +119,8 @@ class FixtureManager
 
         $fixtures = $event->getFixtures();
         $options = $event->getOptions();
+
+        $logger->headline('done!');
 
         return $fixtures;
     }

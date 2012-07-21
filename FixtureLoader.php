@@ -5,6 +5,8 @@ namespace DavidBadura\FixturesBundle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\KernelInterface;
+use DavidBadura\FixturesBundle\Logger\Logger;
+use DavidBadura\FixturesBundle\Logger\NullLogger;
 
 /**
  *
@@ -40,8 +42,12 @@ class FixtureLoader
      *
      * @return array
      */
-    public function getFixturesByBundles()
+    protected function getFixturesByBundles()
     {
+        if(!$this->kernel || empty($this->bundles)) {
+            return array();
+        }
+
         $paths = array();
 
         foreach ($this->bundles as $name) {
@@ -57,8 +63,12 @@ class FixtureLoader
      * @param  mixed     $path
      * @return Fixture[]
      */
-    public function loadFixtures($path = null)
+    public function loadFixtures($path = null, Logger $logger = null)
     {
+        if(!$logger) {
+            $logger = new NullLogger();
+        }
+
         $path = (empty($path)) ? $this->getFixturesByBundles() : $path ;
 
         $finder = new Finder();
@@ -66,6 +76,7 @@ class FixtureLoader
 
         $fixtures = array();
         foreach ($finder->files() as $file) {
+            $logger->log($file->getPathname());
             $data = Yaml::parse($file->getPathname());
             if (is_array($data)) {
                 $fixtures = array_merge_recursive($fixtures, $data);

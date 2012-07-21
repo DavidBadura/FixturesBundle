@@ -103,7 +103,10 @@ class FixtureLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $data = $this->loader->loadFixtures(__DIR__ . '/TestResources/fixtures');
+        $logger = $this->getMock('DavidBadura\FixturesBundle\Logger\Logger');
+        $logger->expects($this->exactly(3))->method('log');
+
+        $data = $this->loader->loadFixtures(__DIR__ . '/TestResources/fixtures', $logger);
         $this->assertEquals($expects, $data);
     }
 

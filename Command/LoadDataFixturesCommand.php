@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use DavidBadura\FixturesBundle\Logger\ConsoleOutputLogger;
 
 /**
  * Load data fixtures from bundles.
@@ -32,11 +33,13 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
         $container = $this->getContainer();
         $manager = $container->get('davidbadura_fixtures.fixture_manager');
 
+        $logger = new ConsoleOutputLogger($output);
+
         $manager->load(array(
             'tags' => $input->getOption('tag'),
             'fixtures' => $input->getOption('fixture'),
             'test' => $input->getOption('test')
-        ));
+        ), $logger);
 
         $output->writeln('<info>Ok</info>');
     }
