@@ -39,6 +39,9 @@ class DefaultConverter extends FixtureConverter
                 if (!isset($data[$arg]) && !$optional) {
                     throw new FixtureConverterException(sprintf('Missing "%s" attribute', $arg));
                 } elseif (isset($data[$arg])) {
+                    if (is_string($data[$arg])) {
+                        $data[$arg] = str_replace('{unique_id}', uniqid(), $data[$arg]);
+                    }
                     $args[] = $data[$arg];
                 }
             }

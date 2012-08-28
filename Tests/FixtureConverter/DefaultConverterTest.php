@@ -51,4 +51,26 @@ class DefaultConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('xyz', 'abc'), $object->getGroups());
     }
 
+    public function testDefaultConverterCreateObject_UniqueId()
+    {
+
+        $data = $this->getMock('DavidBadura\FixturesBundle\FixtureData', array('getProperties'), array(
+            'test',
+            array(
+                'name' => 'test_name {unique_id}',
+                'email' => 'test_email',
+            )
+        ));
+
+        $data->expects($this->any())->method('getProperties')->will($this->returnValue(array(
+            'class' => 'DavidBadura\FixturesBundle\Tests\TestObjects\User',
+            'constructor' => array('name', 'email')
+        )));
+
+        $object = $this->converter->createObject($data);
+
+        $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $object);
+        $this->assertRegExp('/test_name .{13}/', $object->getName());
+        $this->assertEquals('test_email', $object->getEmail());
+    }
 }
