@@ -42,7 +42,8 @@ class MongoDBPersister implements PersisterInterface
      */
     public function save()
     {
-        $this->dm->flush();
+        $this->dm->getSchemaManager()->ensureIndexes();
+        $this->dm->flush(null, array('safe' => true));
     }
 
 }
