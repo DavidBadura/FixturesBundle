@@ -59,6 +59,7 @@ class DefaultConverterTest extends \PHPUnit_Framework_TestCase
             array(
                 'name' => 'test_name {unique_id}',
                 'email' => 'test_email',
+                'description'   => 'test_description {unique_id}'
             )
         ));
 
@@ -72,5 +73,9 @@ class DefaultConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $object);
         $this->assertRegExp('/test_name .{13}/', $object->getName());
         $this->assertEquals('test_email', $object->getEmail());
+
+        $this->converter->finalizeObject($object, $data);
+
+        $this->assertRegExp('/test_description .{13}/', $object->getDescription());
     }
 }

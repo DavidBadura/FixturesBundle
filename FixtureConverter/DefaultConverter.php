@@ -72,6 +72,9 @@ class DefaultConverter extends FixtureConverter
 
         foreach ($data as $property => $value) {
             if (!isset($args[$property])) {
+                if (is_string($value)) {
+                    $value = str_replace('{unique_id}', uniqid(), $value);
+                }
                 $objectAccess->writeProperty($property, $value);
             }
         }
