@@ -74,6 +74,23 @@ fixtures:
                 name: Member
 ```
 
+Unique IDs
+----------
+
+To generate a unique ID you can use the `{unique_id}` snippet.
+
+``` yaml
+# @YourBundle/Resource/fixtures/install.yml
+fixtures:
+    user:
+        properties:
+            class: "YourBundle\Entity\User"
+        data:
+            david:
+                name: Random {unique_id}
+                email: "{unique_id}@example.com"
+```
+
 Change converter
 ----------------
 

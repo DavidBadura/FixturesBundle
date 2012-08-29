@@ -21,6 +21,11 @@ class User
     private $email;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      *
      * @var array
      */
@@ -65,6 +70,17 @@ class User
         $this->email = $email;
 
         return $this;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     public function getRoles()
