@@ -112,4 +112,3 @@ Command:
 ``` shell
 php app/console davidbadura:fixtures:load
 ```
-
