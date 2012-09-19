@@ -61,6 +61,7 @@ class FixtureLoader
     /**
      *
      * @param  mixed     $path
+     * @param  Logger    $logger
      * @return Fixture[]
      */
     public function loadFixtures($path = null, Logger $logger = null)
