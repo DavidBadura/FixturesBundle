@@ -7,7 +7,7 @@ DavidBaduraFixturesBundle
 Features
 --------
 
-* [DavidBaduraFakerBundle](https://github.com/DavidBadura/FakerBundle) support
+* [DavidBaduraFakerBundle](https://github.com/DavidBadura/FakerBundle) support ([documentation](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/faker.md))
 * Resolve object dependency (also bidirectional references)
 * Configurable default fixture converter (constructor, properties, set* and add* methods)
 * Easy to create your own converter
