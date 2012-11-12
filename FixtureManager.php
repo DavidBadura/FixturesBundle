@@ -92,6 +92,10 @@ class FixtureManager
             $logger = new NullLogger();
         }
 
+        $options = array_merge(array(
+            'fixtures' => array()
+        ), $options);
+
         $logger->headline('search fixture files...');
 
         $data = $this->fixtureLoader->loadFixtures($options['fixtures'], $logger);
