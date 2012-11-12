@@ -46,6 +46,10 @@ class DavidBaduraFixturesExtension extends Extension
             $loader->addArgument($config['bundles']);
         }
 
+        if ($config['faker']) {
+            $loader->load('faker.xml');
+        }
+
     }
 
 }

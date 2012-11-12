@@ -7,3 +7,4 @@ Index
 - [Command](command.md)
 - [Service](service.md)
 - [Extend](extend.md)
+- [Faker](faker.md)

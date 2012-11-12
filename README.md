@@ -7,6 +7,7 @@ DavidBaduraFixturesBundle
 Features
 --------
 
+* [DavidBaduraFakerBundle](https://github.com/DavidBadura/FakerBundle) support
 * Resolve object dependency (also bidirectional references)
 * Configurable default fixture converter (constructor, properties, set* and add* methods)
 * Easy to create your own converter
@@ -15,12 +16,13 @@ Features
 * Object validation
 * Fixturemanager as a service
 * Fixture data validating and normalizing by symfony config component
-* MongoDB Support
+* MongoDB support
 
 Todos
 -----
 
 * XML Fixtures support
+* DefaultConverter: handle "setCreateDate(\DateTime $date)" methods
 
 Documentation
 -------------
@@ -111,4 +113,10 @@ Command:
 
 ``` shell
 php app/console davidbadura:fixtures:load
+```
+
+Service:
+``` php
+$fixtureManager = $container->get('davidbadura_fixtures.fixture_manager');
+$fixtureManager->load();
 ```

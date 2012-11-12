@@ -1,7 +1,7 @@
 {
     "name": "davidbadura/fixtures-bundle",
     "description": "A Symfony2 bundle to load yaml fixtures",
-    "keywords": ["symfony2", "fixtures", "doctrine", "yaml", "database", "orm"],
+    "keywords": ["symfony2", "fixtures", "faker", "doctrine", "yaml", "database", "orm"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [{
@@ -11,6 +11,9 @@
     "require": {
         "php": ">=5.3.0",
         "symfony/symfony" : ">=2.0"
+    },
+    "suggest": {
+        "davidbadura/faker-bundle" : "1.0.*"
     },
     "autoload": {
         "psr-0": {
