@@ -27,7 +27,13 @@ Todos
 Documentation
 -------------
 
-Read [documentation](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/index.md)
+- [Configuration](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/configuration.md)
+- [Fixtures](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/fixtures.md)
+- [Converters](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/converter.md)
+- [Command](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/command.md)
+- [Service](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/service.md)
+- [Extend](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/extend.md)
+- [Faker intergration](https://github.com/DavidBadura/FixturesBundle/blob/master/Resources/doc/faker.md)
 
 
 1. Installation

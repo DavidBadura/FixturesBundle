@@ -67,6 +67,23 @@ fixtures:
                 name: 'David Badura'
 ```
 
+The DefaultConverter support \DateTime parameters in setter and adder methods:
+
+
+Method example `$object->setCreateDate(\DateTime $date)`
+
+``` yaml
+fixtures:
+    user:
+        properties:
+            class: 'YourBundle\Entity\User'
+            constructor: [name, ?email]
+        data:
+            david:
+                name: 'David Badura'
+                createDate: 'now'
+```
+
 
 Create your own converter
 -------------------------

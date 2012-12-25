@@ -4,7 +4,7 @@ Faker
 Configuration
 -------------
 
-First you must add [DavidBaduraFakerBundle](https://github.com/DavidBadura/FixturesBundle) in your composer.json
+First you must add [DavidBaduraFakerBundle](https://github.com/DavidBadura/FakerBundle) in your composer.json
 
 ``` js
 {
@@ -28,7 +28,7 @@ public function registerBundles()
 }
 ```
 
-Configure DavidBaduraFixturesBundle:
+Then you must activate the faker integration:
 
 ``` yaml
 # app/config/config.yml
@@ -40,6 +40,9 @@ david_badura_fixtures:
 
 Simple fixtures
 ---------------
+
+Now you can use the features from faker library:
+The following fixture...
 
 ``` yaml
 # @YourBundle/Resource/fixtures/install.yml
@@ -61,7 +64,7 @@ fixtures:
                 name: <name()>
 ```
 
-convertet to:
+will be convertet to:
 
 ``` yaml
 # @YourBundle/Resource/fixtures/install.yml
