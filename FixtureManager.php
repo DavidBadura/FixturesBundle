@@ -110,15 +110,15 @@ class FixtureManager
 
         $fixtures = $this->fixtureFactory->createFixtures($data);
 
-        foreach($fixtures as $fixture) {
-            $logger->log($fixture->getName());
-        }
-
         $event = new PreExecuteEvent($fixtures, $options);
         $this->eventDispatcher->dispatch(FixtureEvents::onPreExecute, $event);
 
         $fixtures = $event->getFixtures();
         $options = $event->getOptions();
+
+        foreach($fixtures as $fixture) {
+            $logger->log($fixture->getName());
+        }
 
         $this->executor->execute($fixtures);
 
