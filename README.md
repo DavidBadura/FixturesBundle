@@ -17,12 +17,12 @@ Features
 * Fixturemanager as a service
 * Fixture data validating and normalizing by symfony config component
 * MongoDB support
+* DefaultConverter: handle "setCreateDate(\DateTime $date)" methods
 
 Todos
 -----
 
 * XML Fixtures support
-* DefaultConverter: handle "setCreateDate(\DateTime $date)" methods
 
 Documentation
 -------------
