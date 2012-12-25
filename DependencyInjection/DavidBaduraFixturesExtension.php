@@ -39,11 +39,11 @@ class DavidBaduraFixturesExtension extends Extension
         }
 
         if (isset($config['bundles'])) {
-            $loader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
-            $loader->addArgument($config['bundles']);
+            $fixtureLoader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
+            $fixtureLoader->addArgument($config['bundles']);
 
-            $loader = $container->getDefinition('davidbadura_fixtures.converter_repository');
-            $loader->addArgument($config['bundles']);
+            $converterLoader = $container->getDefinition('davidbadura_fixtures.converter_repository');
+            $converterLoader->addArgument($config['bundles']);
         }
 
         if ($config['faker']) {
