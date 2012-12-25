@@ -61,7 +61,7 @@ class FakerListener
                 $matches = array();
                 if (preg_match(FakerListener::FAKER_PLACEHOLDER_PATTERN, $item, $matches)) {
                     $attributes = explode(',', $matches[2]);
-                    $item = call_user_func_array(array($this->faker, $matches[1]), $attributes);
+                    $item = call_user_func_array(array($faker, $matches[1]), $attributes);
                 }
             });
 
