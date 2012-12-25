@@ -21,6 +21,10 @@ class AccessObject
 
     public $addPublicTestMethodArrayVar = array();
 
+    public $setDateTimeMethod;
+
+    public $addDateTimeMethod = array();
+
     public function __construct()
     {
         $this->arrayCollection = new ArrayCollection();
@@ -59,6 +63,16 @@ class AccessObject
     public function getPublicNonArrayCollection()
     {
         return null;
+    }
+
+    public function setDateTimeMethod(\DateTime $dateTime)
+    {
+        $this->setDateTimeMethod = $dateTime;
+    }
+
+    public function addMultiDateTimeMethod(\DateTime $dateTime)
+    {
+        $this->addDateTimeMethod[] = $dateTime;
     }
 
 }

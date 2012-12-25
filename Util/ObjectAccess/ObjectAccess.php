@@ -9,15 +9,34 @@ namespace DavidBadura\FixturesBundle\Util\ObjectAccess;
 class ObjectAccess
 {
 
+    /**
+     *
+     * @var object
+     */
     protected $object;
+
+    /**
+     *
+     * @var \ReflectionClass
+     */
     protected $reflClass;
 
+    /**
+     *
+     * @param object $object
+     */
     public function __construct($object)
     {
         $this->object = $object;
         $this->reflClass = new \ReflectionClass($object);
     }
 
+    /**
+     *
+     * @param string $property
+     * @param mixed $value
+     * @throws ObjectAccessException
+     */
     public function writeProperty($property, $value)
     {
         $noPublic = array();
@@ -34,8 +53,7 @@ class ObjectAccess
         if ($this->reflClass->hasMethod($setter)) {
 
             if ($this->reflClass->getMethod($setter)->isPublic()) {
-                $this->object->$setter($value);
-
+                $this->object->$setter($this->prepareValue($value, $setter));
                 return;
             }
 
@@ -51,7 +69,7 @@ class ObjectAccess
 
                 if ($this->reflClass->getMethod($adder)->isPublic()) {
                     foreach ($value as $val) {
-                        $this->object->$adder($val);
+                        $this->object->$adder($this->prepareValue($val, $adder));
                     }
 
                     return;
@@ -71,7 +89,7 @@ class ObjectAccess
 
                     if ($this->reflClass->getMethod($singularAdder)->isPublic()) {
                         foreach ($value as $val) {
-                            $this->object->$singularAdder($val);
+                            $this->object->$singularAdder($this->prepareValue($val, $singularAdder));
                         }
 
                         return;
@@ -136,11 +154,51 @@ class ObjectAccess
             . 'Maybe you should create the method "%s()" or "%s()"?', $property, $this->reflClass->getName(), $setter, $adder));
     }
 
+    /**
+     *
+     * @param string $property
+     * @return string
+     */
     protected function camelize($property)
     {
         return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) {
                     return ('.' === $match[1] ? '_' : '') . strtoupper($match[2]);
                 }, $property);
+    }
+
+    /**
+     *
+     * @param mixed $value
+     * @param string $method
+     * @param int $parameter
+     * @return \DateTime|mixed
+     * @throws \UnexpectedValueException
+     */
+    public function prepareValue($value, $method, $parameter = 0)
+    {
+        if (!is_numeric($value) && !is_string($value)) {
+            return $value;
+        }
+
+        $params = $this->reflClass->getMethod($method)->getParameters();
+
+        if (!$params[$parameter]->getClass()) {
+            return $value;
+        }
+
+        $class = $params[$parameter]->getClass()->getName();
+
+        if ($class == 'DateTime') {
+
+            try {
+                return new \DateTime($value);
+            } catch (\Exception $e) {
+                throw new ObjectAccessException('Could not convert '.$value.' to \DateTime for '.get_class($this->object).'::'.$method, 0, $e);
+            }
+
+        }
+
+        return $value;
     }
 
 }

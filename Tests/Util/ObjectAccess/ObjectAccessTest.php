@@ -122,4 +122,36 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
         $access->writeProperty('asd', 'test123');
     }
 
+    public function testSetDateTimeMethod()
+    {
+        $object = new AccessObject();
+        $access = new ObjectAccess($object);
+
+        $access->writeProperty('dateTimeMethod', 'now');
+
+        $this->assertInstanceOf('\DateTime', $object->setDateTimeMethod);
+    }
+
+    public function testAddDateTimeMethod()
+    {
+        $object = new AccessObject();
+        $access = new ObjectAccess($object);
+
+        $access->writeProperty('multiDateTimeMethod', array('now'));
+
+        $this->assertInstanceOf('\DateTime', $object->addDateTimeMethod[0]);
+    }
+
+    public function testInvalidSetDateTimeMethod()
+    {
+        $this->setExpectedException('DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccessException');
+
+        $object = new AccessObject();
+        $access = new ObjectAccess($object);
+
+        $access->writeProperty('dateTimeMethod', 'not valid');
+
+        $this->assertInstanceOf('\DateTime', $object->setDateTimeMethod);
+    }
+
 }
