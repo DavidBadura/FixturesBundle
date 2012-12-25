@@ -30,8 +30,16 @@ class DefaultConverter extends FixtureConverter
         if (empty($constructor)) {
             $object = new $class();
         } else {
+            $reflection = new \ReflectionClass($class);
+
+            if($reflection->hasMethod('__construct')) {
+                $constParams = $reflection->getMethod('__construct')->getParameters();
+            } else {
+                $constParams = array();
+            }
+
             $args = array();
-            foreach ($constructor as $arg) {
+            foreach ($constructor as $key => $arg) {
 
                 $optional = (substr($arg, 0, 1) == '?');
                 $arg = ($optional) ? substr($arg, 1) : $arg;
@@ -39,14 +47,23 @@ class DefaultConverter extends FixtureConverter
                 if (!isset($data[$arg]) && !$optional) {
                     throw new FixtureConverterException(sprintf('Missing "%s" attribute', $arg));
                 } elseif (isset($data[$arg])) {
-                    if (is_string($data[$arg])) {
-                        $data[$arg] = str_replace('{unique_id}', uniqid(), $data[$arg]);
+
+                    $value = $data[$arg];
+
+                    if (is_string($value)) {
+                        $value = str_replace('{unique_id}', uniqid(), $value);
+
+                        if(isset($constParams[$key])
+                            && $constParams[$key]->getClass()
+                            && $constParams[$key]->getClass()->getName() == 'DateTime') {
+                            $value = new \DateTime($value);
+                        }
                     }
-                    $args[] = $data[$arg];
+
+                    $args[] = $value;
                 }
             }
 
-            $reflection = new \ReflectionClass($class);
             $object = $reflection->newInstanceArgs($args);
         }
 

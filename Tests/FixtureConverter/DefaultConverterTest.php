@@ -78,4 +78,28 @@ class DefaultConverterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRegExp('/test_description .{13}/', $object->getDescription());
     }
+
+    public function testDateTimeConstructor()
+    {
+
+        $data = $this->getMock('DavidBadura\FixturesBundle\FixtureData', array('getProperties'), array(
+            'test',
+            array(
+                'name' => 'test_name',
+                'date' => 'now'
+            )
+        ));
+
+        $data->expects($this->any())->method('getProperties')->will($this->returnValue(array(
+            'class' => 'DavidBadura\FixturesBundle\Tests\TestObjects\Post',
+            'constructor' => array('name', 'date')
+        )));
+
+        $object = $this->converter->createObject($data);
+
+        $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\Post', $object);
+        $this->assertEquals('test_name', $object->getName());
+        $this->assertInstanceOf('DateTime', $object->getDate());
+    }
+
 }
