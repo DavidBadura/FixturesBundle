@@ -59,7 +59,7 @@ class FakerListener
 
         array_walk_recursive($data, function(&$item, &$key) use ($faker) {
                 $matches = array();
-                if (preg_match(self::FAKER_PLACEHOLDER_PATTERN, $item, $matches)) {
+                if (preg_match(FakerListener::FAKER_PLACEHOLDER_PATTERN, $item, $matches)) {
                     $attributes = explode(',', $matches[2]);
                     $item = call_user_func_array(array($this->faker, $matches[1]), $attributes);
                 }
@@ -73,7 +73,7 @@ class FakerListener
         foreach ($fixtures as $key1 => $fixture) {
             foreach ($fixture['data'] as $key2 => $data) {
                 $matches = array();
-                if (preg_match(self::MULTI_PLACEHOLDER_PATTERN, $key2, $matches)) {
+                if (preg_match(FakerListener::MULTI_PLACEHOLDER_PATTERN, $key2, $matches)) {
 
                     $from = $matches[1];
                     $to = $matches[2];
@@ -93,7 +93,7 @@ class FakerListener
 
         array_walk_recursive($fixtures, function(&$item, &$key) {
                 $matches = array();
-                if (preg_match(self::MULTI_PLACEHOLDER_PATTERN, $item, $matches)) {
+                if (preg_match(FakerListener::MULTI_PLACEHOLDER_PATTERN, $item, $matches)) {
 
                     $from = $matches[1];
                     $to = $matches[2];
