@@ -22,6 +22,7 @@ Features
 Todos
 -----
 
+* Core components move in its own repository [DavidBadura\Fixtures](https://github.com/DavidBadura/Fixtures) 
 * XML Fixtures support
 
 Documentation
