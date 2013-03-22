@@ -68,6 +68,13 @@ class DavidBaduraFixturesBundleTest extends \PHPUnit_Framework_TestCase
 
         $fakerListener = $container->get('davidbadura_fixtures.event_listener.faker');
         $this->assertInstanceOf('DavidBadura\FixturesBundle\EventListener\FakerListener', $fakerListener);
+
+        $faker = $fakerListener->getFaker();
+
+        $this->assertTrue(is_numeric($faker->randomDigit));
+        $this->assertTrue(is_numeric($faker->randomDigitNotNull));
+        $this->assertTrue(is_numeric($faker->randomNumber));
+        $this->assertTrue(is_numeric($faker->numerify));
     }
 
 }
