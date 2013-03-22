@@ -41,6 +41,15 @@ class FakerListener
 
     /**
      *
+     * @return Generator
+     */
+    public function getFaker()
+    {
+        return $this->faker;
+    }
+
+    /**
+     *
      * @param PostExecuteEvent $event
      */
     public function onPostFixtureLoad(PostFixtureLoadEvent $event)
