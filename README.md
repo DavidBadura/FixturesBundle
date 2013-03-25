@@ -18,6 +18,7 @@ Features
 * Fixture data validating and normalizing by symfony config component
 * MongoDB support
 * DefaultConverter: handle "setCreateDate(\DateTime $date)" methods
+* Security Encoder support
 
 Todos
 -----

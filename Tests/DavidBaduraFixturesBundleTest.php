@@ -26,6 +26,7 @@ class DavidBaduraFixturesBundleTest extends \PHPUnit_Framework_TestCase
         $container->set('kernel', $this->getMock('Symfony\Component\HttpKernel\KernelInterface'));
         $container->set('event_dispatcher', $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'));
         $container->set('validator', $this->getMock('Symfony\Component\Validator\ValidatorInterface'));
+        $container->set('security.encoder_factory', $this->getMock('Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'));
         $container->set('doctrine.orm.entity_manager', $this->getMock('Doctrine\Common\PersisterInterface'));
 
         $container->compile();
@@ -58,6 +59,7 @@ class DavidBaduraFixturesBundleTest extends \PHPUnit_Framework_TestCase
         $container->set('kernel', $this->getMock('Symfony\Component\HttpKernel\KernelInterface'));
         $container->set('event_dispatcher', $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'));
         $container->set('validator', $this->getMock('Symfony\Component\Validator\ValidatorInterface'));
+        $container->set('security.encoder_factory', $this->getMock('Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'));
         $container->set('doctrine.orm.entity_manager', $this->getMock('Doctrine\Common\PersisterInterface'));
 
         $container->compile();
