@@ -16,6 +16,7 @@
         <parameter key="davidbadura_fixtures.event_listener.validation.class">DavidBadura\FixturesBundle\EventListener\ValidationListener</parameter>
         <parameter key="davidbadura_fixtures.event_listener.persist.class">DavidBadura\FixturesBundle\EventListener\PersistListener</parameter>
         <parameter key="davidbadura_fixtures.event_listener.tag_filter.class">DavidBadura\FixturesBundle\EventListener\TagFilterListener</parameter>
+        <parameter key="davidbadura_fixtures.event_listener.security.class">DavidBadura\FixturesBundle\EventListener\SecurityListener</parameter>
     </parameters>
 
     <services>
@@ -70,6 +71,12 @@
         <service id="davidbadura_fixtures.event_listener.tag_filter"
             class="%davidbadura_fixtures.event_listener.tag_filter.class%">
             <tag name="kernel.event_listener" event="david_badura_fixtures.pre_execute" method="onPreExecute" />
+        </service>
+
+        <service id="davidbadura_fixtures.event_listener.security"
+            class="%davidbadura_fixtures.event_listener.security.class%">
+            <argument type="service" id="security.encoder_factory" />
+            <tag name="kernel.event_listener" event="david_badura_fixtures.post_execute" method="onPostExecute" priority="48" />
         </service>
     </services>
 

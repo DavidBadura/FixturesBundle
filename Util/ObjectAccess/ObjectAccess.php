@@ -43,7 +43,6 @@ class ObjectAccess
 
         $camelizeProperty = $this->camelize($property);
 
-        $getter = 'get' . $camelizeProperty;
         $setter = 'set' . $camelizeProperty;
         $adder = 'add' . $camelizeProperty;
 
@@ -102,8 +101,8 @@ class ObjectAccess
             /*
              * needed to support ArrayCollection
              */
-            if ($this->reflClass->hasMethod($getter) && $this->reflClass->getMethod($getter)->isPublic()) {
-                $collection = $this->object->$getter();
+            try {
+                $collection = $this->readProperty($property);
                 if ($collection instanceof \Doctrine\Common\Collections\ArrayCollection) {
                     foreach ($value as $val) {
                         $collection->add($val);
@@ -111,6 +110,9 @@ class ObjectAccess
 
                     return;
                 }
+
+            } catch(ObjectAccessException $e) {
+                // do nothing
             }
         }
 
@@ -152,6 +154,58 @@ class ObjectAccess
 
         throw new ObjectAccessException(sprintf('property "%s" is not writeable in class "%s"' . "\n"
             . 'Maybe you should create the method "%s()" or "%s()"?', $property, $this->reflClass->getName(), $setter, $adder));
+    }
+
+    /**
+     *
+     * @param string $property
+     * @return mixed
+     * @throws ObjectAccessException
+     */
+    public function readProperty($property)
+    {
+        $getter = 'get' . $this->camelize($property);
+        $noPublic = array();
+
+        /*
+         * try with getter method (get*)
+         */
+        if ($this->reflClass->hasMethod($getter) && $this->reflClass->getMethod($getter)->isPublic()) {
+            return $this->object->$getter();
+        }
+
+        /*
+         * try property
+         */
+        if ($this->reflClass->hasProperty($property)) {
+            if ($this->reflClass->getProperty($property)->isPublic()) {
+                return $this->object->$property;
+            }
+
+            $noPublic[] = sprintf('Property "%s" is not public. Maybe you should create the method "%s()"?', $property, $getter);
+        }
+
+        /*
+         * needed to support \stdClass instances
+         */
+        if ($this->object instanceof \stdClass) {
+            return $this->object->$property;
+        }
+
+        /*
+         * try with magic __get method
+         */
+        if ($this->reflClass->hasMethod('__get')) {
+            return $this->object->$property;
+        }
+
+        if (count($noPublic) > 0) {
+            throw new ObjectAccessException(sprintf('property "%s" is not readable in class "%s"' . "\n"
+                . implode("\n", $noPublic), $property, $this->reflClass->getName()));
+        }
+
+        throw new ObjectAccessException(sprintf('property "%s" is not readable in class "%s"' . "\n"
+            . 'Maybe you should create the method "%s()"?', $property, $this->reflClass->getName(), $getter));
     }
 
     /**
