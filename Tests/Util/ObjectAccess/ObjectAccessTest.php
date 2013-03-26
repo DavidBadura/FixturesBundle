@@ -18,6 +18,9 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
 
         $access->writeProperty('test', 123);
         $this->assertEquals(123, $object->test);
+
+        $value = $access->readProperty('test');
+        $this->assertEquals(123, $value);
     }
 
     public function testPublicProperty()
@@ -27,9 +30,12 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
 
         $access->writeProperty('publicTestProperty', 'test123');
         $this->assertEquals('test123', $object->publicTestProperty);
+
+        $value = $access->readProperty('publicTestProperty');
+        $this->assertEquals('test123', $value);
     }
 
-    public function testProtectdProperty()
+    public function testWriteProtectdProperty()
     {
         $this->setExpectedException('DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccessException');
 
@@ -37,6 +43,16 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
         $access = new ObjectAccess($object);
 
         $access->writeProperty('protectedTestProperty', 'test123');
+    }
+
+    public function testReadProtectdProperty()
+    {
+        $this->setExpectedException('DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccessException');
+
+        $object = new AccessObject();
+        $access = new ObjectAccess($object);
+
+        $access->readProperty('protectedTestProperty');
     }
 
     public function testPublicSetterMethod()
@@ -92,6 +108,17 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
         $access->writeProperty('protectedTestMethodArray', $value);
     }
 
+    public function testPublicGetterMethod()
+    {
+        $object = new AccessObject();
+        $access = new ObjectAccess($object);
+
+        $object->setPublicTestMethod('test123');
+
+        $value = $access->readProperty('publicTestMethod');
+        $this->assertEquals('test123', $value);
+    }
+
     public function testArrayCollection()
     {
         $object = new AccessObject();
@@ -112,7 +139,18 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test123', $object->testProperty);
     }
 
-    public function testNotExsistProperty()
+    public function testMagicGetter()
+    {
+        $object = new MagicAccessObject();
+        $access = new ObjectAccess($object);
+
+        $object->testProperty = 'test123';
+
+        $value = $access->readProperty('testProperty');
+        $this->assertEquals('test123', $value);
+    }
+
+    public function testNotExsistPropertyWrite()
     {
         $this->setExpectedException('DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccessException');
 
@@ -120,6 +158,16 @@ class ObjectAccessTest extends \PHPUnit_Framework_TestCase
         $access = new ObjectAccess($object);
 
         $access->writeProperty('asd', 'test123');
+    }
+
+    public function testNotExsistPropertyRead()
+    {
+        $this->setExpectedException('DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccessException');
+
+        $object = new AccessObject();
+        $access = new ObjectAccess($object);
+
+        $access->readProperty('asd');
     }
 
     public function testSetDateTimeMethod()

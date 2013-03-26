@@ -16,6 +16,12 @@ class User
 
     /**
      *
+     * @var password
+     */
+    private $password;
+
+    /**
+     *
      * @var string
      */
     private $email;
@@ -58,6 +64,16 @@ class User
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 
     public function getEmail()
@@ -105,6 +121,11 @@ class User
         $this->groups = $groups;
 
         return $this;
+    }
+
+    public function getSalt()
+    {
+        return 'secret';
     }
 
 }

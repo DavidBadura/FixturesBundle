@@ -35,6 +35,11 @@ class AccessObject
         $this->setPublicTestMethodVar = $var;
     }
 
+    public function getPublicTestMethod()
+    {
+        return $this->setPublicTestMethodVar;
+    }
+
     protected function setProtectedTestMethod()
     {
 
