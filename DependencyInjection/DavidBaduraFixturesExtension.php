@@ -30,10 +30,12 @@ class DavidBaduraFixturesExtension extends Extension
 
         if ($config['persister'] == 'orm') {
             $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\DoctrinePersister');
-            $persister->addArgument(new Reference('doctrine.orm.entity_manager'));
+            $serviceId = ($config['persister_id']) ? $config['persister_id'] : 'doctrine.orm.entity_manager' ;
+            $persister->addArgument(new Reference($serviceId));
         } elseif ($config['persister'] === 'odm') {
             $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\MongoDBPersister');
-                $persister->addArgument(new Reference('doctrine.odm.mongodb.document_manager'));
+            $serviceId = ($config['persister_id']) ? $config['persister_id'] : 'doctrine.odm.mongodb.document_manager' ;
+            $persister->addArgument(new Reference($serviceId));
         } else {
             throw new \Exception();
         }
