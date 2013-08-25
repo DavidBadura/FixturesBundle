@@ -70,12 +70,15 @@ class FixtureLoader
             $logger = new NullLogger();
         }
 
+        $fixtures = array();
         $path = (empty($path)) ? $this->getFixturesByBundles() : $path ;
+        if (empty($path)) {
+            return $fixtures;
+        }
 
         $finder = new Finder();
         $finder->in($path)->name('*.yml');
 
-        $fixtures = array();
         foreach ($finder->files() as $file) {
             $logger->log($file->getPathname());
             $data = Yaml::parse($file->getPathname());
