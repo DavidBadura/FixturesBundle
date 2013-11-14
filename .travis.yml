@@ -17,7 +17,7 @@ install: composer install
 before_script:
   - git config --global user.email "test@test.com"
   - git config --global user.name "John Doe"
-  - composer require symfony/console:${SYMFONY_VERSION}
+  - composer require symfony/symfony:${SYMFONY_VERSION}
   
 script: phpunit
 
