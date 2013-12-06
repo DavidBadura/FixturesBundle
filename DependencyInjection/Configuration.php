@@ -28,6 +28,7 @@ class Configuration
                     ->defaultValue(array())
                 ->end()
                 ->scalarNode('persister')->defaultValue('orm')->end()
+                ->scalarNode('persister_id')->defaultValue(null)->end()
                 ->booleanNode('faker')->defaultValue(false)->end()
                 ->arrayNode('defaults')
                     ->children()
