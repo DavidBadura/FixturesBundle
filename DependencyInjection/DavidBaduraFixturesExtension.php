@@ -42,10 +42,10 @@ class DavidBaduraFixturesExtension extends Extension
 
         if (isset($config['bundles'])) {
             $fixtureLoader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
-            $fixtureLoader->addArgument($config['bundles']);
+            $fixtureLoader->addArgument(array_unique($config['bundles']));
 
             $converterLoader = $container->getDefinition('davidbadura_fixtures.converter_repository');
-            $converterLoader->addArgument($config['bundles']);
+            $converterLoader->addArgument(array_unique($config['bundles']));
         }
 
         if ($config['faker']) {
