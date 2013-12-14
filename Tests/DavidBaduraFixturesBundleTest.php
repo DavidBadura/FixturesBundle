@@ -27,12 +27,12 @@ class DavidBaduraFixturesBundleTest extends \PHPUnit_Framework_TestCase
         $container->set('event_dispatcher', $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'));
         $container->set('validator', $this->getMock('Symfony\Component\Validator\ValidatorInterface'));
         $container->set('security.encoder_factory', $this->getMock('Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'));
-        $container->set('doctrine.orm.entity_manager', $this->getMock('Doctrine\Common\PersisterInterface'));
+        $container->set('doctrine.orm.entity_manager', $this->getMock('Doctrine\Common\Persistence\ObjectManager'));
 
         $container->compile();
 
         $manager = $container->get('davidbadura_fixtures.fixture_manager');
-        $this->assertInstanceOf('DavidBadura\FixturesBundle\FixtureManager', $manager);
+        $this->assertInstanceOf('DavidBadura\Fixtures\FixtureManager\FixtureManager', $manager);
     }
 
     public function testFakerBundleBuild()
@@ -43,7 +43,9 @@ class DavidBaduraFixturesBundleTest extends \PHPUnit_Framework_TestCase
 
         $bundle->build($container);
         $fakerBundle->build($container);
-
+        
+        $fakerExtension = new DavidBaduraFakerExtension();
+        $fakerExtension->load(array(), $container);
 
         $extension = new DavidBaduraFixturesExtension();
         $extension->load(array(
@@ -52,26 +54,19 @@ class DavidBaduraFixturesBundleTest extends \PHPUnit_Framework_TestCase
             )
         ), $container);
 
-        $fakerExtension = new DavidBaduraFakerExtension();
-        $fakerExtension->load(array(), $container);
-
-
+        
         $container->set('kernel', $this->getMock('Symfony\Component\HttpKernel\KernelInterface'));
         $container->set('event_dispatcher', $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'));
         $container->set('validator', $this->getMock('Symfony\Component\Validator\ValidatorInterface'));
         $container->set('security.encoder_factory', $this->getMock('Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'));
-        $container->set('doctrine.orm.entity_manager', $this->getMock('Doctrine\Common\PersisterInterface'));
+        $container->set('doctrine.orm.entity_manager', $this->getMock('Doctrine\Common\Persistence\ObjectManager'));
 
         $container->compile();
 
         $manager = $container->get('davidbadura_fixtures.fixture_manager');
-        $this->assertInstanceOf('DavidBadura\FixturesBundle\FixtureManager', $manager);
+        $this->assertInstanceOf('DavidBadura\Fixtures\FixtureManager\FixtureManagerInterface', $manager);
 
-
-        $fakerListener = $container->get('davidbadura_fixtures.event_listener.faker');
-        $this->assertInstanceOf('DavidBadura\FixturesBundle\EventListener\FakerListener', $fakerListener);
-
-        $faker = $fakerListener->getFaker();
+        $faker = $container->get('davidbadura_faker.faker');
 
         $this->assertTrue(is_numeric($faker->randomDigit));
         $this->assertTrue(is_numeric($faker->randomDigitNotNull));

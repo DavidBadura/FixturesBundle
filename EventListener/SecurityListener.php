@@ -3,8 +3,8 @@
 namespace DavidBadura\FixturesBundle\EventListener;
 
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
-use DavidBadura\FixturesBundle\Util\ObjectAccess\ObjectAccess;
+use DavidBadura\Fixtures\Event\FixtureCollectionEvent;
+use DavidBadura\Fixtures\Util\ObjectAccess\ObjectAccess;
 
 /**
  *
@@ -40,9 +40,9 @@ class SecurityListener
      *
      * @param PostExecuteEvent $event
      */
-    public function onPostExecute(PostExecuteEvent $event)
+    public function onPostExecute(FixtureCollectionEvent $event)
     {
-        $fixtures = $event->getFixtures();
+        $fixtures = $event->getCollection();
 
         foreach ($fixtures as $fixture) {
 
