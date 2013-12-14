@@ -30,6 +30,7 @@ Defaults
 david_badura_fixtures:
   bundles: []
   persister: orm
+  persister_id: "doctrine.orm.entity_manager"
   defaults:
     converter: default
     validation:

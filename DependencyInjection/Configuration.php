@@ -28,6 +28,7 @@ class Configuration
                     ->defaultValue(array())
                 ->end()
                 ->scalarNode('persister')->defaultValue('orm')->end()
+                ->scalarNode('persister_id')->defaultValue(null)->end()
                 ->arrayNode('defaults')
                     ->children()
                         ->scalarNode('converter')->defaultValue('default')->end()
