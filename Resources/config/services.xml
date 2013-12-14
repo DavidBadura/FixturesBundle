@@ -5,79 +5,80 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="davidbadura_fixtures.executor.class">DavidBadura\FixturesBundle\Executor\Executor</parameter>
-        <parameter key="davidbadura_fixtures.fixture_loader.class">DavidBadura\FixturesBundle\FixtureLoader</parameter>
-        <parameter key="davidbadura_fixtures.fixture_factory.class">DavidBadura\FixturesBundle\FixtureFactory</parameter>
-        <parameter key="davidbadura_fixtures.fixture_manager.class">DavidBadura\FixturesBundle\FixtureManager</parameter>
-        <parameter key="davidbadura_fixtures.converter_repository.class">DavidBadura\FixturesBundle\ConverterRepository</parameter>
-        <parameter key="davidbadura_fixtures.converter.default.class">DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter</parameter>
 
-        <parameter key="davidbadura_fixtures.event_listener.tree.class">DavidBadura\FixturesBundle\EventListener\TreeListener</parameter>
+        <parameter key="davidbadura_fixtures.executor.class">DavidBadura\Fixtures\Executor\Executor</parameter>
+        <parameter key="davidbadura_fixtures.service_provider.class">DavidBadura\Fixtures\ServiceProvider\ServiceProvider</parameter>
+        <parameter key="davidbadura_fixtures.factory.class">DavidBadura\FixturesBundle\Factory</parameter>
+        <parameter key="davidbadura_fixtures.fixture_manager.class">DavidBadura\Fixtures\FixtureManager\FixtureManager</parameter>
+        <parameter key="davidbadura_fixtures.converter_repository.class">DavidBadura\Fixtures\Converter\ConverterRepository</parameter>
+        <parameter key="davidbadura_fixtures.converter.default.class">DavidBadura\Fixtures\Converter\DefaultConverter</parameter>
+
         <parameter key="davidbadura_fixtures.event_listener.validation.class">DavidBadura\FixturesBundle\EventListener\ValidationListener</parameter>
-        <parameter key="davidbadura_fixtures.event_listener.persist.class">DavidBadura\FixturesBundle\EventListener\PersistListener</parameter>
-        <parameter key="davidbadura_fixtures.event_listener.tag_filter.class">DavidBadura\FixturesBundle\EventListener\TagFilterListener</parameter>
         <parameter key="davidbadura_fixtures.event_listener.security.class">DavidBadura\FixturesBundle\EventListener\SecurityListener</parameter>
+    
     </parameters>
 
     <services>
-        <service id="davidbadura_fixtures.executor" class="%davidbadura_fixtures.executor.class%" />
 
-        <service id="davidbadura_fixtures.converter_repository" class="%davidbadura_fixtures.converter_repository.class%">
-            <argument type="service" id="kernel" />
-        </service>
-
-        <service id="davidbadura_fixtures.fixture_loader" class="%davidbadura_fixtures.fixture_loader.class%">
-            <argument type="service" id="kernel" />
-        </service>
-
-        <service id="davidbadura_fixtures.fixture_factory" class="%davidbadura_fixtures.fixture_factory.class%">
+        <service id="davidbadura_fixtures.executor" 
+            class="%davidbadura_fixtures.executor.class%">
             <argument type="service" id="davidbadura_fixtures.converter_repository" />
         </service>
 
-        <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
+        <service id="davidbadura_fixtures.converter_repository" 
+            class="%davidbadura_fixtures.converter_repository.class%">
+        </service>
+
+        <service id="davidbadura_fixtures.service_provider" 
+            class="%davidbadura_fixtures.service_provider.class%">
+        </service>
+
+        <service id="davidbadura_fixtures.factory"
+            class="%davidbadura_fixtures.factory.class%">
+            <argument type="service" id="kernel" />
+        </service>
+
+        <service id="davidbadura_fixtures.fixture_loader" 
+            class="DavidBadura\Fixtures\Loader\LoaderInterface"
+            factory-service="davidbadura_fixtures.factory"
+            factory-method="createLoader">
+        </service>
+
+        <service id="davidbadura_fixtures.converter.default" 
+            class="%davidbadura_fixtures.converter.default.class%">
             <tag name="davidbadura_fixtures.converter" />
         </service>
 
         <service id="davidbadura_fixtures.fixture_manager"
-            class="DavidBadura\FixturesBundle\FixtureManager">
+            class="%davidbadura_fixtures.fixture_manager.class%">
             <argument type="service" id="davidbadura_fixtures.fixture_loader" />
-            <argument type="service" id="davidbadura_fixtures.fixture_factory" />
             <argument type="service" id="davidbadura_fixtures.executor" />
+            <argument type="service" id="davidbadura_fixtures.persister" />
+            <argument type="service" id="davidbadura_fixtures.service_provider" />
             <argument type="service" id="event_dispatcher" />
         </service>
 
-        <service id="davidbadura_fixtures.converter.default" class="%davidbadura_fixtures.converter.default.class%">
+        <service id="davidbadura_fixtures.converter.default" 
+            class="%davidbadura_fixtures.converter.default.class%">
             <tag name="davidbadura_fixtures.converter" />
-        </service>
-
-        <service id="davidbadura_fixtures.event_listener.tree"
-            class="%davidbadura_fixtures.event_listener.tree.class%">
-            <argument type="service" id="davidbadura_fixtures.converter_repository" />
-            <tag name="kernel.event_listener" event="david_badura_fixtures.post_fixture_load" method="onPostFixtureLoad" />
         </service>
 
         <service id="davidbadura_fixtures.event_listener.validation"
             class="%davidbadura_fixtures.event_listener.validation.class%">
             <argument type="service" id="validator" />
-            <tag name="kernel.event_listener" event="david_badura_fixtures.post_execute" method="onPostExecute" priority="24" />
-        </service>
-
-        <service id="davidbadura_fixtures.event_listener.persist"
-            class="%davidbadura_fixtures.event_listener.persist.class%">
-            <argument type="service" id="davidbadura_fixtures.persister" />
-            <tag name="kernel.event_listener" event="david_badura_fixtures.post_execute" method="onPostExecute" priority="0" />
-        </service>
-
-        <service id="davidbadura_fixtures.event_listener.tag_filter"
-            class="%davidbadura_fixtures.event_listener.tag_filter.class%">
-            <tag name="kernel.event_listener" event="david_badura_fixtures.pre_execute" method="onPreExecute" />
+            <tag name="kernel.event_listener" 
+                event="david_badura_fixtures.post_execute" 
+                method="onPostExecute" priority="24" />
         </service>
 
         <service id="davidbadura_fixtures.event_listener.security"
             class="%davidbadura_fixtures.event_listener.security.class%">
             <argument type="service" id="security.encoder_factory" />
-            <tag name="kernel.event_listener" event="david_badura_fixtures.post_execute" method="onPostExecute" priority="48" />
+            <tag name="kernel.event_listener" 
+                event="david_badura_fixtures.post_execute" 
+                method="onPostExecute" priority="48" />
         </service>
+
     </services>
 
 </container>

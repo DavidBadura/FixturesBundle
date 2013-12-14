@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use DavidBadura\FixturesBundle\Logger\ConsoleOutputLogger;
 
 /**
  * Load data fixtures from bundles.
@@ -22,9 +21,9 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
         $this
             ->setName('davidbadura:fixtures:load')
             ->setDescription('Load data fixtures and save it.')
-            ->addOption('tag', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Load fixtures by tag', array())
             ->addOption('fixture', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.', array())
-            ->addOption('test', null, InputOption::VALUE_NONE, 'Test process (dont save fixtures)')
+            ->addOption('tag', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Load fixtures by tag', array())
+            ->addOption('dry_run', null, InputOption::VALUE_NONE, 'Test process (dont save fixtures)')
         ;
     }
 
@@ -33,13 +32,10 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
         $container = $this->getContainer();
         $manager = $container->get('davidbadura_fixtures.fixture_manager');
 
-        $logger = new ConsoleOutputLogger($output);
-
-        $manager->load(array(
+        $manager->load($input->getOption('fixture'), array(
             'tags' => $input->getOption('tag'),
-            'fixtures' => $input->getOption('fixture'),
-            'test' => $input->getOption('test')
-        ), $logger);
+            'dry_run' => $input->getOption('dry_run')
+        ));
     }
 
 }

@@ -2,16 +2,16 @@
 
 namespace DavidBadura\FixturesBundle\Tests\EventListener;
 
+use DavidBadura\FixturesBundle\Tests\AbstractFixtureTest;
+use DavidBadura\FixturesBundle\Tests\TestObjects\User;
 use DavidBadura\FixturesBundle\EventListener\SecurityListener;
-use DavidBadura\FixturesBundle\Event\PostExecuteEvent;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use DavidBadura\FixturesBundle\FixtureCollection;
-use DavidBadura\FixturesBundle\Fixture;
-use DavidBadura\FixturesBundle\FixtureData;
-use DavidBadura\FixturesBundle\Tests\AbstractFixtureTest;
-use DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface;
-use DavidBadura\FixturesBundle\Tests\TestObjects\User;
+use DavidBadura\Fixtures\Event\FixtureCollectionEvent;
+use DavidBadura\Fixtures\Fixture\FixtureCollection;
+use DavidBadura\Fixtures\Fixture\Fixture;
+use DavidBadura\Fixtures\Fixture\FixtureData;
+use DavidBadura\Fixtures\Converter\FixtureConverterInterface;
 
 /**
  *
@@ -43,9 +43,11 @@ class SecurityListenerTest extends AbstractFixtureTest
      */
     private $converterMock;
 
+
     public function setUp()
     {
         parent::setUp();
+        $this->fixtureManager = $this->getMock('DavidBadura\Fixtures\FixtureManager\FixtureManagerInterface');
         $this->encoder = $this->getMock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface');
         $this->encoder->expects($this->any())->method('encodePassword')->will($this->returnCallback(function($password, $salt) {
             return $password . $salt . 'hash';
@@ -57,28 +59,31 @@ class SecurityListenerTest extends AbstractFixtureTest
         $this->listener = new SecurityListener($this->factory);
 
         $this->converterMock = $this->getMock('DavidBadura\FixturesBundle\FixtureConverter\FixtureConverterInterface');
+        Fixture::setDefaultConverter($this->converterMock);
     }
 
     public function testEnabledSecurityListener()
     {
+        $fixture = Fixture::create('user', array(
+            'data' => array(),
+            'properties' => array(
+                'security' => true
+            )
+        ));
+ 
         $user = new User('test-user', 'test@localhost');
         $user->setPassword('132');
 
         $data = new FixtureData('test_user', array());
         $data->setObject($user);
 
-        $fixture = new Fixture('user', $this->converterMock);
-        $fixture->addFixtureData($data);
-
-        $fixture->setProperties(array(
-            'security' => true
-        ));
+        $fixture->add($data);
 
         $fixtures = new FixtureCollection(array(
             $fixture
         ));
 
-        $event = new PostExecuteEvent($fixtures, array());
+        $event = new FixtureCollectionEvent($this->fixtureManager, $fixtures, array());
         $this->listener->onPostExecute($event);
 
         $this->assertEquals('132secrethash', $user->getPassword());
@@ -86,24 +91,26 @@ class SecurityListenerTest extends AbstractFixtureTest
 
     public function testDisabledSecurityListener()
     {
+        $fixture = Fixture::create('user', array(
+            'data' => array(),
+            'properties' => array(
+                'security' => false
+            )
+        ));
+
         $user = new User('test-user', 'test@localhost');
         $user->setPassword('132');
 
         $data = new FixtureData('test_user', array());
         $data->setObject($user);
 
-        $fixture = new Fixture('user', $this->converterMock);
-        $fixture->addFixtureData($data);
-
-        $fixture->setProperties(array(
-            'security' => false
-        ));
+        $fixture->add($data);
 
         $fixtures = new FixtureCollection(array(
             $fixture
         ));
 
-        $event = new PostExecuteEvent($fixtures, array());
+        $event = new FixtureCollectionEvent($this->fixtureManager, $fixtures, array());
         $this->listener->onPostExecute($event);
 
         $this->assertEquals('132', $user->getPassword());
@@ -113,29 +120,30 @@ class SecurityListenerTest extends AbstractFixtureTest
     {
         $user = new User('test-user', 'test@localhost');
         $user->setPassword('132');
+        
+        $fixture = Fixture::create('user', array(
+            'data' => array(),
+            'properties' => array(
+                'security' => array(
+                    'password' => 'name',
+                    'salt' => 'password'
+                )
+            )
+        ));
 
         $data = new FixtureData('test_user', array());
         $data->setObject($user);
 
-        $fixture = new Fixture('user', $this->converterMock);
-        $fixture->addFixtureData($data);
-
-        $fixture->setProperties(array(
-            'security' => array(
-                'password' => 'name',
-                'salt' => 'password'
-            )
-        ));
+        $fixture->add($data);
 
         $fixtures = new FixtureCollection(array(
             $fixture
         ));
 
-        $event = new PostExecuteEvent($fixtures, array());
+        $event = new FixtureCollectionEvent($this->fixtureManager, $fixtures, array());
         $this->listener->onPostExecute($event);
 
         $this->assertEquals('test-user132hash', $user->getName());
     }
-
 
 }

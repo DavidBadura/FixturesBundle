@@ -2,9 +2,9 @@
 
 namespace DavidBadura\FixturesBundle\Tests;
 
-use DavidBadura\FixturesBundle\FixtureConverter\DefaultConverter;
-use DavidBadura\FixturesBundle\Fixture;
-use DavidBadura\FixturesBundle\FixtureData;
+use DavidBadura\Fixtures\Converter\DefaultConverter;
+use DavidBadura\Fixtures\Fixture\Fixture;
+use DavidBadura\Fixtures\Fixture\FixtureData;
 
 /**
  *
@@ -33,7 +33,7 @@ abstract class AbstractFixtureTest extends \PHPUnit_Framework_TestCase
             ));
     }
 
-    protected function createGroupFixture($data = array())
+protected function createGroupFixture($data = array())
     {
         return $this->createFixture('group', $data, array('class' => 'DavidBadura\FixturesBundle\Tests\TestObjects\Group'));
     }

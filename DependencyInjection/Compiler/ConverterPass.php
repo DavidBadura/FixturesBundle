@@ -21,12 +21,8 @@ class ConverterPass implements CompilerPassInterface
 
         $converters = array();
         foreach ($container->findTaggedServiceIds('davidbadura_fixtures.converter') as $id => $attributes) {
-            $converters[] = new Reference($id);
+            $container->getDefinition('davidbadura_fixtures.converter_repository')->addMethodCall('addConverter', array(new Reference($id)));
         }
-
-        $container->getDefinition('davidbadura_fixtures.converter_repository')->addMethodCall('addConverters', array(
-            $converters
-        ));
     }
 
 }

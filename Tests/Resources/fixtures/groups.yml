@@ -5,3 +5,5 @@ group:
     developer:
       name: Developer
       leader: "@@user:david"
+    owner:
+      name: Owner

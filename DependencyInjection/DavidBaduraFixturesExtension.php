@@ -29,11 +29,11 @@ class DavidBaduraFixturesExtension extends Extension
         $loader->load('services.xml');
 
         if ($config['persister'] == 'orm') {
-            $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\DoctrinePersister');
+            $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\Fixtures\Persister\DoctrinePersister');
             $serviceId = ($config['persister_id']) ? $config['persister_id'] : 'doctrine.orm.entity_manager' ;
             $persister->addArgument(new Reference($serviceId));
         } elseif ($config['persister'] === 'odm') {
-            $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\FixturesBundle\Persister\MongoDBPersister');
+            $persister = $container->register('davidbadura_fixtures.persister', 'DavidBadura\Fixtures\Persister\MongoDBPersister');
             $serviceId = ($config['persister_id']) ? $config['persister_id'] : 'doctrine.odm.mongodb.document_manager' ;
             $persister->addArgument(new Reference($serviceId));
         } else {
@@ -41,15 +41,8 @@ class DavidBaduraFixturesExtension extends Extension
         }
 
         if (isset($config['bundles'])) {
-            $fixtureLoader = $container->getDefinition('davidbadura_fixtures.fixture_loader');
+            $fixtureLoader = $container->getDefinition('davidbadura_fixtures.factory');
             $fixtureLoader->addArgument(array_unique($config['bundles']));
-
-            $converterLoader = $container->getDefinition('davidbadura_fixtures.converter_repository');
-            $converterLoader->addArgument(array_unique($config['bundles']));
-        }
-
-        if ($config['faker']) {
-            $loader->load('faker.xml');
         }
 
     }

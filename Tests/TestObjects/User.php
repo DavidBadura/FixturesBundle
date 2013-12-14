@@ -104,10 +104,9 @@ class User
         return $this->roles;
     }
 
-    public function setRoles(array $roles)
+    public function addRole(Role $role)
     {
-        $this->roles = $roles;
-
+        $this->roles[] = $role;
         return $this;
     }
 
@@ -116,10 +115,9 @@ class User
         return $this->groups;
     }
 
-    public function setGroups(array $groups)
+    public function addGroup(Group $group)
     {
-        $this->groups = $groups;
-
+        $this->groups[] = $group;
         return $this;
     }
 
