@@ -1,7 +1,7 @@
 {
     "name": "davidbadura/fixtures-bundle",
-    "description": "A Symfony2 bundle to load yaml fixtures. Easy extendable, resolve object dependency and validate objects.",
-    "keywords": ["symfony2", "fixtures", "faker", "doctrine", "yaml", "database", "orm"],
+    "description": "A Symfony2 bundle to load yaml, json and toml fixtures. Easy extendable, resolve object dependency and validate objects.",
+    "keywords": ["symfony2", "fixtures", "faker", "doctrine", "yaml", "json", "toml", "database", "orm", "mongodb"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [{
@@ -11,7 +11,7 @@
     "require": {
         "php": ">=5.3.0",
         "symfony/symfony" : "~2.0",
-        "davidbadura/fixtures": "1.0-beta"
+        "davidbadura/fixtures": "1.0@beta"
     },
     "suggest": {
         "davidbadura/faker-bundle" : "1.0.*"
