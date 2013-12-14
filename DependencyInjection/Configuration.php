@@ -28,7 +28,6 @@ class Configuration
                     ->defaultValue(array())
                 ->end()
                 ->scalarNode('persister')->defaultValue('orm')->end()
-                ->booleanNode('faker')->defaultValue(false)->end()
                 ->arrayNode('defaults')
                     ->children()
                         ->scalarNode('converter')->defaultValue('default')->end()
