@@ -11,7 +11,7 @@
     "require": {
         "php": ">=5.3.0",
         "symfony/symfony" : "~2.0",
-        "davidbadura/fixtures": "dev-master"
+        "davidbadura/fixtures": "1.0-beta"
     },
     "suggest": {
         "davidbadura/faker-bundle" : "1.0.*"
