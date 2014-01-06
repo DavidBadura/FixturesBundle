@@ -2,7 +2,7 @@ DavidBaduraFixturesBundle
 =========================
 
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
-
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/DavidBadura/fixturesbundle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Features
 --------
