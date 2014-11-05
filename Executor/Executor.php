@@ -96,7 +96,7 @@ class Executor implements ExecutorInterface
         $executor = $this;
         $data = $fixtureData->getData();
         array_walk_recursive($data, function(&$value, $key) use ($executor, $fixtures) {
-                if (preg_match('/^@([\w-_]*):([\w-_]*)$/', $value, $hit)) {
+                if (is_string($value) && preg_match('/^@([\w-_]*):([\w-_]*)$/', $value, $hit)) {
 
                     if (!$fixtures->has($hit[1]) || !$fixtures->get($hit[1])->getFixtureData($hit[2])) {
                         throw new ReferenceNotFoundException($hit[1], $hit[2]);

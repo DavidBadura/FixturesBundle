@@ -44,6 +44,11 @@ class User
     private $groups = array();
 
     /**
+     * @var DateTime
+     */
+    private $birthdate;
+
+    /**
      *
      * @param string $name
      * @param string $email
@@ -126,6 +131,18 @@ class User
     public function getSalt()
     {
         return 'secret';
+    }
+
+    public function setBirthDate(\DateTime $birthdate)
+    {
+        $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getBirthDate()
+    {
+        return $this->birthdate;
     }
 
 }
