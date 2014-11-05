@@ -28,10 +28,13 @@ class ExecutorTest extends AbstractFixtureTest
 
     public function testSimpleFixture()
     {
+        $birthdate = new \DateTime();
+
         $userFixture = $this->createUserFixture(array(
             'david' => array(
                 'name' => 'David Badura',
-                'email' => 'd.badura@gmx.de'
+                'email' => 'd.badura@gmx.de',
+                'birthdate' => $birthdate
             )
         ));
 
@@ -45,6 +48,7 @@ class ExecutorTest extends AbstractFixtureTest
         $this->assertInstanceOf('DavidBadura\FixturesBundle\Tests\TestObjects\User', $object);
         $this->assertEquals('David Badura', $object->getName());
         $this->assertEquals('d.badura@gmx.de', $object->getEmail());
+        $this->assertEquals($birthdate, $object->getBirthDate());
     }
 
     public function testReference()
