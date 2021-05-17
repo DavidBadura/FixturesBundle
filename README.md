@@ -1,6 +1,9 @@
 DavidBaduraFixturesBundle
 =========================
 
+**The project is no longer supported. If you still want to create fixtures with yaml, then I recommend switching to [Alice](https://github.com/nelmio/alice).**
+
+
 [![Build Status](https://secure.travis-ci.org/DavidBadura/FixturesBundle.png)](http://travis-ci.org/DavidBadura/FixturesBundle)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/DavidBadura/fixturesbundle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
